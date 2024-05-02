@@ -1,0 +1,32 @@
+{
+  "name": "ecommerce",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "keywords": [
+    "RSS",
+    "ecommerce",
+    "Final task"
+  ],
+  "description": "RSS Final [task](https://github.com/rolling-scopes-school/tasks/tree/master/tasks/eCommerce-Application)",
+  "main": "./src/main.tsx",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npx validate-branch-name"
+    }
+  },
+  "lint-staged": {
+    "*.{tsx,ts}": "npm run lint:fix"
+  },
+  "scripts": {
+
+  },
+  "license": "ISC",
+  "dependencies": {
+   
+  },
+  "devDependencies": {
+  
+  }
+}
