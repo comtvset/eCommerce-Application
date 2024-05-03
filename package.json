@@ -20,6 +20,7 @@
     "*.{tsx,ts}": "npm run lint:fix"
   },
   "scripts": {
+    "lint": "eslint --cache . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
 
   },
   "license": "ISC",
