@@ -41,3 +41,4 @@ It's a comprehensive online shopping portal that provides an interactive and sea
 0. Jira (Board, Dashboard, Releases, Sprint, Pocker Planning, Automation)
 0. Confluence (Knoledge Base, MoMs, Agreements, Roles and Responsibilitties etc..)
 0. GitHub (Pull Request, workflow, Review)
+
