@@ -20,7 +20,9 @@
     "*.{tsx,ts}": "npm run lint:fix"
   },
   "scripts": {
-
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "license": "ISC",
   "dependencies": {
