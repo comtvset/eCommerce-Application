@@ -24,7 +24,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prepare": "cd .. && husky eCommerce/.husky"
+    "prepare": "husky || true"
   },
   "license": "ISC",
   "dependencies": {
