@@ -23,7 +23,8 @@
     "lint": "eslint --cache . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky || true"
   },
   "license": "ISC",
   "dependencies": {
