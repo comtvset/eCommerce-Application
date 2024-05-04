@@ -26,6 +26,7 @@
     "lint": "eslint --cache . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "npx prettier . --cache --write src/**/*.*",
     "ci:format": "prettier . --check"
+    "prepare": "husky || true"
   },
   "license": "ISC",
   "dependencies": {
