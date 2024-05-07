@@ -100,7 +100,7 @@ npm run preview
 
 ### prepare
 
-automatically added by *husky init* command to prevent fail 
+automatically added by *husky init* command to prevent fail
 
 Example:
 ```
@@ -151,4 +151,13 @@ start check of code quality with additional params. At the end you can find list
 Example:
 ```
 npm run ci:format
+```
+
+### test
+
+to run the test
+
+Example:
+```
+npm run test
 ```
