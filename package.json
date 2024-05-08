@@ -27,7 +27,7 @@
     "format": "npx prettier . --cache --write src/**/*.*",
     "ci:format": "prettier . --check",
     "prepare": "husky || true",
-    "test": "vitest"
+    "test": "vitest run --coverage"
   },
   "license": "ISC",
   "dependencies": {
@@ -42,6 +42,7 @@
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
+    "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
