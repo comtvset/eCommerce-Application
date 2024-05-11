@@ -39,6 +39,7 @@ module.exports = {
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'error',
     'implicit-arrow-linebreak': 'off',
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.ts', '.tsx', '.jsx'] }],
     'import/no-extraneous-dependencies': [
       'error',
       {
