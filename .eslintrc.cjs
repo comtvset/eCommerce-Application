@@ -40,6 +40,15 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'error',
     'implicit-arrow-linebreak': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.ts', '.tsx', '.jsx'] }],
+    'import/prefer-default-export': 'off',
+    'react/function-component-definition': [
+      2,
+      {
+        namedComponents: 'arrow-function',
+        unnamedComponents: 'arrow-function',
+      },
+    ],
+    'arrow-body-style': 'off',
     'import/no-extraneous-dependencies': [
       'error',
       {
@@ -62,6 +71,11 @@ module.exports = {
         },
       },
     ],
+  },
+  settings: {
+    'import/resolver': {
+      typescript: {},
+    },
   },
   noInlineConfig: true,
 };
