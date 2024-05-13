@@ -49,6 +49,7 @@ module.exports = {
       },
     ],
     'arrow-body-style': 'off',
+    'import/no-unresolved': 'error',
     'import/no-extraneous-dependencies': [
       'error',
       {

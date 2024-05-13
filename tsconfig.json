@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "src/*": ["./src/*"]
+      "src/*": ["./src/*"],
+      "components/*": ["./src/components/*"],
+      "tests/*": ["./src/tests/*"]
     },
     "target": "ES2020",
     "useDefineForClassFields": true,
