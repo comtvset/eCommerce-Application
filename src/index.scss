@@ -10,14 +10,18 @@ html {
   font-size: 10px;
 }
 
-body {
-  background-color: $backgroundColor;
-  color: $primaryTextColor;
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 400;
+:root {
+  --background-color: #efe6d3;
+  --primary-text-color: #000000;
+  --font-family: 'Open Sans', sans-serif;
+  --font-weight: 400;
 }
 
-#root {
-  max-width: $maxWidthDesktop;
-  margin: 0 auto;
+body {
+  background-color: var(--background-color);
+  color: var(--primary-text-color);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight);
+  width: 100vw;
+  height: 100vh;
 }
