@@ -22,12 +22,8 @@
 }
 
 .logo,
-.login,
-.register {
-  text-decoration: none;
-  color: $primaryTextColor;
+.link {
   &:hover {
-    color: $hoverTextColor;
     cursor: pointer;
     transition-duration: 1s;
   }
@@ -37,7 +33,6 @@
   font-size: 3.2rem;
 }
 
-.login,
-.register {
+.link {
   font-size: 1.6rem;
 }

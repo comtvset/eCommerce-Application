@@ -6,12 +6,12 @@ const links = [
   {
     to: '/login',
     title: 'LOG IN',
-    className: styles.login,
+    id: 1,
   },
   {
     to: '/register',
     title: 'REGISTER',
-    className: styles.register,
+    id: 2,
   },
 ];
 
@@ -22,7 +22,7 @@ export const Header: React.FC = () => {
         <Link to="/" title="Cozy House" className={styles.logo} />
         <nav className={styles.navigation}>
           {links.map((link) => (
-            <Link key={link.to} to={link.to} title={link.title} className={link.className} />
+            <Link key={link.id} to={link.to} title={link.title} className={styles.link} />
           ))}
         </nav>
       </header>

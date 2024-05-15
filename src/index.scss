@@ -13,6 +13,7 @@ html {
 :root {
   --background-color: #efe6d3;
   --primary-text-color: #000000;
+  --hover-text-color: #f5861f;
   --font-family: 'Open Sans', sans-serif;
   --font-weight: 400;
 }
@@ -24,4 +25,12 @@ body {
   font-weight: var(--font-weight);
   width: 100vw;
   height: 100vh;
+}
+
+a {
+  color: var(--primary-text-color);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--hover-text-color);
 }
