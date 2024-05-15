@@ -1,0 +1,38 @@
+@import 'src/styles/variables';
+
+.container {
+  width: $maxWidthDesktop;
+  margin: 0 auto;
+}
+
+.header,
+.navigation {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header {
+  width: 100%;
+  padding-top: 40px;
+}
+
+.navigation {
+  width: 13%;
+  align-items: end;
+}
+
+.logo,
+.link {
+  &:hover {
+    cursor: pointer;
+    transition-duration: 1s;
+  }
+}
+
+.logo {
+  font-size: 3.2rem;
+}
+
+.link {
+  font-size: 1.6rem;
+}
