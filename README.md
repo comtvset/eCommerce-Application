@@ -33,6 +33,7 @@ It's a comprehensive online shopping portal that provides an interactive and sea
 10. Husky
 11. git
 12. Jest
+13. React Hook Form
 
 ## Organization
 
