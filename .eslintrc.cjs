@@ -11,6 +11,7 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'plugin:prettier/recommended',
     'airbnb',
+    'plugin:react/jsx-runtime',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules', 'build', 'public', 'assets'],
   parser: '@typescript-eslint/parser',
