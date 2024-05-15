@@ -11,6 +11,7 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'plugin:prettier/recommended',
     'airbnb',
+    'plugin:react/jsx-runtime',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules', 'build', 'public', 'assets'],
   parser: '@typescript-eslint/parser',
@@ -39,6 +40,17 @@ module.exports = {
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'error',
     'implicit-arrow-linebreak': 'off',
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.ts', '.tsx', '.jsx'] }],
+    'import/prefer-default-export': 'off',
+    'react/function-component-definition': [
+      2,
+      {
+        namedComponents: 'arrow-function',
+        unnamedComponents: 'arrow-function',
+      },
+    ],
+    'arrow-body-style': 'off',
+    'import/no-unresolved': 'error',
     'import/no-extraneous-dependencies': [
       'error',
       {
@@ -61,6 +73,11 @@ module.exports = {
         },
       },
     ],
+  },
+  settings: {
+    'import/resolver': {
+      typescript: {},
+    },
   },
   noInlineConfig: true,
 };

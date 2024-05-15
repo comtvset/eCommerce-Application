@@ -29,17 +29,16 @@ It's a comprehensive online shopping portal that provides an interactive and sea
 6. HTML
 7. CSS
 8. CommerceTools - a leading provider of commerce solutions for B2C and B2B enterprises. CommerceTools offers a cloud-native, microservices-based commerce platform that enables brands to create unique and engaging digital commerce experiences.
-9. Loadash
-10. Linters: ESLint, Prettier, airbnb rules
-11. Husky
-12. git
-13. Jest
+9. Linters: ESLint, Prettier, airbnb rules
+10. Husky
+11. git
+12. Jest
 
 ## Organization
 
 0. Agile / Scrum
-1. Jira (Board, Dashboard, Releases, Sprint, Pocker Planning, Automation)
-2. Confluence (Knoledge Base, MoMs, Agreements, Roles and Responsibilitties etc..)
+1. Jira (Board, Dashboard, Releases, Sprint, Poker Planning, Automation)
+2. Confluence (Knowledge Base, MoMs, Agreements, Roles and Responsibilities etc..)
 3. GitHub (Pull Request, workflow, Review)
 
 ## Setup project locally
@@ -123,7 +122,7 @@ start check of code quality with additional params. At the end you can find list
 
 --cache - check only changed files
 
---ext - check only file with specified extentions
+--ext - check only file with specified extensions
 
 --report-unused-disable-directives
 This option causes ESLint to report directive comments like // eslint-disable-line when no errors would have been reported on that line anyway.
