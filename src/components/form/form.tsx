@@ -70,9 +70,10 @@ export function Form() {
 
       <div className={styles.registration_container}>
         <div className={styles.registration_title}>Don’t have an account?</div>
-          <button style={{backgroundColor:'#94B21B'}} className={styles.button_login}>SING UP</button>
-        </div>
+        <button style={{ backgroundColor: '#94B21B' }} className={styles.button_login}>
+          SING UP
+        </button>
+      </div>
     </form>
-
   );
 }

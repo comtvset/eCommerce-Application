@@ -14,7 +14,7 @@
 .login {
   display: flex;
   width: 474px;
-  height:  529px;
+  height: 529px;
   background-color: rgba(255, 255, 255, 0.6);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
@@ -48,7 +48,7 @@
 
 .img_container {
   display: flex;
-  flex-direction: row-reverse
+  flex-direction: row-reverse;
 }
 
 .button_container {
@@ -59,7 +59,7 @@
 .button_login {
   width: 158px;
   height: 45px;
-  background-color: #D6B258;
+  background-color: #d6b258;
   border-radius: 10px;
   border: none;
   font-size: 16px;

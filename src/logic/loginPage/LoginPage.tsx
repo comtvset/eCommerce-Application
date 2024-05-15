@@ -1,5 +1,5 @@
 import { Form } from 'src/components/form/form';
-import styles from "src/logic/loginPage/loginPage.module.scss";
+import styles from 'src/logic/loginPage/loginPage.module.scss';
 
 const Login = () => {
   return (

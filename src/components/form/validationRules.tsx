@@ -1,4 +1,4 @@
-export const validationRuleForEmail = {
+const validationRuleForEmail = {
   rule1: (value: string) => /^[^@]/.test(value) || '⚠ Email cannot start with @',
   rule2: (value: string) => /^[^.]/.test(value) || '⚠ Email cannot start with a dot',
   rule3: (value: string) => /^\S*$/.test(value) || '⚠ Email cannot contain spaces',
@@ -10,7 +10,7 @@ export const validationRuleForEmail = {
   rule9: (value: string) => value.length > 5 || '⚠ Not shorter than 5 characters',
 };
 
-export const validationRuleForPassword = {
+const validationRuleForPassword = {
   rule1: (value: string) => /^\S/.test(value) || '⚠ Password must not start with whitespace',
   rule2: (value: string) => value.length > 8 || '⚠ Password not shorter than 8 characters',
   rule3: (value: string) => /\S$/.test(value) || '⚠ Password must not end with whitespace',
@@ -19,3 +19,5 @@ export const validationRuleForPassword = {
   rule6: (value: string) => /[0-9]/.test(value) || '⚠ Password must contain at least one digit',
   rule7: (value: string) => /[!@#$%^&*]/.test(value) || '⚠ Password must contain at least one special character',
 };
+
+export { validationRuleForEmail, validationRuleForPassword };
