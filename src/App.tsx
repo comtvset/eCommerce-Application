@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { RegistrationPage } from 'src/logic/registrationPage/registrationPage';
-import { Login } from 'src/logic/loginPage/LoginPage';
+import { RegistrationPage } from 'src/logic/registrationPage/registrationPage.tsx';
+import { Login } from 'src/logic/loginPage/LoginPage.tsx';
 
 export const App = () => {
   const [showRegistration, setShowRegistration] = useState<boolean>(false);
@@ -20,7 +20,14 @@ export const App = () => {
       )}
       {showRegistration && <RegistrationPage />}
 
-      <button onClick={() => setShowLogin(true)}>Login</button>
+      <button
+        type="button"
+        onClick={() => {
+          setShowLogin(true);
+        }}
+      >
+        Login
+      </button>
       {showLogin && <Login />}
     </div>
   );
