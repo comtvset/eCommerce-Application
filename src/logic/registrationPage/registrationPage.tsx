@@ -1,4 +1,4 @@
-import style from './registration.module.scss';
+import style from './Registration.module.scss';
 
 export const RegistrationPage = () => {
   return (

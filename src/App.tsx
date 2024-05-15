@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { RegistrationPage } from './logic/registrationPage/registrationPage.tsx';
+import { RegistrationPage } from './logic/registrationPage/RegistrationPage.tsx';
 
 export const App = () => {
   const [showRegistration, setShowRegistration] = useState<boolean>(false);
