@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from 'src/logic/loginPage/loginPage.module.scss';
-import { Button } from 'src/components/button/Button.tsx';
 
 export const Form = () => {
   const [email, setEmail] = useState('');
@@ -33,7 +32,9 @@ export const Form = () => {
           setPassword(e.target.value);
         }}
       />
-      <Button type="submit" label="LOG IN" onClick={handleClick} />
+      <button type="submit" onClick={handleClick}>
+        LOG IN
+      </button>
     </form>
   );
 };

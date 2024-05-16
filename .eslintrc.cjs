@@ -29,7 +29,6 @@ module.exports = {
       },
     ],
     eqeqeq: 'error',
-    'react/button-has-type': 'off',
     'no-console': 'warn',
     'no-undef': 'off',
     'no-unused-vars': 'off',
