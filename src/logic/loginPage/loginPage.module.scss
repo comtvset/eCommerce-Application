@@ -1,3 +1,5 @@
+@import '../../styles/mixins';
+
 .container_login {
   display: flex;
   background-image: url('src/public/login-bg.jpeg');
@@ -12,17 +14,18 @@
 }
 
 .login {
-  display: flex;
-  width: 474px;
-  height: 529px;
-  background-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  justify-content: center;
-  align-items: center;
+  @include form(0.6);
 }
 
 .form {
   display: flex;
   flex-direction: column;
+  gap: 15px;
+  margin: 50px auto;
+}
+
+@media (width < 768px) {
+  .login {
+    width: 300px;
+  }
 }

@@ -1,17 +1,14 @@
-import style from './registration.module.scss';
+import stylesLogin from 'src/logic/loginPage/loginPage.module.scss';
+import stylesRegistration from 'src/logic/registrationPage/registration.module.scss';
+import { RegistrationForm } from 'src/components/form/RegistrationForm.tsx';
 
 export const RegistrationPage = () => {
   return (
-    <div className={style.registration}>
-      <input className="inputText" placeholder="Email" />
-      <input className="inputText" placeholder="Password" />
-      <input className="inputText" placeholder="First name" />
-      <input className="inputText" placeholder="Last name" />
-      <input className="inputText" placeholder="Date of birth" />
-      <input className="inputText" placeholder="Street" />
-      <input className="inputText" placeholder="City" />
-      <input className="inputText" placeholder="Postal code" />
-      <input className="inputText" placeholder="Country" />
+    <div className={stylesLogin.container_login}>
+      <div className={stylesRegistration.registration}>
+        <h1>Create Account</h1>
+        <RegistrationForm />
+      </div>
     </div>
   );
 };

@@ -1,8 +1,29 @@
+@import '../../styles/mixins';
+
 .registration {
-  margin-top: 2vh;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 1vh;
+  @include form(0.9);
+  color: var(--primary-text-color);
+}
+
+.submitButton {
+  background-color: var(--register-button);
+  border-radius: 0.5rem;
+  height: auto;
+  padding: 0.5rem 0;
+  letter-spacing: 0.05rem;
+  border: 1px solid var(--background-color);
+  color: var(--background-color);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (width < 768px) {
+  .registration {
+    width: 300px;
+  }
 }
