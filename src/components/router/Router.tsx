@@ -5,8 +5,9 @@ import { Error } from 'src/logic/errorPage/ErrorPage.tsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 export const Router = () => {
+  const baseUrl = '/';
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={baseUrl}>
       <Routes>
         <Route path="*" element={<Error />} />
         <Route path="/" element={<Main />} />
