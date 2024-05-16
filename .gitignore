@@ -109,3 +109,7 @@ dist
 
 # do not track package-lock.json file
 package-lock.json
+
+# Vite
+
+.vite
