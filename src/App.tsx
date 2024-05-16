@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { RegistrationPage } from 'src/logic/registrationPage/registrationPage.tsx';
 import { Login } from 'src/logic/loginPage/LoginPage.tsx';
 
+
 export const App = () => {
   const [showRegistration, setShowRegistration] = useState<boolean>(false);
   const [showLogin, setShowLogin] = useState<boolean>(false);
