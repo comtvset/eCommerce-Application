@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from 'src/logic/loginPage/loginPage.module.scss';
-import { validationEmail, validationPassword } from 'src/components/form/validationForm';
+import { validationEmail, validationPassword } from 'src/components/form/validationForm.ts';
 
 export const Form = () => {
   const [email, setEmail] = useState('');
@@ -28,13 +28,11 @@ export const Form = () => {
     event.preventDefault();
 
     if (!email) {
-      setErrorEmail('⚠ This field is required');
+      setErrorEmail('⚠ This field is required!');
     }
-
     if (!password) {
-      setErrorPassword('⚠ This field is required');
+      setErrorPassword('⚠ This field is required!');
     }
-
     if (email && password) {
       setEmail('');
       setPassword('');
