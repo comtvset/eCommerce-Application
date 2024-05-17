@@ -1,0 +1,100 @@
+@import 'src/styles/variables';
+@import 'src/styles/mixins';
+
+.error_layout {
+  background-color: #dbdbdb;
+}
+
+.error_container {
+  background-image: url('../../public/error_page.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+
+  @include media-1400 {
+    max-width: 1201px;
+  }
+
+  @include media-1200 {
+    max-width: 1001px;
+  }
+
+  @include media-1000 {
+    max-width: 801px;
+  }
+
+  @include media-800 {
+    max-width: 601px;
+  }
+
+  @include media-600 {
+    max-width: 401px;
+  }
+
+  @include media-400 {
+    max-width: 360px;
+  }
+}
+
+.error_link,
+.error_text,
+.error_title {
+  color: $secondaryTextColor;
+}
+
+.error_title,
+.error_text {
+  text-align: center;
+}
+
+.error_title {
+  font-size: 6.4rem;
+  margin-top: 12%;
+
+  @include media-1000 {
+    margin-top: 15%;
+  }
+
+  @include media-800 {
+    margin-top: 18%;
+  }
+
+  @include media-600 {
+    margin-top: 25%;
+  }
+
+  @include media-600 {
+    margin-top: 32%;
+  }
+}
+
+.error_text {
+  font-size: 2.4rem;
+  margin-top: 2%;
+}
+
+.error_link {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: $primaryBackgroundButton;
+  border-radius: 10px;
+  font-size: 1.6rem;
+  justify-self: center;
+  align-self: center;
+  margin-top: 3%;
+
+  &:hover {
+    background-color: $primaryBackgroundButtonHover;
+    transition: background-color 0.3s ease;
+    color: $secondaryTextColor;
+  }
+
+  &:active {
+    background-color: $primaryBackgroundButtonActive;
+  }
+}
