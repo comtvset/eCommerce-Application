@@ -24,6 +24,10 @@
   margin: 50px auto;
 }
 
+.error {
+  color: red;
+}
+
 @media (width < 768px) {
   .login {
     width: 300px;

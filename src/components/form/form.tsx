@@ -1,18 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styles from 'src/logic/loginPage/loginPage.module.scss';
+import { validationEmail, validationPassword } from 'src/components/form/validationForm.ts';
 
 export const Form = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorEmail, setErrorEmail] = useState('');
+  const [errorPassword, setErrorPassword] = useState('');
+
+  const handleValidation = useCallback(() => {
+    if (email) {
+      const emailError = validationEmail(email);
+      setErrorEmail(emailError);
+    } else {
+      setErrorEmail('');
+    }
+
+    if (password) {
+      const passwordError = validationPassword(password);
+      setErrorPassword(passwordError);
+    } else {
+      setErrorPassword('');
+    }
+  }, [email, password]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (!email || !password) {
-      return;
+
+    if (!email) {
+      setErrorEmail('⚠ This field is required!');
     }
-    setEmail('');
-    setPassword('');
+    if (!password) {
+      setErrorPassword('⚠ This field is required!');
+    }
+    if (email && password) {
+      setEmail('');
+      setPassword('');
+    }
   };
+
+  useEffect(() => {
+    handleValidation();
+  }, [email, password, handleValidation]);
 
   return (
     <form className={styles.form}>
@@ -24,15 +53,20 @@ export const Form = () => {
           setEmail(e.target.value);
         }}
       />
+      <span className={styles.error}>{errorEmail}</span>
+
       <input
         className="inputText"
         placeholder="Password"
         value={password}
+        type="password"
         onChange={(e) => {
           setPassword(e.target.value);
         }}
       />
-      <button type="submit" onClick={handleClick}>
+      <span className={styles.error}>{errorPassword}</span>
+
+      <button type="submit" onClick={handleClick} disabled={false}>
         LOG IN
       </button>
     </form>
