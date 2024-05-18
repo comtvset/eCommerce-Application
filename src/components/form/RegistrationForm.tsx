@@ -96,7 +96,7 @@ export const RegistrationForm: React.FC = () => {
       ...prevErrors,
       postalCode: error,
     }));
-  }, []);
+  }, [formData.postalCode]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
