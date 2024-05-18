@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styleLogin from 'src/logic/loginPage/loginPage.module.scss';
 import styleRegistration from 'src/logic/registrationPage/registration.module.scss';
-import { validateEmail } from 'src/components/validation/Validation.tsx';
+import { validateEmail } from 'src/components/validation/Validation.ts';
 
 export const RegistrationForm = () => {
   const [email, setEmail] = useState('');
