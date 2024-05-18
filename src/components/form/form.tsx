@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from 'src/logic/loginPage/loginPage.module.scss';
-import { validationEmail, validationPassword } from 'src/components/form/validationForm.ts';
+import { validationEmail, validationPassword } from 'src/components/validation/validationForm.ts';
 
 export const Form = () => {
   const [email, setEmail] = useState('');
