@@ -35,3 +35,8 @@ a {
 a:hover {
   color: var(--hover-text-color);
 }
+
+input,
+button {
+  width: 100px;
+}
