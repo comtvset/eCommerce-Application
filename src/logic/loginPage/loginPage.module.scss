@@ -1,8 +1,9 @@
 @import '../../styles/mixins';
+@import 'src/styles/variables';
 
 .container_login {
   display: flex;
-  background-image: url('src/public/login-bg.jpeg');
+  background-image: url('../../public/login-bg.jpeg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -26,6 +27,31 @@
 
 .error {
   color: red;
+}
+
+.login_text {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.login_link {
+  display: inline-block;
+  padding: 4px 45px;
+  background-color: $primaryBackgroundButton;
+  color: $secondaryTextColor;
+  font-weight: 700;
+  justify-self: center;
+  align-self: center;
+
+  &:hover {
+    background-color: $primaryBackgroundButtonHover;
+    transition: background-color 0.3s ease;
+    color: $secondaryTextColor;
+  }
+
+  &:active {
+    background-color: $primaryBackgroundButtonActive;
+  }
 }
 
 @media (width < 768px) {
