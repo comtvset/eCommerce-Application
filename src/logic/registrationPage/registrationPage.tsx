@@ -6,7 +6,6 @@ export const RegistrationPage = () => {
   return (
     <div className={stylesLogin.container_login}>
       <div className={stylesRegistration.registration}>
-        <h1>Create Account</h1>
         <RegistrationForm />
       </div>
     </div>
