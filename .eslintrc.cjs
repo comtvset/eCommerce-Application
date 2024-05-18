@@ -20,7 +20,15 @@ module.exports = {
     sourceType: 'module',
     project: ['./tsconfig.json', './tsconfig.node.json'],
   },
-  plugins: ['react-refresh', '@typescript-eslint', 'unused-imports', 'simple-import-sort', 'prettier', 'unicorn', '@stylistic/js'],
+  plugins: [
+    'react-refresh',
+    '@typescript-eslint',
+    'unused-imports',
+    'simple-import-sort',
+    'prettier',
+    'unicorn',
+    '@stylistic/js',
+  ],
   rules: {
     'react-refresh/only-export-components': [
       'warn',
@@ -50,6 +58,7 @@ module.exports = {
       },
     ],
     'arrow-body-style': 'off',
+    'operator-linebreak': ['error', 'after'],
     'import/no-unresolved': 'error',
     'import/no-extraneous-dependencies': [
       'error',

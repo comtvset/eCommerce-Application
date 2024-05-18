@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styleLogin from 'src/logic/loginPage/loginPage.module.scss';
 import styleRegistration from 'src/logic/registrationPage/registration.module.scss';
+import { validateEmail } from 'src/logic/validation/Validation.tsx';
 
 export const RegistrationForm = () => {
   const [email, setEmail] = useState('');
@@ -14,8 +15,25 @@ export const RegistrationForm = () => {
   const [country, setCountry] = useState('');
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const validateInputs = () => {
-    return false;
+  interface ValidationRuleResult {
+    validateEmail: boolean;
+    validatePassword: boolean;
+    validateFirstName: boolean;
+  }
+
+  const validationRuleResult: ValidationRuleResult = {
+    validateEmail: false,
+    validatePassword: false,
+    validateFirstName: false,
+  };
+
+  const validateInputs = (): boolean => {
+    return (
+      validationRuleResult.validateEmail &&
+      validationRuleResult.validatePassword &&
+      validationRuleResult.validateFirstName &&
+      validationRuleResult.validateFirstName
+    );
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -32,8 +50,11 @@ export const RegistrationForm = () => {
         placeholder="Email"
         value={email}
         onChange={(e) => {
-          setEmail(e.target.value);
+          const { value } = e.target;
+          setEmail(value);
+          validationRuleResult.validateEmail = validateEmail(value);
         }}
+        required
       />
       <input
         className="inputText"
@@ -42,6 +63,7 @@ export const RegistrationForm = () => {
         onChange={(e) => {
           setPassword(e.target.value);
         }}
+        required
       />
       <input
         className="inputText"
@@ -58,6 +80,7 @@ export const RegistrationForm = () => {
         onChange={(e) => {
           setLastName(e.target.value);
         }}
+        required
       />
       <input
         className="inputText"
@@ -66,6 +89,7 @@ export const RegistrationForm = () => {
         onChange={(e) => {
           setDateOfBirth(e.target.value);
         }}
+        required
       />
       <h2>Shipping address</h2>
       <input
@@ -75,6 +99,7 @@ export const RegistrationForm = () => {
         onChange={(e) => {
           setStreet(e.target.value);
         }}
+        required
       />
       <input
         className="inputText"
@@ -83,6 +108,7 @@ export const RegistrationForm = () => {
         onChange={(e) => {
           setCity(e.target.value);
         }}
+        required
       />
       <input
         className="inputText"
@@ -91,6 +117,7 @@ export const RegistrationForm = () => {
         onChange={(e) => {
           setPostalCode(e.target.value);
         }}
+        required
       />
       <input
         className="inputText"
@@ -99,6 +126,7 @@ export const RegistrationForm = () => {
         onChange={(e) => {
           setCountry(e.target.value);
         }}
+        required
       />
       <h2>Billing address</h2>
       <input
@@ -108,6 +136,7 @@ export const RegistrationForm = () => {
         onChange={(e) => {
           setStreet(e.target.value);
         }}
+        required
       />
       <input
         className="inputText"
@@ -116,6 +145,7 @@ export const RegistrationForm = () => {
         onChange={(e) => {
           setCity(e.target.value);
         }}
+        required
       />
       <input
         className="inputText"
@@ -124,6 +154,7 @@ export const RegistrationForm = () => {
         onChange={(e) => {
           setPostalCode(e.target.value);
         }}
+        required
       />
       <input
         className="inputText"
@@ -132,6 +163,7 @@ export const RegistrationForm = () => {
         onChange={(e) => {
           setCountry(e.target.value);
         }}
+        required
       />
 
       <button className={styleRegistration.submitButton} type="submit" disabled={isDisabled}>
