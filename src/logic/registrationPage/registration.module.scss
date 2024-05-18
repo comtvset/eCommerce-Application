@@ -1,8 +1,62 @@
 @import '../../styles/mixins';
+@import '../../index.scss';
 
 .registration {
   @include form(0.9);
   color: var(--primary-text-color);
+}
+
+.errorText {
+  color: var(--error-text);
+}
+.formbody {
+  display: flex;
+  flex-direction: row;
+
+  .label_block,
+  .input_block,
+  .error_block {
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 20px;
+    margin: 20px auto;
+    > label,
+    input, 
+    select ,
+    div {
+      height: 26px;
+      border: 0;
+      padding: 0;
+      width: 100px;
+      border-radius: 5px;
+      padding: 0 5px;
+    }
+    input,
+    select {
+      outline: 1px solid var(--primary-text-color);
+    }
+  }
+  .label_block,
+  .input_block {
+    width: 100px;
+    label {
+      width: 80px;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+  }
+  .error_block {
+    width: 170px;
+    div {
+      width: inherit;
+    }
+  }
+}
+
+.left_aligned {
+  margin-left: -250px;
 }
 
 .submitButton {
@@ -15,6 +69,7 @@
   color: var(--background-color);
   font-weight: 600;
   cursor: pointer;
+  margin-bottom: 20px;
 }
 
 .submitButton:disabled {
