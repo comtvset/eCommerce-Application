@@ -25,14 +25,13 @@
     gap: 15px;
     padding-right: 20px;
     margin: 20px auto;
+
     > label,
     input,
     select,
     div {
       height: 26px;
       border: 0;
-      padding: 0;
-      width: 100px;
       border-radius: 5px;
       padding: 0 5px;
     }
@@ -40,27 +39,21 @@
     select {
       outline: 1px solid var(--primary-text-color);
     }
+    select {
+      width: 110px;
+    }
   }
-  .label_block,
-  .input_block {
-    width: 100px;
-    label {
+  .label_block> label {
       width: 80px;
       text-transform: uppercase;
       font-weight: 400;
-    }
   }
   .error_block {
     width: 170px;
-    div {
-      width: inherit;
-    }
   }
 }
 
-.left_aligned {
-  margin-left: -250px;
-}
+
 
 .submitButton {
   background-color: var(--register-button);

@@ -1,0 +1,47 @@
+.left_aligned {
+  margin-left: -250px;
+}
+.formbody {
+  display: flex;
+  flex-direction: row;
+
+  .label_block,
+  .input_block,
+  .error_block {
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 20px;
+    margin: 20px auto;
+
+    > label,
+    input,
+    select,
+    div {
+      height: 26px;
+      border: 0;
+      border-radius: 5px;
+      padding: 0 5px;
+    }
+    input,
+    select {
+      outline: 1px solid var(--primary-text-color);
+    }
+    select {
+      width: 110px;
+    }
+  }
+  .label_block> label {
+      width: 80px;
+      text-transform: uppercase;
+      font-weight: 400;
+  }
+  .error_block {
+    width: 170px;
+  }
+}
+
+.errorText {
+  color: var(--error-text);
+}

@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import style from 'src/logic/registrationPage/registration.module.scss';
-import {
-  validateBirthday,
-  validateCountry,
-  validateEmail,
-  validateName,
-  validateNonEmpty,
-  validatePassword,
-} from 'src/components/validation/Validation.ts';
-import { validatePostalCode } from '../validation/PostalCodeValidation.ts';
-import { Country } from '../country/country.ts';
+import { AddressForm } from 'src/components/address/Address.tsx';
+import { validateField } from 'src/components/validation/Validation.ts';
+import { validatePostalCode } from 'src/components/validation/PostalCodeValidation.ts';
+import { Country } from 'src/components/country/country.ts';
 
 const allFields = {
   email: '',
@@ -23,7 +17,7 @@ const allFields = {
   country: '',
 };
 
-let countryEnumValue: Country;
+let countrySelectedValue: Country;
 interface FormData {
   email: string;
   password: string;
@@ -43,31 +37,7 @@ export const RegistrationForm: React.FC = () => {
 
   const [isFormValid, setIsFormValid] = useState(false);
 
-  countryEnumValue = Country[formData.country as keyof typeof Country];
-
-  const validateField = (name: string, value: string): string => {
-    switch (name) {
-      case 'email':
-        return validateEmail(value);
-      case 'password':
-        return validatePassword(value);
-      case 'firstName':
-      case 'lastName':
-      case 'city':
-        return validateName(value);
-      case 'dateOfBirth':
-        return validateBirthday(value);
-      case 'street':
-        return validateNonEmpty(value);
-
-      case 'postalCode':
-        return validatePostalCode(countryEnumValue, value);
-      case 'country':
-        return validateCountry(value);
-      default:
-        return '';
-    }
-  };
+  countrySelectedValue = Country[formData.country as keyof typeof Country];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -76,8 +46,7 @@ export const RegistrationForm: React.FC = () => {
       [name]: value,
     });
 
-    // Validate the field on change and update errors
-    const error = validateField(name, value);
+    const error = validateField(name, value, countrySelectedValue);
     setErrors({
       ...errors,
       [name]: error,
@@ -90,8 +59,7 @@ export const RegistrationForm: React.FC = () => {
   }, [errors]);
 
   useEffect(() => {
-    // Trigger validation for postalCode field when country changes
-    const error = validatePostalCode(countryEnumValue, formData.postalCode);
+    const error = validatePostalCode(countrySelectedValue, formData.postalCode);
     setErrors((prevErrors) => ({
       ...prevErrors,
       postalCode: error,
@@ -181,55 +149,8 @@ export const RegistrationForm: React.FC = () => {
           <div className={style.errorText}>{errors.dateOfBirth}</div>
         </div>
       </div>
-      <h2 className={style.left_aligned}>Shipping address</h2>
-      <div className={style.formbody}>
-        <div className={style.label_block}>
-          <label htmlFor="street">Street</label>
-          <label htmlFor="city">City</label>
-          <label htmlFor="country">Country</label>
-          <label htmlFor="postalCode">Postal code</label>
-        </div>
-        <div className={style.input_block}>
-          <input
-            type="text"
-            id="street"
-            name="street"
-            value={formData.street}
-            onChange={handleChange}
-            required
-          />
-          <input type="text" id="city" name="city" value={formData.city} onChange={handleChange} required />
-          <select
-            id="country"
-            name="country"
-            value={formData.country}
-            onChange={handleChange}
-            onBlur={handleChange}
-            autoComplete="off"
-            required
-          >
-            <option value="">...</option>
-            <option value="France">France</option>
-            <option value="Germany">Germany</option>
-            <option value="Italy">Italy</option>
-            <option value="Netherlands">Netherlands</option>
-          </select>
-          <input
-            type="text"
-            id="postalCode"
-            name="postalCode"
-            value={formData.postalCode}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className={style.error_block}>
-          <div className={style.errorText}>{errors.street}</div>
-          <div className={style.errorText}>{errors.city}</div>
-          <div className={style.errorText}>{errors.country}</div>
-          <div className={style.errorText}>{errors.postalCode}</div>
-        </div>
-      </div>
+      <AddressForm formData={formData} handleChange={handleChange} errors={errors} title="Shipping address" />
+
       <button className={style.submitButton} type="submit" disabled={!isFormValid}>
         APPLY
       </button>

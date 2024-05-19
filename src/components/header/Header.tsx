@@ -30,7 +30,12 @@ export const Header: React.FC = () => {
       <header className={styles.header}>
         <nav className={styles.navigation}>
           {links.map((link) => (
-            <Link key={link.id} to={link.to} title={link.title} className={`${styles.link} ${activeLink === link.to ? styles.active : ''}`} />
+            <Link
+              key={link.id}
+              to={link.to}
+              title={link.title}
+              className={`${styles.link} ${activeLink === link.to ? styles.active : ''}`}
+            />
           ))}
         </nav>
       </header>
