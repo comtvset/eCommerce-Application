@@ -13,6 +13,7 @@ html {
 :root {
   --background-color: #efe6d3;
   --primary-text-color: hsla(0, 63%, 3%, 0.564);
+  --error-text: rgba(233, 49, 49, 0.769);
   --register-button: #2db942;
   --hover-text-color: #f5861f;
   --font-family: 'Open Sans', sans-serif;
@@ -34,4 +35,9 @@ a {
 }
 a:hover {
   color: var(--hover-text-color);
+}
+
+input,
+button {
+  width: 100px;
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from 'src/logic/loginPage/loginPage.module.scss';
-import { validationEmail, validationPassword } from 'src/components/form/validationForm.ts';
+
+import { validationEmail, validationPassword } from 'src/components/validation/validationForm.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { Link } from 'src/components/link/Link.tsx';
 
