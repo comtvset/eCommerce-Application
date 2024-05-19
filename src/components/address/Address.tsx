@@ -1,5 +1,7 @@
 import React from 'react';
 import style from 'src/components/address/Address.module.scss';
+import Selector from 'src/components/selector/Selector.tsx';
+import { InputWithLabel } from 'src/components/input/InputWithLabel.tsx';
 
 interface AddressProps {
   formData: {
@@ -23,52 +25,54 @@ export const AddressForm: React.FC<AddressProps> = ({ formData, handleChange, er
     <>
       <h2 className={style.left_aligned}>{title}</h2>
       <div className={style.formbody}>
-        <div className={style.label_block}>
-          <label htmlFor="street">Street</label>
-          <label htmlFor="city">City</label>
-          <label htmlFor="country">Country</label>
-          <label htmlFor="postalCode">Postal code</label>
-        </div>
-        <div className={style.input_block}>
-          <input
-            type="text"
-            id="street"
-            name="street"
-            value={formData.street}
-            onChange={handleChange}
-            required
-          />
-          <input type="text" id="city" name="city" value={formData.city} onChange={handleChange} required />
-          <select
-            id="country"
-            name="country"
-            value={formData.country}
-            onChange={handleChange}
-            onBlur={handleChange}
-            autoComplete="off"
-            required
-          >
-            <option value="">...</option>
-            <option value="France">France</option>
-            <option value="Germany">Germany</option>
-            <option value="Italy">Italy</option>
-            <option value="Netherlands">Netherlands</option>
-          </select>
-          <input
-            type="text"
-            id="postalCode"
-            name="postalCode"
-            value={formData.postalCode}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className={style.error_block}>
-          <div className={style.errorText}>{errors.street}</div>
-          <div className={style.errorText}>{errors.city}</div>
-          <div className={style.errorText}>{errors.country}</div>
-          <div className={style.errorText}>{errors.postalCode}</div>
-        </div>
+        <InputWithLabel
+          id="street"
+          type="text"
+          name="street"
+          label="Street"
+          value={formData.street}
+          onChange={handleChange}
+          required
+          error={errors.street}
+        />
+        <InputWithLabel
+          id="city"
+          type="text"
+          name="city"
+          label="City"
+          value={formData.city}
+          onChange={handleChange}
+          required
+          error={errors.city}
+        />
+        <Selector
+          selectorProps={{
+            id: 'country',
+            name: 'country',
+            value: formData.country,
+            label: 'Country',
+            options: [
+              { value: '', label: '...' },
+              { value: 'France', label: 'France' },
+              { value: 'Germany', label: 'Germany' },
+              { value: 'Italy', label: 'Italy' },
+              { value: 'Netherlands', label: 'Netherlands' },
+            ],
+            onChange: handleChange,
+            onBlur: handleChange,
+            error: errors.country,
+          }}
+        />
+        <InputWithLabel
+          id="postalCode"
+          type="text"
+          name="postalCode"
+          label="Postal Code"
+          value={formData.postalCode}
+          onChange={handleChange}
+          required
+          error={errors.postalCode}
+        />
       </div>
     </>
   );

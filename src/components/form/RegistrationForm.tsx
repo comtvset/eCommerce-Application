@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import style from 'src/logic/registrationPage/registration.module.scss';
+import style from 'src/components/form/RegistrationForm.module.scss';
 import { AddressForm } from 'src/components/address/Address.tsx';
 import { validateField } from 'src/components/validation/Validation.ts';
 import { validatePostalCode } from 'src/components/validation/PostalCodeValidation.ts';
 import { Country } from 'src/components/country/country.ts';
+import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 
 const allFields = {
   email: '',
@@ -47,9 +48,10 @@ export const RegistrationForm: React.FC = () => {
     });
 
     const error = validateField(name, value, countrySelectedValue);
+    const errorValidate = error === '' ? '' : `⚠ ${error}`;
     setErrors({
       ...errors,
-      [name]: error,
+      [name]: errorValidate,
     });
   };
 
@@ -64,7 +66,7 @@ export const RegistrationForm: React.FC = () => {
       ...prevErrors,
       postalCode: error,
     }));
-  }, [formData.postalCode]);
+  }, [formData.country, formData.postalCode]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -91,66 +93,8 @@ export const RegistrationForm: React.FC = () => {
 
   return (
     <form className={style.registration} onSubmit={handleSubmit}>
-      <div className={style.formbody}>
-        <div className={style.label_block}>
-          <label htmlFor="email">Email</label>
-          <label htmlFor="password">Password</label>
-          <label htmlFor="firstName">First Name</label>
-          <label htmlFor="lastName">Last Name</label>
-          <label htmlFor="dateOfBirth">Date of birth</label>
-        </div>
-        <div className={style.input_block}>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            autoComplete="off"
-            required
-          />
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="date"
-            id="dateOfBirth"
-            name="dateOfBirth"
-            value={formData.dateOfBirth}
-            onChange={handleChange}
-          />
-        </div>
-        <div className={style.error_block}>
-          <div className={style.errorText}>{errors.email}</div>
-          <div className={style.errorText}>{errors.password}</div>
-          <div className={style.errorText}>{errors.firstName}</div>
-          <div className={style.errorText}>{errors.lastName}</div>
-          <div className={style.errorText}>{errors.dateOfBirth}</div>
-        </div>
-      </div>
+      <RegistrationMainFields formData={formData} handleChange={handleChange} errors={errors} />
       <AddressForm formData={formData} handleChange={handleChange} errors={errors} title="Shipping address" />
-
       <button className={style.submitButton} type="submit" disabled={!isFormValid}>
         APPLY
       </button>
