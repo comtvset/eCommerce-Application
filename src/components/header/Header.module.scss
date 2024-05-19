@@ -8,14 +8,11 @@
 
 .header {
   background-color: rgba(255, 255, 255, 0.5);
-  position: absolute;
+  position: sticky;
   top: 0;
-  left: 50%;
-  height: 30px;
-  transform: translateX(-50%);
   width: 100%;
 
-  &.hidden {
+  & .hidden {
     display: none;
   }
 }
