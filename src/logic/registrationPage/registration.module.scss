@@ -4,6 +4,9 @@
 .registration {
   @include form(0.9);
   color: var(--primary-text-color);
+  height: 90vh;
+  margin-top: 30px;
+  padding: 10px 0 10px 0;
 }
 
 .errorText {

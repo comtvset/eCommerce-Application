@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from 'src/components/header/Header.module.scss';
 import { Link } from 'components/link/Link.tsx';
+import { useLocation } from 'react-router-dom';
 
 const links = [
   {
@@ -16,13 +17,20 @@ const links = [
 ];
 
 export const Header: React.FC = () => {
+  const location = useLocation().pathname;
+  const [activeLink, setActiveLink] = useState<string>(location);
+
+  useEffect(() => {
+    setActiveLink(location);
+  }, [location]);
+
+  const is404Page = location !== '/' && location !== '/login' && location !== '/register';
   return (
-    <div className={styles.container}>
+    <div className={`${styles.header} ${is404Page ? styles.hidden : ''}`}>
       <header className={styles.header}>
-        <Link to="/" title="Cozy House" className={styles.logo} />
         <nav className={styles.navigation}>
           {links.map((link) => (
-            <Link key={link.id} to={link.to} title={link.title} className={styles.link} />
+            <Link key={link.id} to={link.to} title={link.title} className={`${styles.link} ${activeLink === link.to ? styles.active : ''}`} />
           ))}
         </nav>
       </header>
