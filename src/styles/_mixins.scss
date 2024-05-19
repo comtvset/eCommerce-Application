@@ -8,3 +8,39 @@
   justify-content: center;
   align-items: center;
 }
+
+@mixin media-1400 {
+  @media (max-width: $screen-width-1400) {
+    @content;
+  }
+}
+
+@mixin media-1200 {
+  @media (max-width: $screen-width-1200) {
+    @content;
+  }
+}
+
+@mixin media-1000 {
+  @media (max-width: $screen-width-1000) {
+    @content;
+  }
+}
+
+@mixin media-800 {
+  @media (max-width: $screen-width-800) {
+    @content;
+  }
+}
+
+@mixin media-600 {
+  @media (max-width: $screen-width-600) {
+    @content;
+  }
+}
+
+@mixin media-400 {
+  @media (max-width: $screen-width-400) {
+    @content;
+  }
+}
