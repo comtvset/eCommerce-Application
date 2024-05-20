@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import React from 'react';
 import { App } from 'src/App.tsx';
-import 'src/styles/style.css';
+import 'src/index.scss';
 
 const rootElement = document.createElement('div');
 rootElement.id = 'root';
