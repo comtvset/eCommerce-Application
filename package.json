@@ -31,6 +31,15 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@commercetools/platform-sdk": "^7.8.0",
+    "@commercetools/sdk-client-v2": "^2.5.0",
+    "@commercetools/sdk-middleware-auth": "^7.0.1",
+    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/react": "^15.0.7",
+    "@types/prop-types": "^15.7.12",
+    "dotenv": "^16.4.5",
+    "isomorphic-fetch": "^3.0.0",
+    "node-fetch": "^3.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.4",
@@ -39,6 +48,7 @@
   },
   "devDependencies": {
     "@stylistic/eslint-plugin-js": "^1.7.2",
+    "@types/node": "^20.12.12",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
