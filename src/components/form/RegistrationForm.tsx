@@ -5,6 +5,7 @@ import { validateField } from 'src/components/validation/Validation.ts';
 import { validatePostalCode } from 'src/components/validation/PostalCodeValidation.ts';
 import { Country } from 'src/components/country/country.ts';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
+import { BillingAddressForm } from '../address/BillingAddress.tsx';
 
 const allFields = {
   email: '',
@@ -17,9 +18,15 @@ const allFields = {
   city: '',
   postalCode: '',
   country: '',
+  isBillingDefaultAddress: false,
+  billingStreet: '',
+  billingCity: '',
+  billingCountry: '',
+  billingPostalCode: '',
 };
 
-let countrySelectedValue: Country;
+let countryShipping: Country;
+let countryBilling: Country;
 interface FormData {
   email: string;
   password: string;
@@ -31,6 +38,11 @@ interface FormData {
   city: string;
   postalCode: string;
   country: string;
+  isBillingDefaultAddress: boolean;
+  billingStreet: string;
+  billingCity: string;
+  billingCountry: string;
+  billingPostalCode: string;
 }
 
 type FilledFields = Omit<FormData, 'isShippingDefaultAddress'>;
@@ -42,11 +54,18 @@ export const RegistrationForm: React.FC = () => {
 
   const [isFormValid, setIsFormValid] = useState(false);
 
-  countrySelectedValue = Country[formData.country as keyof typeof Country];
-  const handleBoolean = (checked: boolean) => {
+  countryShipping = Country[formData.country as keyof typeof Country];
+  countryBilling = Country[formData.billingCountry as keyof typeof Country];
+  const handleDefaultAddress = (checked: boolean) => {
     setFormData({
       ...formData,
       isShippingDefaultAddress: checked,
+    });
+  };
+  const handleBillingAddress = (checked: boolean) => {
+    setFormData({
+      ...formData,
+      isBillingDefaultAddress: checked,
     });
   };
 
@@ -57,7 +76,7 @@ export const RegistrationForm: React.FC = () => {
       [name]: value,
     });
 
-    const error = validateField(name, value, countrySelectedValue);
+    const error = validateField(name, value, countryShipping, countryBilling);
     const errorValidate = error === '' ? '' : `⚠ ${error}`;
     setErrors({
       ...errors,
@@ -66,17 +85,25 @@ export const RegistrationForm: React.FC = () => {
   };
 
   useEffect(() => {
-    const allFieldsValid = Object.values(errors).every((error) => error === '');
+    const allFieldsValid = Object.values(errors).every((error) => error === '' || typeof error === 'boolean');
     setIsFormValid(allFieldsValid);
   }, [errors]);
 
   useEffect(() => {
-    const error = validatePostalCode(countrySelectedValue, formData.postalCode);
+    const error = validatePostalCode(countryShipping, formData.postalCode);
     setErrors((prevErrors) => ({
       ...prevErrors,
       postalCode: error,
     }));
   }, [formData.country, formData.postalCode]);
+
+  useEffect(() => {
+    const error = validatePostalCode(countryBilling, formData.billingPostalCode);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      billingPostalCode: error,
+    }));
+  }, [formData.billingCountry, formData.billingPostalCode]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -92,6 +119,11 @@ export const RegistrationForm: React.FC = () => {
       'city',
       'postalCode',
       'country',
+      'isBillingDefaultAddress',
+      'billingStreet',
+      'billingCity',
+      'billingCountry',
+      'billingPostalCode',
     ];
 
     const isAnyEmpty = requiredFields.some((field) => !formData[field]);
@@ -107,10 +139,17 @@ export const RegistrationForm: React.FC = () => {
       <RegistrationMainFields formData={formData} handleChange={handleChange} errors={errors} />
       <AddressForm
         formData={formData}
-        handleBoolean={handleBoolean}
+        handleBoolean={handleDefaultAddress}
         handleChange={handleChange}
         errors={errors}
         title="Shipping address"
+      />
+      <BillingAddressForm
+        formData={formData}
+        handleBoolean={handleBillingAddress}
+        handleChange={handleChange}
+        errors={errors}
+        title="Billing address"
       />
 
       <button className={style.submitButton} type="submit" disabled={!isFormValid}>

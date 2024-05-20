@@ -60,8 +60,19 @@ const validateCountry = (value: string): string => {
   return '';
 };
 
-export const validateField = (name: string, value: string, countryEnumValue: Country): string => {
-  const validateValue = name === 'postalCode' ? countryEnumValue : value;
+export const validateField = (
+  name: string,
+  inputValue: string,
+  countryShipping: Country,
+  countryBilling: Country,
+): string => {
+  let validateValue: Country | string;
+  if (name === 'postalCode') {
+    validateValue = countryShipping;
+  } else if (name === 'billingPostalCode') {
+    validateValue = countryBilling;
+  } else validateValue = inputValue;
+
   switch (name) {
     case 'email':
       return validateEmail(validateValue);
@@ -70,15 +81,19 @@ export const validateField = (name: string, value: string, countryEnumValue: Cou
     case 'firstName':
     case 'lastName':
     case 'city':
+    case 'billingCity':
       return validateName(validateValue);
     case 'dateOfBirth':
       return validateBirthday(validateValue);
     case 'street':
+    case 'billingStreet':
       return validateNonEmpty(validateValue);
-
     case 'postalCode':
-      return validatePostalCode(countryEnumValue, validateValue);
+      return validatePostalCode(countryShipping, validateValue);
+    case 'billingPostalCode':
+      return validatePostalCode(countryBilling, validateValue);
     case 'country':
+    case 'billingCountry':
       return validateCountry(validateValue);
     default:
       return '';
