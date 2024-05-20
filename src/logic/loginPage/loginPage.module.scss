@@ -31,15 +31,17 @@
 }
 
 .login_text {
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   font-weight: 700;
 }
 
 .login_link {
   display: inline-block;
-  padding: 4px 45px;
+  padding: 10px 58px;
   background-color: $primaryBackgroundButton;
+  border-radius: 10px;
   color: $secondaryTextColor;
+  font-size: 1.6rem;
   font-weight: 700;
   justify-self: center;
   align-self: center;
