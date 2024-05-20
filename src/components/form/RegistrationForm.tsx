@@ -79,20 +79,20 @@ export const RegistrationForm: React.FC = () => {
   };
 
   const handleSameAddress = (checked: boolean) => {
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       isEqualAddress: checked,
-    });
-    if (checked) {
-      setFormData({
-        ...formData,
-        billingStreet: formData.street,
-        billingCity: formData.city,
-        billingCountry: formData.country,
-        billingPostalCode: formData.postalCode,
-        isEqualAddress: checked,
-      });
+      ...(checked && {
+        billingStreet: prevFormData.street,
+        billingCity: prevFormData.city,
+        billingCountry: prevFormData.country,
+        billingPostalCode: prevFormData.postalCode,
+      }),
+    }));
+  };
 
+  useEffect(() => {
+    if (formData.isEqualAddress) {
       const billingAddressFields: string[] = [
         'billingStreet',
         'billingCity',
@@ -101,11 +101,17 @@ export const RegistrationForm: React.FC = () => {
       ];
       billingAddressFields.forEach((field) => {
         if (typeof formData[field] === 'string') {
-          validateOneField(field, formData[field] as string);
+          const value = formData[field] as string;
+          const error = validateField(field, value, countryShipping, countryBilling);
+          const errorValidate = error === '' ? '' : `⚠ ${error}`;
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            [field]: errorValidate,
+          }));
         }
       });
     }
-  };
+  }, [formData.isEqualAddress, formData]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -128,7 +134,7 @@ export const RegistrationForm: React.FC = () => {
       ...prevErrors,
       postalCode: error,
     }));
-  }, [formData.country, formData.postalCode]);
+  }, [formData.country, formData.postalCode, formData.isEqualAddress]);
 
   useEffect(() => {
     const error = validatePostalCode(countryBilling, formData.billingPostalCode);
@@ -136,7 +142,7 @@ export const RegistrationForm: React.FC = () => {
       ...prevErrors,
       billingPostalCode: error,
     }));
-  }, [formData.billingCountry, formData.billingPostalCode]);
+  }, [formData.billingCountry, formData.billingPostalCode, formData.isEqualAddress]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
