@@ -7,25 +7,6 @@ import { Country } from 'src/components/country/country.ts';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 import { BillingAddressForm } from '../address/BillingAddress.tsx';
 
-const allFields = {
-  email: '',
-  password: '',
-  firstName: '',
-  lastName: '',
-  dateOfBirth: '',
-  isShippingDefaultAddress: false,
-  isEqualAddress: false,
-  street: '',
-  city: '',
-  postalCode: '',
-  country: '',
-  isBillingDefaultAddress: false,
-  billingStreet: '',
-  billingCity: '',
-  billingCountry: '',
-  billingPostalCode: '',
-};
-
 let countryShipping: Country;
 let countryBilling: Country;
 interface FormData {
@@ -45,14 +26,31 @@ interface FormData {
   billingCity: string;
   billingCountry: string;
   billingPostalCode: string;
+  [key: string]: string | boolean;
 }
-
-type FilledFields = Omit<FormData, 'isShippingDefaultAddress'>;
+const allFields: FormData = {
+  email: '',
+  password: '',
+  firstName: '',
+  lastName: '',
+  dateOfBirth: '',
+  isShippingDefaultAddress: false,
+  isEqualAddress: false,
+  street: '',
+  city: '',
+  postalCode: '',
+  country: '',
+  isBillingDefaultAddress: false,
+  billingStreet: '',
+  billingCity: '',
+  billingCountry: '',
+  billingPostalCode: '',
+};
 
 export const RegistrationForm: React.FC = () => {
   const [formData, setFormData] = useState(allFields);
 
-  const [errors, setErrors] = useState<FilledFields>(allFields);
+  const [errors, setErrors] = useState(allFields);
 
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -71,11 +69,42 @@ export const RegistrationForm: React.FC = () => {
     });
   };
 
+  const validateOneField = (name: string, value: string) => {
+    const error = validateField(name, value, countryShipping, countryBilling);
+    const errorValidate = error === '' ? '' : `⚠ ${error}`;
+    setErrors({
+      ...errors,
+      [name]: errorValidate,
+    });
+  };
+
   const handleSameAddress = (checked: boolean) => {
     setFormData({
       ...formData,
       isEqualAddress: checked,
     });
+    if (checked) {
+      setFormData({
+        ...formData,
+        billingStreet: formData.street,
+        billingCity: formData.city,
+        billingCountry: formData.country,
+        billingPostalCode: formData.postalCode,
+        isEqualAddress: checked,
+      });
+
+      const billingAddressFields: string[] = [
+        'billingStreet',
+        'billingCity',
+        'billingCountry',
+        'billingPostalCode',
+      ];
+      billingAddressFields.forEach((field) => {
+        if (typeof formData[field] === 'string') {
+          validateOneField(field, formData[field] as string);
+        }
+      });
+    }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -85,12 +114,7 @@ export const RegistrationForm: React.FC = () => {
       [name]: value,
     });
 
-    const error = validateField(name, value, countryShipping, countryBilling);
-    const errorValidate = error === '' ? '' : `⚠ ${error}`;
-    setErrors({
-      ...errors,
-      [name]: errorValidate,
-    });
+    validateOneField(name, value);
   };
 
   useEffect(() => {
