@@ -5,6 +5,8 @@ import { myStatus } from 'src/components/tempFolderForDevelop/fakeState.ts';
 import { IResponse, myRedirect } from 'src/components/tempFolderForDevelop/redirect.ts';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
 import { useNavigate } from 'react-router-dom';
+import { Paragraph } from 'src/components/text/Text.tsx';
+import { Link } from 'src/components/link/Link.tsx';
 
 export const Form = () => {
   const [email, setEmail] = useState('');
@@ -87,6 +89,10 @@ export const Form = () => {
         <button type="submit" onClick={handleClick} disabled={false}>
           LOG IN
         </button>
+        <div className={styles.link_register}>
+          <Paragraph tag="p" className={styles.login_text} title="Don’t have an account?" />
+          <Link to="/register" title="REGISTER" className={styles.login_link} />
+        </div>
       </form>
       {showModal && modalData && <ModalWindow data={modalData} />}
     </>
