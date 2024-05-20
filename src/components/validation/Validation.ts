@@ -1,9 +1,10 @@
 // validation rules are compatible with CommerceTools
+// https://docs.commercetools.com/api/projects/customers
 
 import { Country } from '../country/country.ts';
+import { validatePostalCode } from './PostalCodeValidation.ts';
 
-// https://docs.commercetools.com/api/projects/customers
-export const validateEmail = (email: string): string => {
+const validateEmail = (email: string): string => {
   const trimmedValue = email.trim();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{3}$/;
 
@@ -16,7 +17,7 @@ export const validateEmail = (email: string): string => {
   return '';
 };
 
-export const validatePassword = (password: string): string => {
+const validatePassword = (password: string): string => {
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
   if (!passwordRegex.test(password)) {
     return 'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, and 1 number.';
@@ -24,12 +25,12 @@ export const validatePassword = (password: string): string => {
   return '';
 };
 
-export const validateName = (name: string): string => {
+const validateName = (name: string): string => {
   const emailRegex = /^[a-zA-Z]+$/;
   return emailRegex.test(name) ? '' : 'Must contain at least 1 letter and use only Latin letters.';
 };
 
-export const validateBirthday = (value: string): string => {
+const validateBirthday = (value: string): string => {
   const birthday = new Date(value);
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -44,7 +45,7 @@ export const validateBirthday = (value: string): string => {
   return result;
 };
 
-export const validateNonEmpty = (value: string): string => {
+const validateNonEmpty = (value: string): string => {
   const trimmedValue = value.trim();
   if (!trimmedValue) {
     return 'Must contain at least one character';
@@ -52,9 +53,34 @@ export const validateNonEmpty = (value: string): string => {
   return '';
 };
 
-export const validateCountry = (value: string): string => {
+const validateCountry = (value: string): string => {
   if (!(value in Country)) {
     return 'Please select a valid country.';
   }
   return '';
+};
+
+export const validateField = (name: string, value: string, countryEnumValue: Country): string => {
+  const validateValue = name === 'postalCode' ? countryEnumValue : value;
+  switch (name) {
+    case 'email':
+      return validateEmail(validateValue);
+    case 'password':
+      return validatePassword(validateValue);
+    case 'firstName':
+    case 'lastName':
+    case 'city':
+      return validateName(validateValue);
+    case 'dateOfBirth':
+      return validateBirthday(validateValue);
+    case 'street':
+      return validateNonEmpty(validateValue);
+
+    case 'postalCode':
+      return validatePostalCode(countryEnumValue, validateValue);
+    case 'country':
+      return validateCountry(validateValue);
+    default:
+      return '';
+  }
 };

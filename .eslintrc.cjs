@@ -42,7 +42,15 @@ module.exports = {
     'no-shadow': 'off',
     'implicit-arrow-linebreak': 'off',
     'arrow-body-style': 'off',
-    'object-curly-newline': ['error', { consistent: true }],
+    'object-curly-newline': [
+      'error',
+      {
+        ObjectExpression: { consistent: true, multiline: true },
+        ObjectPattern: { consistent: true, multiline: true },
+        ImportDeclaration: 'never',
+        ExportDeclaration: { multiline: true, minProperties: 4 },
+      },
+    ],
     'import/prefer-default-export': 'off',
     'import/no-unresolved': 'error',
     'import/no-extraneous-dependencies': [
@@ -62,6 +70,7 @@ module.exports = {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.ts', '.tsx', '.jsx'] }],
     'react/display-name': 'off',
     'react/react-in-jsx-scope': 'off',
+    'react/require-default-props': [1, { ignoreFunctionalComponents: true }],
     'react/function-component-definition': [
       2,
       {
