@@ -12,6 +12,7 @@ const allFields = {
   firstName: '',
   lastName: '',
   dateOfBirth: '',
+  isShippingDefaultAddress: false,
   street: '',
   city: '',
   postalCode: '',
@@ -25,20 +26,30 @@ interface FormData {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
+  isShippingDefaultAddress: boolean;
   street: string;
   city: string;
   postalCode: string;
   country: string;
 }
 
+type FilledFields = Omit<FormData, 'isShippingDefaultAddress'>;
+
 export const RegistrationForm: React.FC = () => {
   const [formData, setFormData] = useState(allFields);
 
-  const [errors, setErrors] = useState(allFields);
+  const [errors, setErrors] = useState<FilledFields>(allFields);
 
   const [isFormValid, setIsFormValid] = useState(false);
 
   countrySelectedValue = Country[formData.country as keyof typeof Country];
+
+  const handleBoolean = (checked: boolean) => {
+    setFormData({
+      ...formData,
+      isShippingDefaultAddress: checked,
+    });
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -77,6 +88,7 @@ export const RegistrationForm: React.FC = () => {
       'firstName',
       'lastName',
       'dateOfBirth',
+      'isShippingDefaultAddress',
       'street',
       'city',
       'postalCode',
@@ -94,7 +106,13 @@ export const RegistrationForm: React.FC = () => {
   return (
     <form className={style.registration} onSubmit={handleSubmit}>
       <RegistrationMainFields formData={formData} handleChange={handleChange} errors={errors} />
-      <AddressForm formData={formData} handleChange={handleChange} errors={errors} title="Shipping address" />
+      <AddressForm
+        formData={formData}
+        handleBoolean={handleBoolean}
+        handleChange={handleChange}
+        errors={errors}
+        title="Shipping address"
+      />
       <button className={style.submitButton} type="submit" disabled={!isFormValid}>
         APPLY
       </button>

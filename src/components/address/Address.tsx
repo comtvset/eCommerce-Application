@@ -2,15 +2,18 @@ import React from 'react';
 import style from 'src/components/address/Address.module.scss';
 import Selector from 'src/components/selector/Selector.tsx';
 import { InputWithLabel } from 'src/components/input/InputWithLabel.tsx';
+import { Checkbox } from 'src/components/checkbox/Checkbox.tsx';
 
 interface AddressProps {
   formData: {
+    isShippingDefaultAddress: boolean;
     street: string;
     city: string;
     country: string;
     postalCode: string;
   };
   handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  handleBoolean: (value: boolean) => void;
   errors: {
     street: string;
     city: string;
@@ -20,10 +23,21 @@ interface AddressProps {
   title: string;
 }
 
-export const AddressForm: React.FC<AddressProps> = ({ formData, handleChange, errors, title }) => {
+export const AddressForm: React.FC<AddressProps> = ({
+  formData,
+  handleChange,
+  handleBoolean,
+  errors,
+  title,
+}) => {
   return (
     <>
       <h2 className={style.left_aligned}>{title}</h2>
+      <Checkbox
+        label="Set as default address"
+        checked={formData.isShippingDefaultAddress}
+        onChange={handleBoolean}
+      />
       <div className={style.formbody}>
         <InputWithLabel
           id="street"
