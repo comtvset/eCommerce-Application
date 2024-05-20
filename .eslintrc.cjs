@@ -35,11 +35,11 @@ module.exports = {
     'react-hooks',
   ],
   rules: {
-    "@typescript-eslint/no-floating-promises": [
-      "error",
+    '@typescript-eslint/no-floating-promises': [
+      'error',
       {
-        "ignoreIIFE": true
-      }
+        ignoreIIFE: true,
+      },
     ],
     eqeqeq: 'error',
     'no-console': 'warn',
