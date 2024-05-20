@@ -6,26 +6,29 @@
   src: url(src/public/OpenSans-Regular.ttf) format('truetype');
 }
 
-html {
-  font-size: 10px;
+* {
+  box-sizing: border-box;
 }
 
 :root {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  width: 100vw;
+  background-color: var(--background-color);
+  color: var(--primary-text-color);
+
   --background-color: #efe6d3;
   --primary-text-color: hsla(0, 63%, 3%, 0.564);
   --error-text: rgba(233, 49, 49, 0.769);
   --register-button: #2db942;
   --hover-text-color: #f5861f;
-  --font-family: 'Open Sans', sans-serif;
-  --font-weight: 400;
 }
 
-body {
-  background-color: var(--background-color);
-  color: var(--primary-text-color);
-  font-family: var(--font-family);
-  font-weight: var(--font-weight);
-  width: 100vw;
+#root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
   height: 100vh;
 }
 
@@ -38,6 +41,12 @@ a:hover {
 }
 
 input,
+select,
 button {
-  width: 100px;
+  width: 200px;
+  border-radius: 5px;
+  height: 40px;
+  border: none;
+  outline: 1px solid var(--primary-text-color);
+  font-size: 2rem;
 }
