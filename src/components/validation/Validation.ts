@@ -6,7 +6,7 @@ import { validatePostalCode } from './PostalCodeValidation.ts';
 
 const validateEmail = (email: string): string => {
   const trimmedValue = email.trim();
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{3}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@.]{2,}$/;
 
   if (!trimmedValue) {
     return 'Email is required';
