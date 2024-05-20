@@ -4,6 +4,8 @@ import { AddressForm } from 'src/components/address/Address.tsx';
 import { validateField } from 'src/components/validation/Validation.ts';
 import { validatePostalCode } from 'src/components/validation/PostalCodeValidation.ts';
 import { Country } from 'src/components/country/country.ts';
+import { Paragraph } from 'src/components/text/Text.tsx';
+import { Link } from 'src/components/link/Link.tsx';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 
 const allFields = {
@@ -116,6 +118,10 @@ export const RegistrationForm: React.FC = () => {
       <button className={style.submitButton} type="submit" disabled={!isFormValid}>
         APPLY
       </button>
+      <div className={style.link}>
+        <Paragraph tag="p" className={style.register_text} title="Do you already have an account?" />
+        <Link to="/login" title="LOGIN" className={style.login_link} />
+      </div>
     </form>
   );
 };

@@ -1,4 +1,5 @@
 @import '../../styles/mixins';
+@import 'src/styles/variables';
 
 .registration {
   display: flex;
@@ -25,4 +26,31 @@
 .submitButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.register_text {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: $secondaryTextColor;
+}
+
+.login_link {
+  display: inline-block;
+  padding: 10px 75px;
+  background-color: $primaryBackgroundButton;
+  color: $secondaryTextColor;
+  font-size: 1.6rem;
+  font-weight: 700;
+  justify-self: center;
+  align-self: center;
+
+  &:hover {
+    background-color: $primaryBackgroundButtonHover;
+    transition: background-color 0.3s ease;
+    color: $secondaryTextColor;
+  }
+
+  &:active {
+    background-color: $primaryBackgroundButtonActive;
+  }
 }
