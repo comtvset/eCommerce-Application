@@ -27,11 +27,9 @@ const getTokens = async () => {
   }
 };
 
-try {
+(async () => {
   await getTokens();
-} catch (error) {
-  // console.error(error);  // commit for ESLint
-}
+})();
 
 export const sdkTest = () => {
   return true;
