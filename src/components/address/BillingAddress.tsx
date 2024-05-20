@@ -4,78 +4,67 @@ import Selector from 'src/components/selector/Selector.tsx';
 import { InputWithLabel } from 'src/components/input/InputWithLabel.tsx';
 import { Checkbox } from 'src/components/checkbox/Checkbox.tsx';
 
-interface AddressProps {
+interface BillingAddressProps {
   formData: {
-    isShippingDefaultAddress: boolean;
-    isEqualAddress: boolean;
-    street: string;
-    city: string;
-    country: string;
-    postalCode: string;
+    isBillingDefaultAddress: boolean;
+    billingStreet: string;
+    billingCity: string;
+    billingCountry: string;
+    billingPostalCode: string;
   };
   handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   handleBoolean: (value: boolean) => void;
-  handleSameAddress: (value: boolean) => void;
   errors: {
-    street: string;
-    city: string;
-    country: string;
-    postalCode: string;
+    billingStreet: string;
+    billingCity: string;
+    billingCountry: string;
+    billingPostalCode: string;
   };
   title: string;
 }
 
-export const AddressForm: React.FC<AddressProps> = ({
+export const BillingAddressForm: React.FC<BillingAddressProps> = ({
   formData,
   handleChange,
   handleBoolean,
-  handleSameAddress,
   errors,
   title,
 }) => {
   return (
     <>
       <h2 className={style.left_aligned}>{title}</h2>
-      <div className={style.checkboxes}>
-        <Checkbox
-          id="shippingCheckbox"
-          label="Set as default address"
-          checked={formData.isShippingDefaultAddress}
-          onChange={handleBoolean}
-        />
-        <Checkbox
-          id="isEqualAddress"
-          label="Shipping and Billing address are the same"
-          checked={formData.isEqualAddress}
-          onChange={handleSameAddress}
-        />
-      </div>
+      <Checkbox
+        id="billingCheckbox"
+        label="Set as default address"
+        checked={formData.isBillingDefaultAddress}
+        onChange={handleBoolean}
+      />
       <div className={style.formbody}>
         <InputWithLabel
-          id="street"
+          id="billingStreet"
           type="text"
-          name="street"
+          name="billingStreet"
           label="Street"
-          value={formData.street}
+          value={formData.billingStreet}
           onChange={handleChange}
           required
-          error={errors.street}
+          error={errors.billingStreet}
         />
         <InputWithLabel
-          id="city"
+          id="billingCity"
           type="text"
-          name="city"
+          name="billingCity"
           label="City"
-          value={formData.city}
+          value={formData.billingCity}
           onChange={handleChange}
           required
-          error={errors.city}
+          error={errors.billingCity}
         />
         <Selector
           selectorProps={{
-            id: 'country',
-            name: 'country',
-            value: formData.country,
+            id: 'billingCountry',
+            name: 'billingCountry',
+            value: formData.billingCountry,
             label: 'Country',
             options: [
               { value: '', label: '...' },
@@ -86,18 +75,18 @@ export const AddressForm: React.FC<AddressProps> = ({
             ],
             onChange: handleChange,
             onBlur: handleChange,
-            error: errors.country,
+            error: errors.billingCountry,
           }}
         />
         <InputWithLabel
-          id="postalCode"
+          id="billingPostalCode"
           type="text"
-          name="postalCode"
+          name="billingPostalCode"
           label="Postal Code"
-          value={formData.postalCode}
+          value={formData.billingPostalCode}
           onChange={handleChange}
           required
-          error={errors.postalCode}
+          error={errors.billingPostalCode}
         />
       </div>
     </>
