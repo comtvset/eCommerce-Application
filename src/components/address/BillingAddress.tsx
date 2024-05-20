@@ -34,6 +34,7 @@ export const BillingAddressForm: React.FC<BillingAddressProps> = ({
     <>
       <h2 className={style.left_aligned}>{title}</h2>
       <Checkbox
+        id="billingCheckbox"
         label="Set as default address"
         checked={formData.isBillingDefaultAddress}
         onChange={handleBoolean}
