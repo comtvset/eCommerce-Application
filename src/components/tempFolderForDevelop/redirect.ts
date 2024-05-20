@@ -14,5 +14,5 @@ export const myRedirect = (res: IResponse, navigation: NavigateFunction) => {
     // console.log('Stay at the Login page');  // commit for ESLint
   }
 
-  // console.log(`information: { status: ${res.status}, token: ${res.token} }`);  // commit for ESLint
+  // console.log(`information: { status: ${res.status}, token: ${res.token} }`); //commit for ESLint
 };
