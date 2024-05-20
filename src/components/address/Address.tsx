@@ -7,6 +7,7 @@ import { Checkbox } from 'src/components/checkbox/Checkbox.tsx';
 interface AddressProps {
   formData: {
     isShippingDefaultAddress: boolean;
+    isEqualAddress: boolean;
     street: string;
     city: string;
     country: string;
@@ -14,6 +15,7 @@ interface AddressProps {
   };
   handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   handleBoolean: (value: boolean) => void;
+  handleSameAddress: (value: boolean) => void;
   errors: {
     street: string;
     city: string;
@@ -27,17 +29,27 @@ export const AddressForm: React.FC<AddressProps> = ({
   formData,
   handleChange,
   handleBoolean,
+  handleSameAddress,
   errors,
   title,
 }) => {
   return (
     <>
       <h2 className={style.left_aligned}>{title}</h2>
-      <Checkbox
-        label="Set as default address"
-        checked={formData.isShippingDefaultAddress}
-        onChange={handleBoolean}
-      />
+      <div className={style.checkboxes}>
+        <Checkbox
+          id="shippingCheckbox"
+          label="Set as default address"
+          checked={formData.isShippingDefaultAddress}
+          onChange={handleBoolean}
+        />
+        <Checkbox
+          id="isEqualAddress"
+          label="Shipping and Billing address are the same"
+          checked={formData.isEqualAddress}
+          onChange={handleSameAddress}
+        />
+      </div>
       <div className={style.formbody}>
         <InputWithLabel
           id="street"

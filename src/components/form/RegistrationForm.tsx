@@ -14,6 +14,7 @@ const allFields = {
   lastName: '',
   dateOfBirth: '',
   isShippingDefaultAddress: false,
+  isEqualAddress: false,
   street: '',
   city: '',
   postalCode: '',
@@ -34,6 +35,7 @@ interface FormData {
   lastName: string;
   dateOfBirth: string;
   isShippingDefaultAddress: boolean;
+  isEqualAddress: boolean;
   street: string;
   city: string;
   postalCode: string;
@@ -66,6 +68,13 @@ export const RegistrationForm: React.FC = () => {
     setFormData({
       ...formData,
       isBillingDefaultAddress: checked,
+    });
+  };
+
+  const handleSameAddress = (checked: boolean) => {
+    setFormData({
+      ...formData,
+      isEqualAddress: checked,
     });
   };
 
@@ -115,6 +124,7 @@ export const RegistrationForm: React.FC = () => {
       'lastName',
       'dateOfBirth',
       'isShippingDefaultAddress',
+      'isEqualAddress',
       'street',
       'city',
       'postalCode',
@@ -139,6 +149,7 @@ export const RegistrationForm: React.FC = () => {
       <RegistrationMainFields formData={formData} handleChange={handleChange} errors={errors} />
       <AddressForm
         formData={formData}
+        handleSameAddress={handleSameAddress}
         handleBoolean={handleDefaultAddress}
         handleChange={handleChange}
         errors={errors}
