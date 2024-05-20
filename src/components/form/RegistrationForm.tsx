@@ -43,7 +43,6 @@ export const RegistrationForm: React.FC = () => {
   const [isFormValid, setIsFormValid] = useState(false);
 
   countrySelectedValue = Country[formData.country as keyof typeof Country];
-
   const handleBoolean = (checked: boolean) => {
     setFormData({
       ...formData,
@@ -113,6 +112,7 @@ export const RegistrationForm: React.FC = () => {
         errors={errors}
         title="Shipping address"
       />
+
       <button className={style.submitButton} type="submit" disabled={!isFormValid}>
         APPLY
       </button>
