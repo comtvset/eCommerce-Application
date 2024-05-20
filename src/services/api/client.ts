@@ -23,14 +23,14 @@ const getTokens = async () => {
 
     localStorage.setItem('userTokens', JSON.stringify(tokens));
   } catch (error) {
-    console.error(error);
+    // console.error(error); // commit for ESLint
   }
 };
 
 try {
   await getTokens();
 } catch (error) {
-  console.error(error);
+  // console.error(error);  // commit for ESLint
 }
 
 export const sdkTest = () => {
