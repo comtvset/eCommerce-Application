@@ -15,6 +15,7 @@ export const Form = () => {
   const [errorPassword, setErrorPassword] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState<IResponse | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigation = useNavigate();
 
@@ -79,18 +80,29 @@ export const Form = () => {
           className="inputText"
           placeholder="Password"
           value={password}
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           onChange={(e) => {
             setPassword(e.target.value);
           }}
         />
         <span className={styles.error}>{errorPassword}</span>
 
+        <label>
+          Show Password
+          <input
+            type="checkbox"
+            checked={showPassword}
+            onChange={(event) => {
+              setShowPassword(event.target.checked);
+            }}
+          />
+        </label>
+
         <button type="submit" onClick={handleClick} disabled={false}>
           LOG IN
         </button>
         <div className={styles.link_register}>
-          <Paragraph tag="p" className={styles.login_text} title="Don’t have an account?" />
+          <Paragraph tag="p" className={styles.login_text} title="Don't have an account?" />
           <Link to="/register" title="REGISTER" className={styles.login_link} />
         </div>
       </form>
