@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from 'src/logic/loginPage/loginPage.module.scss';
+import myStyles from 'src/components/form/RegistrationForm.module.scss';
 import { validationEmail, validationPassword } from 'src/components/validation/validationForm.ts';
-import { myStatus } from 'src/components/tempFolderForDevelop/fakeState.ts';
+import { myStatus } from 'src/components/tempFolderForDevelop/fakeStatus.ts';
 import { IResponse, myRedirect } from 'src/components/tempFolderForDevelop/redirect.ts';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
 import { useNavigate } from 'react-router-dom';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { Link } from 'src/components/link/Link.tsx';
+import { loginRequest } from 'src/services/api/loginRequest.ts';
 
 export const Form = () => {
   const [email, setEmail] = useState('');
@@ -35,7 +37,7 @@ export const Form = () => {
     }
   }, [email, password]);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     const emailError = validationEmail(email);
@@ -49,13 +51,23 @@ export const Form = () => {
     }
 
     if (emailError.length === 0 && passwordError.length === 0) {
-      const responseServer = myStatus(true);
-      myRedirect(responseServer, navigation);
-      setEmail('');
-      setPassword('');
+      try {
+        await loginRequest(email, password);
 
-      setModalData(responseServer);
-      setShowModal(true);
+        const responseServer = myStatus(true);
+        myRedirect(responseServer);
+
+        setEmail('');
+        setPassword('');
+        navigation('/');
+        setModalData(responseServer);
+        setShowModal(true);
+      } catch (error) {
+        const responseServer = myStatus(false);
+        myRedirect(responseServer);
+        setModalData(responseServer);
+        setShowModal(true);
+      }
     }
   };
 
@@ -87,9 +99,10 @@ export const Form = () => {
         />
         <span className={styles.error}>{errorPassword}</span>
 
-        <label>
+        <label className={myStyles.myLabel}>
           Show Password
           <input
+            className={myStyles.myInput}
             type="checkbox"
             checked={showPassword}
             onChange={(event) => {
@@ -98,7 +111,16 @@ export const Form = () => {
           />
         </label>
 
-        <button type="submit" onClick={handleClick} disabled={false}>
+        <button
+          className={myStyles.myButton}
+          type="submit"
+          onClick={(event) => {
+            handleClick(event).catch((error: unknown) => {
+              return error;
+            });
+          }}
+          disabled={false}
+        >
           LOG IN
         </button>
         <div className={styles.link_register}>

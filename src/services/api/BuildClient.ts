@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 // prettier-ignore
-import type { AuthMiddlewareOptions, HttpMiddlewareOptions, AnonymousAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import type { AuthMiddlewareOptions, HttpMiddlewareOptions, AnonymousAuthMiddlewareOptions, PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { MyTokenCache } from './MyTokenCache.ts';
 
 const PROJECT_KEY: string = import.meta.env.VITE_CTP_PROJECT_KEY as string;
@@ -39,6 +39,22 @@ const anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
   tokenCache: newTokenCache,
 };
 
+const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
+  host: AUTH_URL,
+  projectKey: PROJECT_KEY,
+  credentials: {
+    clientId: CLIENT_ID,
+    clientSecret: CLIENT_SECRET,
+    user: {
+      username: '',
+      password: '',
+    },
+  },
+  scopes: [`manage_project:${PROJECT_KEY}`],
+  tokenCache: newTokenCache,
+  fetch,
+};
+
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
   host: API_URL,
   fetch,
@@ -48,6 +64,15 @@ export const ctpClient = new ClientBuilder()
   .withProjectKey(PROJECT_KEY)
   .withClientCredentialsFlow(authMiddlewareOptions)
   .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
+  .withHttpMiddleware(httpMiddlewareOptions)
+  .withLoggerMiddleware()
+  .build();
+
+export const loginClient = new ClientBuilder()
+  .withProjectKey(PROJECT_KEY)
+  // .withAnonymousSessionFlow(authMiddlewareOptions)
+  .withPasswordFlow(passwordAuthMiddlewareOptions)
+
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware()
   .build();

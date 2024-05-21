@@ -55,3 +55,30 @@
     background-color: $primaryBackgroundButtonActive;
   }
 }
+
+.myLabel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 1.3rem;
+  color: hsla(0, 63%, 3%, 0.564);
+}
+
+.myInput {
+  outline: none;
+  width: 20px;
+}
+
+.myButton {
+  outline: none;
+  background-color: #d6b258;
+  cursor: pointer;
+}
+
+.myButton:hover {
+  background-color: #f0ac00;
+}
+
+.myButton:active {
+  background-color: #f0ca00;
+}
