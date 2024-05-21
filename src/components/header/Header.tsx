@@ -25,9 +25,15 @@ export const Header: React.FC = () => {
   }, [location]);
 
   const is404Page = location !== '/' && location !== '/login' && location !== '/register';
+  const isHeaderInactive = location === '/';
   return (
     <div className={`${styles.header} ${is404Page ? styles.hidden : ''}`}>
-      <header className={styles.header}>
+      <header className={styles.container}>
+        <Link
+          to="/"
+          title="Cozy House"
+          className={`${styles.logo} ${isHeaderInactive ? styles.inactive : ''}`}
+        />
         <nav className={styles.navigation}>
           {links.map((link) => (
             <Link

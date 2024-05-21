@@ -1,4 +1,5 @@
 @import 'src/styles/variables';
+@import 'src/styles/mixins';
 
 .header,
 .navigation {
@@ -7,12 +8,12 @@
 }
 
 .header {
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255);
   position: sticky;
   top: 0;
   width: 100%;
 
-  & .hidden {
+  &.hidden {
     display: none;
   }
 }
@@ -22,15 +23,32 @@
   height: 100%;
   width: 90%;
   margin: 0 auto;
+  justify-content: space-between;
 }
 
 .navigation {
-  width: 50%;
+  width: 20%;
   align-items: end;
-}
 
+  @include media-1000 {
+    width: 25%;
+  }
+
+  @include media-800 {
+    width: 35%;
+  }
+
+  @include media-600 {
+    width: 45%;
+  }
+
+  @include media-500 {
+    width: 58%;
+  }
+}
 .logo,
 .link {
+  color: $secondaryTextColor;
   &:hover {
     cursor: pointer;
     transition-duration: 1s;
@@ -39,12 +57,18 @@
 
 .logo {
   font-size: 3.2rem;
+  &.inactive:hover {
+    cursor: auto;
+    color: $secondaryTextColor;
+  }
+  @include media-500 {
+    font-size: 2.4rem;
+  }
 }
 
 .link {
   display: flex;
   height: 100%;
-  color: $secondaryTextColor;
   font-size: 1.6rem;
   align-items: flex-end;
   padding: 5px 10px 0 10px;
