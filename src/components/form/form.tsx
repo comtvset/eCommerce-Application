@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import styles from 'src/logic/loginPage/loginPage.module.scss';
 import myStyles from 'src/components/form/RegistrationForm.module.scss';
 import { validationEmail, validationPassword } from 'src/components/validation/validationForm.ts';
-import { myStatus } from 'src/components/tempFolderForDevelop/fakeState.ts';
+import { myStatus } from 'src/components/tempFolderForDevelop/fakeStatus.ts';
 import { IResponse, myRedirect } from 'src/components/tempFolderForDevelop/redirect.ts';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
 import { useNavigate } from 'react-router-dom';
