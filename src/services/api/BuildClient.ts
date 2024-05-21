@@ -1,7 +1,10 @@
 import fetch from 'node-fetch';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
-// prettier-ignore
-import type { AuthMiddlewareOptions, HttpMiddlewareOptions, AnonymousAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import type {
+  AuthMiddlewareOptions,
+  HttpMiddlewareOptions,
+  AnonymousAuthMiddlewareOptions,
+} from '@commercetools/sdk-client-v2';
 import { MyTokenCache } from './MyTokenCache.ts';
 
 const PROJECT_KEY: string = import.meta.env.VITE_CTP_PROJECT_KEY as string;
