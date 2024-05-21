@@ -126,7 +126,9 @@ export const RegistrationForm: React.FC = () => {
   };
 
   useEffect(() => {
-    const allFieldsValid = Object.values(errors).every((error) => error === '' || typeof error === 'boolean');
+    const allFieldsValid = Object.values(errors).every(
+      (error) => error === '' || typeof error === 'boolean',
+    );
     setIsFormValid(allFieldsValid);
   }, [errors]);
 
@@ -199,7 +201,11 @@ export const RegistrationForm: React.FC = () => {
         APPLY
       </button>
       <div className={style.link}>
-        <Paragraph tag="p" className={style.register_text} title="Do you already have an account?" />
+        <Paragraph
+          tag="p"
+          className={style.register_text}
+          title="Do you already have an account?"
+        />
         <Link to="/login" title="LOGIN" className={style.login_link} />
       </div>
     </form>
