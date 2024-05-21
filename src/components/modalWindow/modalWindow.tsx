@@ -7,12 +7,12 @@ interface ModalWindowProps {
 }
 
 const ModalWindow: React.FC<ModalWindowProps> = ({ data }) => {
-  const { status, token } = data;
+  const { status, message } = data;
   return (
     <div className={styles.parent}>
       <div className={styles.children}>
         <span>{status}</span>
-        <span>{token}</span>
+        <span>{message}</span>
       </div>
     </div>
   );
@@ -21,7 +21,7 @@ const ModalWindow: React.FC<ModalWindowProps> = ({ data }) => {
 ModalWindow.propTypes = {
   data: PropTypes.shape({
     status: PropTypes.string.isRequired,
-    token: PropTypes.string.isRequired,
+    message: PropTypes.string.isRequired,
   }).isRequired,
 };
 

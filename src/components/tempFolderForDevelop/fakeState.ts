@@ -1,15 +1,15 @@
 export const myStatus = (status: boolean) => {
   const obj = {
     status: '',
-    token: '',
+    message: '',
   };
 
   if (status) {
-    obj.status = 'ok';
-    obj.token = 'test77733test6test';
+    obj.status = 'Success';
+    obj.message = 'Login successful!';
   } else {
-    obj.status = 'error';
-    obj.token = 'error';
+    obj.status = 'Invalid';
+    obj.message = 'Incorrect email or password!';
   }
   return obj;
 };

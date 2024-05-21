@@ -2,19 +2,20 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.664);
+  // background-color: rgba(0, 0, 0, 0.664);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .children {
-  width: 200px;
-  height: 150px;
-  background-color: aliceblue;
+  width: 250px;
+  height: 200px;
+  background-color: rgba(219, 142, 80, 0.815);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
+  font-size: 16px;
 }
