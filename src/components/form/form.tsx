@@ -2,8 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import styles from 'src/logic/loginPage/loginPage.module.scss';
 import myStyles from 'src/components/form/RegistrationForm.module.scss';
 import { validationEmail, validationPassword } from 'src/components/validation/validationForm.ts';
-import { myStatus } from 'src/components/tempFolderForDevelop/fakeStatus.ts';
-import { IResponse, myRedirect } from 'src/components/tempFolderForDevelop/redirect.ts';
+import { myStatus } from 'src/components/tempFolderForDevelop/statusHandler.ts';
+import { IResponse, myRedirect } from 'src/components/tempFolderForDevelop/responseHandler.ts';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
 import { useNavigate } from 'react-router-dom';
 import { Paragraph } from 'src/components/text/Text.tsx';
@@ -74,6 +74,21 @@ export const Form = () => {
   useEffect(() => {
     handleValidation();
   }, [email, password, handleValidation]);
+
+  useEffect(() => {
+    if (showModal) {
+      const timer = setTimeout(() => {
+        setShowModal(false);
+      }, 1000);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+    return () => {
+      ('');
+    };
+  }, [showModal]);
 
   return (
     <>
