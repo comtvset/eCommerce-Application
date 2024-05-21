@@ -21,6 +21,7 @@
   font-weight: 600;
   cursor: pointer;
   margin: 20px auto;
+  padding: 10px 65px;
 }
 
 .submitButton:disabled {
@@ -44,6 +45,7 @@
   justify-self: center;
   align-self: center;
   margin-bottom: 20px;
+  border-radius: 0.5rem;
 
   &:hover {
     background-color: $primaryBackgroundButtonHover;

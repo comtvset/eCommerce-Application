@@ -28,6 +28,7 @@
 
 .error {
   color: red;
+  font-size: 1.4rem;
 }
 
 .login_text {
@@ -39,12 +40,13 @@
   display: inline-block;
   padding: 10px 58px;
   background-color: $primaryBackgroundButton;
-  border-radius: 10px;
+  border-radius: 0.5rem;
   color: $secondaryTextColor;
   font-size: 1.6rem;
   font-weight: 700;
   justify-self: center;
   align-self: center;
+
 
   &:hover {
     background-color: $primaryBackgroundButtonHover;

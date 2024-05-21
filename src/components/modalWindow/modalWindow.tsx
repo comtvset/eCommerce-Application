@@ -1,5 +1,5 @@
 import styles from 'src/components/modalWindow/modalWindow.module.scss';
-import { IResponse } from 'src/components/tempFolderForDevelop/redirect.ts';
+import { IResponse } from 'src/components/tempFolderForDevelop/responseHandler.ts';
 import PropTypes from 'prop-types';
 
 interface ModalWindowProps {
