@@ -46,8 +46,8 @@ const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
     user: {
-      username: 'co@mail.com',
-      password: 'dfg!4ET$vc28b2',
+      username: '',
+      password: '',
     },
   },
   scopes: [`manage_project:${PROJECT_KEY}`],
