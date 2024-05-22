@@ -27,10 +27,14 @@ export const Header: React.FC = () => {
     setActiveLink(location);
     const user = localStorage.getItem('userTokens');
     setIsLoggedIn(!!user);
+  }, [location]);
+
+  useEffect(() => {
+    const user = localStorage.getItem('userTokens');
     if (user && window.location.pathname === '/login') {
       navigation('/');
     }
-  }, [location]);
+  }, [navigation]);
 
   const clearLocalStorage = () => {
     localStorage.clear();
