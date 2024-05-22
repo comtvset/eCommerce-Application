@@ -56,7 +56,7 @@ export const Form = () => {
         saveCredentials(email, password);
         await loginRequest(email, password);
 
-        const responseServer = myStatus(true);
+        const responseServer = myStatus(true, 'Successful!');
         myRedirect(responseServer);
 
         setEmail('');
@@ -65,7 +65,7 @@ export const Form = () => {
         setModalData(responseServer);
         setShowModal(true);
       } catch (error) {
-        const responseServer = myStatus(false);
+        const responseServer = myStatus(false, 'Incorrect email or password!');
         myRedirect(responseServer);
         setModalData(responseServer);
         setShowModal(true);
