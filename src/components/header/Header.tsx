@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from 'src/components/header/Header.module.scss';
 import { Link } from 'components/link/Link.tsx';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Form } from 'src/components/form/form.tsx';
 
 const links = [
@@ -19,6 +19,7 @@ const links = [
 
 export const Header: React.FC = () => {
   const location = useLocation().pathname;
+  const navigation = useNavigate();
   const [activeLink, setActiveLink] = useState<string>(location);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
@@ -26,6 +27,9 @@ export const Header: React.FC = () => {
     setActiveLink(location);
     const user = localStorage.getItem('userTokens');
     setIsLoggedIn(!!user);
+    if (user && window.location.pathname === '/login') {
+      navigation('/');
+    }
   }, [location]);
 
   const clearLocalStorage = () => {
