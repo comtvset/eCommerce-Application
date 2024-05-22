@@ -10,6 +10,8 @@ import { Link } from 'src/components/link/Link.tsx';
 import { CustomerDraft } from '@commercetools/platform-sdk';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { useNavigate } from 'react-router-dom';
+import { loginRequest } from 'src/services/api/loginRequest.ts';
+import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 import { BillingAddressForm } from '../address/BillingAddress.tsx';
 import { IResponse } from '../tempFolderForDevelop/responseHandler.ts';
@@ -181,6 +183,7 @@ export const RegistrationForm: React.FC = () => {
         lastName: formData.lastName,
         dateOfBirth: formData.dateOfBirth,
       };
+
       const createCustomer = () => {
         return apiRoot
           .customers()
@@ -190,19 +193,21 @@ export const RegistrationForm: React.FC = () => {
           .execute();
       };
       createCustomer()
-        .then(({ body }) => {
-          if (body.customer.email === '') {
-            // TODO
+        .then(async ({ body }) => {
+          if (body.customer.email) {
+            saveCredentials(formData.email, formData.password);
+            await loginRequest(formData.email, formData.password);
+            navigation('/');
+            setModalData(myStatus(false, 'A customer with this email already exists!'));
+            setShowModal(true);
           }
         })
         .catch((error: unknown) => {
           if (error) {
-            // TODO
+            setModalData(myStatus(false, 'A customer with this email already exists!'));
+            setShowModal(true);
           }
         });
-      navigation('/');
-      setModalData(myStatus(false));
-      setShowModal(true);
     }
   };
 
