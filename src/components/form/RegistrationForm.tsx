@@ -6,6 +6,9 @@ import { validatePostalCode } from 'src/components/validation/PostalCodeValidati
 import { Country } from 'src/components/country/country.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { Link } from 'src/components/link/Link.tsx';
+// import { apiRootRegistration } from 'src/services/api/ctpClientRegistration.ts';
+import { CustomerDraft } from '@commercetools/platform-sdk';
+import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 import { BillingAddressForm } from '../address/BillingAddress.tsx';
 
@@ -30,6 +33,7 @@ interface FormData {
   billingPostalCode: string;
   [key: string]: string | boolean;
 }
+
 const allFields: FormData = {
   email: '',
   password: '',
@@ -157,24 +161,37 @@ export const RegistrationForm: React.FC = () => {
       'firstName',
       'lastName',
       'dateOfBirth',
-      'isShippingDefaultAddress',
-      'isEqualAddress',
-      'street',
-      'city',
-      'postalCode',
-      'country',
-      'isBillingDefaultAddress',
-      'billingStreet',
-      'billingCity',
-      'billingCountry',
-      'billingPostalCode',
     ];
 
     const isAnyEmpty = requiredFields.some((field) => !formData[field]);
 
     if (!isAnyEmpty && isFormValid) {
-      // Submit the form if all required fields are filled and form is valid
-      // TODO
+      const newCustomer: CustomerDraft = {
+        email: formData.email,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        dateOfBirth: formData.dateOfBirth,
+      };
+      const createCustomer = () => {
+        return apiRoot
+          .customers()
+          .post({
+            body: newCustomer,
+          })
+          .execute();
+      };
+      createCustomer()
+        .then(({ body }) => {
+          if (body.customer.email === '') {
+            // TODO
+          }
+        })
+        .catch((error: unknown) => {
+          if (error) {
+            // TODO
+          }
+        });
     }
   };
 
