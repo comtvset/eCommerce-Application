@@ -7,9 +7,11 @@ import { Country } from 'src/components/country/country.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { Link } from 'src/components/link/Link.tsx';
 // import { apiRootRegistration } from 'src/services/api/ctpClientRegistration.ts';
-import { CustomerDraft } from '@commercetools/platform-sdk';
+import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+
 import { loginRequest } from 'src/services/api/loginRequest.ts';
 import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
@@ -59,6 +61,14 @@ const allFields: FormData = {
   billingPostalCode: '',
 };
 
+const requiredFields: (keyof FormData)[] = [
+  'email',
+  'password',
+  'firstName',
+  'lastName',
+  'dateOfBirth',
+];
+
 export const RegistrationForm: React.FC = () => {
   const [formData, setFormData] = useState(allFields);
 
@@ -72,6 +82,7 @@ export const RegistrationForm: React.FC = () => {
 
   countryShipping = Country[formData.country as keyof typeof Country];
   countryBilling = Country[formData.billingCountry as keyof typeof Country];
+
   const handleDefaultAddress = (checked: boolean) => {
     setFormData({
       ...formData,
@@ -165,23 +176,43 @@ export const RegistrationForm: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const requiredFields: (keyof FormData)[] = [
-      'email',
-      'password',
-      'firstName',
-      'lastName',
-      'dateOfBirth',
-    ];
-
     const isAnyEmpty = requiredFields.some((field) => !formData[field]);
 
     if (!isAnyEmpty && isFormValid) {
+      let generatedCustomerID: string;
+      let generatedShippAddrID: string | undefined;
+      let generatedBillAddrID: string | undefined;
+      const generateUUID = (): string => {
+        return uuidv4();
+      };
+
+      const addresses: BaseAddress[] = [
+        {
+          id: generateUUID(),
+          streetName: formData.street,
+          city: formData.city,
+          country: Country[formData.country as keyof typeof Country],
+          postalCode: formData.postalCode,
+        },
+        {
+          id: generateUUID(),
+          streetName: formData.billingStreet,
+          city: formData.billingCity,
+          country: Country[formData.billingCountry as keyof typeof Country],
+          postalCode: formData.billingPostalCode,
+        },
+      ];
+
       const newCustomer: CustomerDraft = {
+        key: generateUUID(),
         email: formData.email,
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
         dateOfBirth: formData.dateOfBirth,
+        addresses,
+        ...(formData.isShippingDefaultAddress && { defaultShippingAddress: 0 }),
+        ...(formData.isBillingDefaultAddress && { defaultBillingAddress: 1 }),
       };
 
       const createCustomer = () => {
@@ -192,8 +223,12 @@ export const RegistrationForm: React.FC = () => {
           })
           .execute();
       };
+
       createCustomer()
         .then(async ({ body }) => {
+          generatedCustomerID = body.customer.id;
+          generatedShippAddrID = body.customer.addresses[0].id;
+          generatedBillAddrID = body.customer.addresses[1].id;
           if (body.customer.email) {
             saveCredentials(formData.email, formData.password);
             await loginRequest(formData.email, formData.password);
@@ -208,6 +243,63 @@ export const RegistrationForm: React.FC = () => {
             setShowModal(true);
           }
         });
+
+      if (formData.isShippingDefaultAddress) {
+        const setDefualtAdd = () => {
+          return apiRoot
+            .customers()
+            .withId({ ID: generatedCustomerID })
+            .post({
+              body: {
+                version: 1,
+                actions: [
+                  {
+                    action: 'setDefaultShippingAddress',
+                    addressId: generatedShippAddrID,
+                  },
+                ],
+              },
+            })
+            .execute();
+        };
+        setDefualtAdd()
+          .then(() => {
+            // TODO
+          })
+          .catch((error: unknown) => {
+            if (error) {
+              // TODO
+            }
+          });
+      }
+      if (formData.isBillingDefaultAddress) {
+        const setDefualtAdd = () => {
+          return apiRoot
+            .customers()
+            .withId({ ID: generatedCustomerID })
+            .post({
+              body: {
+                version: 1,
+                actions: [
+                  {
+                    action: 'setDefaultBillingAddress',
+                    addressId: generatedBillAddrID,
+                  },
+                ],
+              },
+            })
+            .execute();
+        };
+        setDefualtAdd()
+          .then(() => {
+            // TODO
+          })
+          .catch((error: unknown) => {
+            if (error) {
+              // TODO
+            }
+          });
+      }
     }
   };
 
