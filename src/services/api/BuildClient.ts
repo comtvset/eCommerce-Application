@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
+
 // prettier-ignore
 import type { AuthMiddlewareOptions, HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { MyTokenCache } from './MyTokenCache.ts';

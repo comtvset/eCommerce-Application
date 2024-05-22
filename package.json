@@ -37,6 +37,7 @@
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.7",
     "@types/prop-types": "^15.7.12",
+    "@types/uuid": "^9.0.8",
     "dotenv": "^16.4.5",
     "isomorphic-fetch": "^3.0.0",
     "node-fetch": "^3.3.2",

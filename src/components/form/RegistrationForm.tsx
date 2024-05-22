@@ -6,8 +6,15 @@ import { validatePostalCode } from 'src/components/validation/PostalCodeValidati
 import { Country } from 'src/components/country/country.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { Link } from 'src/components/link/Link.tsx';
+// import { apiRootRegistration } from 'src/services/api/ctpClientRegistration.ts';
+import { CustomerDraft } from '@commercetools/platform-sdk';
+import { apiRoot } from 'src/services/api/ctpClient.ts';
+import { useNavigate } from 'react-router-dom';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 import { BillingAddressForm } from '../address/BillingAddress.tsx';
+import { IResponse } from '../tempFolderForDevelop/responseHandler.ts';
+import { myStatus } from '../tempFolderForDevelop/statusHandler.ts';
+import { ModalWindow } from '../modalWindow/modalWindow.tsx';
 
 let countryShipping: Country;
 let countryBilling: Country;
@@ -30,6 +37,7 @@ interface FormData {
   billingPostalCode: string;
   [key: string]: string | boolean;
 }
+
 const allFields: FormData = {
   email: '',
   password: '',
@@ -55,6 +63,10 @@ export const RegistrationForm: React.FC = () => {
   const [errors, setErrors] = useState(allFields);
 
   const [isFormValid, setIsFormValid] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState<IResponse | null>(null);
+  const navigation = useNavigate();
 
   countryShipping = Country[formData.country as keyof typeof Country];
   countryBilling = Country[formData.billingCountry as keyof typeof Country];
@@ -157,58 +169,92 @@ export const RegistrationForm: React.FC = () => {
       'firstName',
       'lastName',
       'dateOfBirth',
-      'isShippingDefaultAddress',
-      'isEqualAddress',
-      'street',
-      'city',
-      'postalCode',
-      'country',
-      'isBillingDefaultAddress',
-      'billingStreet',
-      'billingCity',
-      'billingCountry',
-      'billingPostalCode',
     ];
 
     const isAnyEmpty = requiredFields.some((field) => !formData[field]);
 
     if (!isAnyEmpty && isFormValid) {
-      // Submit the form if all required fields are filled and form is valid
-      // TODO
+      const newCustomer: CustomerDraft = {
+        email: formData.email,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        dateOfBirth: formData.dateOfBirth,
+      };
+      const createCustomer = () => {
+        return apiRoot
+          .customers()
+          .post({
+            body: newCustomer,
+          })
+          .execute();
+      };
+      createCustomer()
+        .then(({ body }) => {
+          if (body.customer.email === '') {
+            // TODO
+          }
+        })
+        .catch((error: unknown) => {
+          if (error) {
+            // TODO
+          }
+        });
+      navigation('/');
+      setModalData(myStatus(false));
+      setShowModal(true);
     }
   };
 
-  return (
-    <form className={style.registration} onSubmit={handleSubmit}>
-      <RegistrationMainFields formData={formData} handleChange={handleChange} errors={errors} />
-      <AddressForm
-        formData={formData}
-        handleSameAddress={handleSameAddress}
-        handleBoolean={handleDefaultAddress}
-        handleChange={handleChange}
-        errors={errors}
-        title="Shipping address"
-      />
-      <BillingAddressForm
-        formData={formData}
-        handleBoolean={handleBillingAddress}
-        handleChange={handleChange}
-        errors={errors}
-        title="Billing address"
-      />
+  useEffect(() => {
+    if (showModal) {
+      const timer = setTimeout(() => {
+        setShowModal(false);
+      }, 1000);
 
-      <button className={style.submitButton} type="submit" disabled={!isFormValid}>
-        APPLY
-      </button>
-      <div className={style.link}>
-        <Paragraph
-          tag="p"
-          className={style.register_text}
-          title="Do you already have an account?"
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+    return () => {
+      ('');
+    };
+  }, [showModal]);
+
+  return (
+    <>
+      <form className={style.registration} onSubmit={handleSubmit}>
+        <RegistrationMainFields formData={formData} handleChange={handleChange} errors={errors} />
+        <AddressForm
+          formData={formData}
+          handleSameAddress={handleSameAddress}
+          handleBoolean={handleDefaultAddress}
+          handleChange={handleChange}
+          errors={errors}
+          title="Shipping address"
         />
-        <Link to="/login" title="LOGIN" className={style.login_link} />
-      </div>
-    </form>
+        <BillingAddressForm
+          formData={formData}
+          handleBoolean={handleBillingAddress}
+          handleChange={handleChange}
+          errors={errors}
+          title="Billing address"
+        />
+
+        <button className={style.submitButton} type="submit" disabled={!isFormValid}>
+          APPLY
+        </button>
+        <div className={style.link}>
+          <Paragraph
+            tag="p"
+            className={style.register_text}
+            title="Do you already have an account?"
+          />
+          <Link to="/login" title="LOGIN" className={style.login_link} />
+        </div>
+      </form>
+      {showModal && modalData && <ModalWindow data={modalData} />}
+    </>
   );
 };
 
