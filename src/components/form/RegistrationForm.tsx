@@ -7,9 +7,10 @@ import { Country } from 'src/components/country/country.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { Link } from 'src/components/link/Link.tsx';
 // import { apiRootRegistration } from 'src/services/api/ctpClientRegistration.ts';
-import { CustomerDraft } from '@commercetools/platform-sdk';
+import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 import { BillingAddressForm } from '../address/BillingAddress.tsx';
 import { IResponse } from '../tempFolderForDevelop/responseHandler.ts';
@@ -174,13 +175,37 @@ export const RegistrationForm: React.FC = () => {
     const isAnyEmpty = requiredFields.some((field) => !formData[field]);
 
     if (!isAnyEmpty && isFormValid) {
+      const generateUUID = (): string => {
+        return uuidv4();
+      };
+
+      const addresses: BaseAddress[] = [
+        {
+          id: generateUUID(),
+          streetName: formData.street,
+          city: formData.city,
+          country: Country[formData.country as keyof typeof Country],
+          postalCode: formData.postalCode,
+        },
+        {
+          id: generateUUID(),
+          streetName: formData.billingStreet,
+          city: formData.billingCity,
+          country: Country[formData.billingCountry as keyof typeof Country],
+          postalCode: formData.billingPostalCode,
+        },
+      ];
+
       const newCustomer: CustomerDraft = {
+        key: generateUUID(),
         email: formData.email,
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
         dateOfBirth: formData.dateOfBirth,
+        addresses,
       };
+
       const createCustomer = () => {
         return apiRoot
           .customers()
