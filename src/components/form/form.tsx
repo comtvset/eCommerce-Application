@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { Link } from 'src/components/link/Link.tsx';
 import { loginRequest } from 'src/services/api/loginRequest.ts';
+import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
 
 export const Form = () => {
   const [email, setEmail] = useState('');
@@ -52,6 +53,7 @@ export const Form = () => {
 
     if (emailError.length === 0 && passwordError.length === 0) {
       try {
+        saveCredentials(email, password);
         await loginRequest(email, password);
 
         const responseServer = myStatus(true);
