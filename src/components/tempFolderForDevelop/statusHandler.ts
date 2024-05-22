@@ -1,4 +1,4 @@
-export const myStatus = (status: boolean) => {
+export const myStatus = (status: boolean, message: string) => {
   const obj = {
     status: '',
     message: '',
@@ -6,10 +6,12 @@ export const myStatus = (status: boolean) => {
 
   if (status) {
     obj.status = 'Success';
-    obj.message = 'Login successful!';
+    obj.message = message;
+    // obj.message = 'Login successful!';
   } else {
     obj.status = 'Invalid';
-    obj.message = 'Incorrect email or password!';
+    obj.message = message;
+    // obj.message = 'Incorrect email or password!';
   }
   return obj;
 };

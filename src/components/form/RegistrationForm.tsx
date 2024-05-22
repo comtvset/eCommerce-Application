@@ -11,6 +11,9 @@ import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+
+import { loginRequest } from 'src/services/api/loginRequest.ts';
+import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 import { BillingAddressForm } from '../address/BillingAddress.tsx';
 import { IResponse } from '../tempFolderForDevelop/responseHandler.ts';
@@ -222,15 +225,22 @@ export const RegistrationForm: React.FC = () => {
       };
 
       createCustomer()
-        .then((body) => {
-          // TODO
+        .then(async ({ body }) => {
           generatedCustomerID = body.body.customer.id;
           generatedShippAddrID = body.body.customer.addresses[0].id;
           generatedBillAddrID = body.body.customer.addresses[1].id;
+          if (body.customer.email) {
+            saveCredentials(formData.email, formData.password);
+            await loginRequest(formData.email, formData.password);
+            navigation('/');
+            setModalData(myStatus(false, 'A customer with this email already exists!'));
+            setShowModal(true);
+          }
         })
         .catch((error: unknown) => {
           if (error) {
-            // TODO
+            setModalData(myStatus(false, 'A customer with this email already exists!'));
+            setShowModal(true);
           }
         });
 
@@ -290,9 +300,6 @@ export const RegistrationForm: React.FC = () => {
             }
           });
       }
-      navigation('/');
-      setModalData(myStatus(false));
-      setShowModal(true);
     }
   };
 
