@@ -226,9 +226,9 @@ export const RegistrationForm: React.FC = () => {
 
       createCustomer()
         .then(async ({ body }) => {
-          generatedCustomerID = body.body.customer.id;
-          generatedShippAddrID = body.body.customer.addresses[0].id;
-          generatedBillAddrID = body.body.customer.addresses[1].id;
+          generatedCustomerID = body.customer.id;
+          generatedShippAddrID = body.customer.addresses[0].id;
+          generatedBillAddrID = body.customer.addresses[1].id;
           if (body.customer.email) {
             saveCredentials(formData.email, formData.password);
             await loginRequest(formData.email, formData.password);
