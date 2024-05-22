@@ -1,11 +1,10 @@
 import fetch from 'node-fetch';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
-import type {
-  AuthMiddlewareOptions,
-  HttpMiddlewareOptions,
-  AnonymousAuthMiddlewareOptions,
-} from '@commercetools/sdk-client-v2';
+
+// prettier-ignore
+import type { AuthMiddlewareOptions, HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { MyTokenCache } from './MyTokenCache.ts';
+import { getCredentials } from '../userData/saveEmailPassword.ts';
 
 const PROJECT_KEY: string = import.meta.env.VITE_CTP_PROJECT_KEY as string;
 const CLIENT_ID: string = import.meta.env.VITE_CTP_CLIENT_ID as string;
@@ -16,7 +15,6 @@ const SCOPESString: string = (import.meta.env.VITE_CTP_SCOPES as string) || '';
 const SCOPES: string[] = SCOPESString.split(' ');
 
 const scopes = SCOPES;
-const newTokenCache: MyTokenCache = new MyTokenCache();
 
 const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: AUTH_URL,
@@ -27,19 +25,6 @@ const authMiddlewareOptions: AuthMiddlewareOptions = {
   },
   scopes,
   fetch,
-  tokenCache: newTokenCache,
-};
-
-const anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
-  host: AUTH_URL,
-  projectKey: PROJECT_KEY,
-  credentials: {
-    clientId: CLIENT_ID,
-    clientSecret: CLIENT_SECRET,
-  },
-  scopes: [`manage_project:${PROJECT_KEY}`],
-  fetch,
-  tokenCache: newTokenCache,
 };
 
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
@@ -47,17 +32,37 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
   fetch,
 };
 
+export const getLoginClient = () => {
+  const newTokenCache: MyTokenCache = new MyTokenCache();
+  const PasswordAuthMiddlewareOptions = {
+    host: AUTH_URL,
+    projectKey: PROJECT_KEY,
+    credentials: {
+      clientId: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
+      user: {
+        username: getCredentials().email,
+        password: getCredentials().password,
+      },
+    },
+    scopes,
+    tokenCache: newTokenCache,
+    fetch,
+  };
+
+  const client = new ClientBuilder()
+    .withProjectKey(PROJECT_KEY)
+    .withPasswordFlow(PasswordAuthMiddlewareOptions)
+    .withHttpMiddleware(httpMiddlewareOptions)
+    // .withLoggerMiddleware() // OFF LOGGER
+    .build();
+
+  return { client, tokenCache: newTokenCache };
+};
+
 export const ctpClient = new ClientBuilder()
   .withProjectKey(PROJECT_KEY)
-  .withClientCredentialsFlow(authMiddlewareOptions)
-  .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
+  .withAnonymousSessionFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware()
+  // .withLoggerMiddleware() // OFF LOGGER
   .build();
-
-export const getCurrentToken = () => {
-  return newTokenCache.get().token;
-};
-export const getRefreshToken = () => {
-  return newTokenCache.get().refreshToken;
-};
