@@ -41,6 +41,10 @@ It's a comprehensive online shopping portal that provides an interactive and sea
 2. Confluence (Knowledge Base, MoMs, Agreements, Roles and Responsibilities etc..)
 3. GitHub (Pull Request, workflow, Review)
 
+## Design
+
+This is a [link](https://www.figma.com/design/vjzFNPME7k3at8mZA0J1AR/Cozy-House?node-id=0%3A1&t=pkImd2amNwJgTpT2-1) to our project design.
+
 ## Setup project locally
 
 1. Install Node.js version >= 20.0.0

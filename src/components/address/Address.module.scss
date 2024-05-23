@@ -1,0 +1,38 @@
+.checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  width: 160px;
+}
+
+.formbody {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 400px;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    > div {
+      font-size: 1.4rem;
+      color: red;
+      margin-top: 5px;
+      text-transform: none;
+    }
+    > label {
+      margin-top: 10px;
+    }
+  }
+}
+
+@media (width < 650px) {
+  .formbody {
+    width: 200px;
+  }
+}
