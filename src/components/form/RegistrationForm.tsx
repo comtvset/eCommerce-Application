@@ -232,8 +232,10 @@ export const RegistrationForm: React.FC = () => {
           if (body.customer.email) {
             saveCredentials(formData.email, formData.password);
             await loginRequest(formData.email, formData.password);
-            navigation('/');
-            setModalData(myStatus(false, 'A customer with this email already exists!'));
+            setTimeout(() => {
+              navigation('/');
+            }, 1000);
+            setModalData(myStatus(true, 'Login successful!'));
             setShowModal(true);
           }
         })
