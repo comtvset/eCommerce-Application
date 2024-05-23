@@ -56,12 +56,13 @@ export const Form = () => {
         saveCredentials(email, password);
         await loginRequest(email, password);
 
-        const responseServer = myStatus(true, 'Successful!');
+        const responseServer = myStatus(true, 'Congratulations, successful login!');
         myRedirect(responseServer);
-
-        setEmail('');
-        setPassword('');
-        navigation('/');
+        setTimeout(() => {
+          setEmail('');
+          setPassword('');
+          navigation('/');
+        }, 1000);
         setModalData(responseServer);
         setShowModal(true);
       } catch (error) {
