@@ -50,7 +50,8 @@ export const Header: React.FC = () => {
     location !== '/' &&
     location !== '/login' &&
     location !== '/register' &&
-    location !== '/catalog';
+    location !== '/catalog' &&
+    location !== '/profile';
   const isHeaderInactive = location === '/';
   const isToken = localStorage.getItem('userTokens');
   return (
@@ -79,7 +80,14 @@ export const Header: React.FC = () => {
               ))}
             </div>
           ) : (
-            <Link onClick={handelLogout} to="/" title="LOGOUT" className={styles.logout} />
+            <div className={styles.logout_container}>
+              <Link
+                to="/profile"
+                title="PROFILE"
+                className={`${styles.logout} ${activeLink === '/profile' ? styles.active : ''}`}
+              />
+              <Link onClick={handelLogout} to="/" title="LOGOUT" className={styles.logout} />
+            </div>
           )}
         </nav>
       </header>
