@@ -6,7 +6,6 @@ import { validatePostalCode } from 'src/components/validation/PostalCodeValidati
 import { Country } from 'src/components/country/country.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { Link } from 'src/components/link/Link.tsx';
-// import { apiRootRegistration } from 'src/services/api/ctpClientRegistration.ts';
 import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { useNavigate } from 'react-router-dom';
