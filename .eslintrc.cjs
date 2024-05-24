@@ -42,6 +42,7 @@ module.exports = {
       },
     ],
     eqeqeq: 'error',
+    'operator-linebreak': ['error', 'after', { overrides: { '?': 'before', ':': 'before' } }],
     'no-console': 'warn',
     'no-undef': 'off',
     'no-unused-vars': 'off',

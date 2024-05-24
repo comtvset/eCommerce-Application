@@ -46,7 +46,11 @@ export const Header: React.FC = () => {
     Form();
   };
 
-  const is404Page = location !== '/' && location !== '/login' && location !== '/register';
+  const is404Page =
+    location !== '/' &&
+    location !== '/login' &&
+    location !== '/register' &&
+    location !== '/catalog';
   const isHeaderInactive = location === '/';
   const isToken = localStorage.getItem('userTokens');
   return (
@@ -58,6 +62,11 @@ export const Header: React.FC = () => {
           className={`${styles.logo} ${isHeaderInactive ? styles.inactive : ''}`}
         />
         <nav className={styles.navigation}>
+          <Link
+            to="/catalog"
+            title="CATALOG"
+            className={`${styles.link} ${activeLink === '/catalog' ? styles.active : ''}`}
+          />
           {!isLoggedIn ? (
             <div className={`${styles.login_container} ${isToken ? styles.hidden : ''}`}>
               {links.map((link) => (
