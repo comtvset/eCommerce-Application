@@ -96,19 +96,25 @@ export const RegistrationForm: React.FC = () => {
     });
   };
 
+  function errorValidate(error: string | Error): string {
+    let result;
+    if (error instanceof Error) {
+      result = `⚠ ${error.message}`;
+    } else if (typeof error === 'string') {
+      result = error === '' ? '' : `⚠ ${error}`;
+    } else {
+      result = '⚠ An unknown error occurred';
+    }
+    return result;
+  }
+
   const validateOneField = (name: string, value: string) => {
     const error = validateField(name, value, countryShipping, countryBilling);
-    let errorValidate;
-    if (error instanceof Error) {
-      errorValidate = `⚠ ${error.message}`;
-    } else if (typeof error === 'string') {
-      errorValidate = error === '' ? '' : `⚠ ${error}`;
-    } else {
-      errorValidate = '⚠ An unknown error occurred';
-    }
+    const errorValue = errorValidate(error);
+
     setErrors({
       ...errors,
-      [name]: errorValidate,
+      [name]: errorValue,
     });
   };
 
@@ -136,11 +142,11 @@ export const RegistrationForm: React.FC = () => {
       billingAddressFields.forEach((field) => {
         if (typeof formData[field] === 'string') {
           const value = formData[field] as string;
-          const error = validateField(field, value, countryShipping, countryBilling);
-          const errorValidate = error === '' ? '' : `⚠ ${error}`;
+          const error = validateField(field, value, countryBilling);
+          const errorValue = errorValidate(error);
           setErrors((prevErrors) => ({
             ...prevErrors,
-            [field]: errorValidate,
+            [field]: errorValue,
           }));
         }
       });
