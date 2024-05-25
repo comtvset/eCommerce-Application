@@ -63,13 +63,13 @@ const validateCountry = (value: string): string => {
 export const validateField = (
   name: string,
   inputValue: string,
-  countryShipping: Country,
-  countryBilling: Country,
-): string => {
+  countryShipping?: Country,
+  countryBilling?: Country,
+): string | Error => {
   let validateValue: Country | string;
-  if (name === 'postalCode') {
+  if (name === 'postalCode' && typeof countryShipping === 'string') {
     validateValue = countryShipping;
-  } else if (name === 'billingPostalCode') {
+  } else if (name === 'billingPostalCode' && typeof countryBilling === 'string') {
     validateValue = countryBilling;
   } else validateValue = inputValue;
 
@@ -89,9 +89,15 @@ export const validateField = (
     case 'billingStreet':
       return validateNonEmpty(validateValue);
     case 'postalCode':
-      return validatePostalCode(countryShipping, validateValue);
+      if (typeof countryShipping === 'string') {
+        return validatePostalCode(countryShipping, validateValue);
+      }
+      return new Error('Missing country information');
     case 'billingPostalCode':
-      return validatePostalCode(countryBilling, validateValue);
+      if (typeof countryBilling === 'string') {
+        return validatePostalCode(countryBilling, validateValue);
+      }
+      return new Error('Missing country information');
     case 'country':
     case 'billingCountry':
       return validateCountry(validateValue);
