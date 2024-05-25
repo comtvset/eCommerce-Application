@@ -98,7 +98,14 @@ export const RegistrationForm: React.FC = () => {
 
   const validateOneField = (name: string, value: string) => {
     const error = validateField(name, value, countryShipping, countryBilling);
-    const errorValidate = error === '' ? '' : `⚠ ${error}`;
+    let errorValidate;
+    if (error instanceof Error) {
+      errorValidate = `⚠ ${error.message}`;
+    } else if (typeof error === 'string') {
+      errorValidate = error === '' ? '' : `⚠ ${error}`;
+    } else {
+      errorValidate = '⚠ An unknown error occurred';
+    }
     setErrors({
       ...errors,
       [name]: errorValidate,
