@@ -22,6 +22,7 @@ export const Header: React.FC = () => {
   const navigation = useNavigate();
   const [activeLink, setActiveLink] = useState<string>(location);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const idUser = localStorage.getItem('id') ?? '';
 
   useEffect(() => {
     setActiveLink(location);
@@ -33,6 +34,9 @@ export const Header: React.FC = () => {
     const user = localStorage.getItem('userTokens');
     if (user && window.location.pathname === '/login') {
       navigation('/');
+    }
+    if (!user && window.location.pathname.startsWith('/profile')) {
+      navigation('/login');
     }
   }, [navigation]);
 
@@ -51,7 +55,7 @@ export const Header: React.FC = () => {
     location !== '/login' &&
     location !== '/register' &&
     location !== '/catalog' &&
-    location !== '/profile';
+    location !== `/profile/${idUser}`;
   const isHeaderInactive = location === '/';
   const isToken = localStorage.getItem('userTokens');
   return (
@@ -82,9 +86,9 @@ export const Header: React.FC = () => {
           ) : (
             <div className={styles.logout_container}>
               <Link
-                to="/profile"
+                to={`/profile/${idUser}`}
                 title="PROFILE"
-                className={`${styles.logout} ${activeLink === '/profile' ? styles.active : ''}`}
+                className={`${styles.logout} ${activeLink === `/profile/${idUser}` ? styles.active : ''}`}
               />
               <Link onClick={handelLogout} to="/" title="LOGOUT" className={styles.logout} />
             </div>
