@@ -4,7 +4,7 @@
 import { Country } from '../country/country.ts';
 import { validatePostalCode } from './PostalCodeValidation.ts';
 
-const validateEmail = (email: string): string => {
+export const validateEmail = (email: string): string => {
   const trimmedValue = email.trim();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@.]{2,}$/;
 
@@ -17,7 +17,7 @@ const validateEmail = (email: string): string => {
   return '';
 };
 
-const validatePassword = (password: string): string => {
+export const validatePassword = (password: string): string => {
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
   if (!passwordRegex.test(password)) {
     return 'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, and 1 number.';
