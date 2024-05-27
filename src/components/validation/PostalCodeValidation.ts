@@ -8,7 +8,7 @@ export const validatePostalCode = (country: Country, postalCode: string): string
     case Country.France:
       pattern = /^\d{2}[ ]?\d{3}$/;
       if (!pattern.test(postalCode)) {
-        error = 'Correct format: <2 numbers><empty space><3 numbers>';
+        error = '2 Correct formats:<2numbers space 3numbers>  <5 numbers> ';
       }
       break;
     case Country.Germany:
@@ -25,7 +25,7 @@ export const validatePostalCode = (country: Country, postalCode: string): string
       }
       break;
     default:
-      return 'Select country from the list';
+      return '';
   }
 
   return pattern.test(postalCode) ? '' : error;
