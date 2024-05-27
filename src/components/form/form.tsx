@@ -103,6 +103,7 @@ export const Form = () => {
           onChange={(e) => {
             setEmail(e.target.value);
           }}
+          required
         />
         <span className={styles.error}>{errorEmail}</span>
 
@@ -114,6 +115,7 @@ export const Form = () => {
           onChange={(e) => {
             setPassword(e.target.value);
           }}
+          required
         />
         <span className={styles.error}>{errorPassword}</span>
 

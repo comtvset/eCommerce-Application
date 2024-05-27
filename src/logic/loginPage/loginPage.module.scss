@@ -24,11 +24,15 @@
   gap: 15px;
   margin: 50px auto;
   width: 200px;
+  >span {
+    width: 300px;
+  }
 }
 
 .error {
   color: red;
   font-size: 1.4rem;
+  white-space: pre-wrap;
 }
 
 .login_text {
@@ -61,5 +65,10 @@
 @media (width < 768px) {
   .login {
     width: 300px;
+  }
+  .form {
+    >span {
+      width: 200px;
+    }
   }
 }
