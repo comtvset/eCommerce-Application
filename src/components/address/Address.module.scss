@@ -31,6 +31,10 @@
   }
 }
 
+.error_tooltip {
+  white-space: pre-wrap;
+}
+
 @media (width < 650px) {
   .formbody {
     width: 200px;

@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from 'src/logic/loginPage/loginPage.module.scss';
 import myStyles from 'src/components/form/registration/RegistrationForm.module.scss';
-import { validationEmail, validationPassword } from 'src/components/validation/validationForm.ts';
+import { validateEmail, validatePassword } from 'src/components/validation/Validation.ts';
+
 import { myStatus } from 'src/components/tempFolderForDevelop/statusHandler.ts';
 import { IResponse, myRedirect } from 'src/components/tempFolderForDevelop/responseHandler.ts';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
@@ -24,14 +25,14 @@ export const Form = () => {
 
   const handleValidation = useCallback(() => {
     if (email) {
-      const emailError = validationEmail(email);
+      const emailError = validateEmail(email);
       setErrorEmail(emailError);
     } else {
       setErrorEmail('');
     }
 
     if (password) {
-      const passwordError = validationPassword(password);
+      const passwordError = validatePassword(password);
       setErrorPassword(passwordError);
     } else {
       setErrorPassword('');
@@ -41,8 +42,8 @@ export const Form = () => {
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    const emailError = validationEmail(email);
-    const passwordError = validationPassword(password);
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
 
     if (!email) {
       setErrorEmail('⚠ This field is required!');
@@ -103,6 +104,7 @@ export const Form = () => {
           onChange={(e) => {
             setEmail(e.target.value);
           }}
+          required
         />
         <span className={styles.error}>{errorEmail}</span>
 
@@ -114,6 +116,7 @@ export const Form = () => {
           onChange={(e) => {
             setPassword(e.target.value);
           }}
+          required
         />
         <span className={styles.error}>{errorPassword}</span>
 
