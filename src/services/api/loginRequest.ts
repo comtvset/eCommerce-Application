@@ -28,6 +28,11 @@ export const loginRequest = async (myEmail: string, myPassword: string) => {
   });
 
   const result = loginUser()
+    .then((response) => {
+      const idUser = response.body.customer.id;
+      const newIdUser = idUser.split('-')[0];
+      localStorage.setItem('id', newIdUser);
+    })
     .then(() => {
       return apiRoot2.carts().get().execute();
     })
