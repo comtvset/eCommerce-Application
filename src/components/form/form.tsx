@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styles from 'src/logic/loginPage/loginPage.module.scss';
-import myStyles from 'src/components/form/RegistrationForm.module.scss';
+import myStyles from 'src/components/form/registration/RegistrationForm.module.scss';
 import { validationEmail, validationPassword } from 'src/components/validation/validationForm.ts';
 import { myStatus } from 'src/components/tempFolderForDevelop/statusHandler.ts';
 import { IResponse, myRedirect } from 'src/components/tempFolderForDevelop/responseHandler.ts';

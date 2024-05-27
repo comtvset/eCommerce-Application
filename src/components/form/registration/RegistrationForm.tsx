@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import style from 'src/components/form/RegistrationForm.module.scss';
+import style from 'src/components/form/registration/RegistrationForm.module.scss';
 import { AddressForm } from 'src/components/address/Address.tsx';
 import { validateField } from 'src/components/validation/Validation.ts';
 import { validatePostalCode } from 'src/components/validation/PostalCodeValidation.ts';
@@ -13,11 +13,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { loginRequest } from 'src/services/api/loginRequest.ts';
 import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
+import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
+import { BillingAddressForm } from 'src/components/address/BillingAddress.tsx';
+import { IResponse } from 'src/components/tempFolderForDevelop/responseHandler.ts';
+import { myStatus } from 'src/components/tempFolderForDevelop/statusHandler.ts';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
-import { BillingAddressForm } from '../address/BillingAddress.tsx';
-import { IResponse } from '../tempFolderForDevelop/responseHandler.ts';
-import { myStatus } from '../tempFolderForDevelop/statusHandler.ts';
-import { ModalWindow } from '../modalWindow/modalWindow.tsx';
 
 let countryShipping: Country;
 let countryBilling: Country;
