@@ -35,6 +35,7 @@ a {
   color: var(--primary-text-color);
   text-decoration: none;
 }
+
 a:hover {
   color: var(--hover-text-color);
 }
@@ -48,4 +49,8 @@ button {
   border: none;
   outline: 1px solid var(--primary-text-color);
   font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.9em;
 }
