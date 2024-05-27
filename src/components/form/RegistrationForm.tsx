@@ -154,7 +154,7 @@ export const RegistrationForm: React.FC = () => {
       (error) => error === '' || typeof error === 'boolean',
     );
     setIsFormValid(allFieldsValid);
-  }, [errors]);
+  }, [errors, formData]);
 
   useEffect(() => {
     const error = validatePostalCode(countryShipping, formData.postalCode);
@@ -162,7 +162,7 @@ export const RegistrationForm: React.FC = () => {
       ...prevErrors,
       postalCode: error,
     }));
-  }, [formData.country, formData.postalCode, formData.isEqualAddress]);
+  }, [formData.country, formData.postalCode]);
 
   useEffect(() => {
     const error = validatePostalCode(countryBilling, formData.billingPostalCode);
@@ -170,7 +170,7 @@ export const RegistrationForm: React.FC = () => {
       ...prevErrors,
       billingPostalCode: error,
     }));
-  }, [formData.billingCountry, formData.billingPostalCode, formData.isEqualAddress]);
+  }, [formData.billingCountry, formData.billingPostalCode]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

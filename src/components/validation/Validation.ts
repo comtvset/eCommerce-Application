@@ -66,12 +66,7 @@ export const validateField = (
   countryShipping: Country,
   countryBilling: Country,
 ): string => {
-  let validateValue: Country | string;
-  if (name === 'postalCode') {
-    validateValue = countryShipping;
-  } else if (name === 'billingPostalCode') {
-    validateValue = countryBilling;
-  } else validateValue = inputValue;
+  const validateValue: Country | string = inputValue;
 
   switch (name) {
     case 'email':
