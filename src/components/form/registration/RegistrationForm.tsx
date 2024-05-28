@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import style from 'src/components/form/registration/RegistrationForm.module.scss';
 import { AddressForm } from 'src/components/address/Address.tsx';
 import { validateField } from 'src/components/validation/Validation.ts';
@@ -17,50 +17,14 @@ import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
 import { BillingAddressForm } from 'src/components/address/BillingAddress.tsx';
 import { IResponse } from 'src/components/tempFolderForDevelop/responseHandler.ts';
 import { myStatus } from 'src/components/tempFolderForDevelop/statusHandler.ts';
+import { customerModel, ICustomerModel } from 'src/model/Customer.ts';
+import { CurrentUserContext } from 'src/App.tsx';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 
 let countryShipping: Country;
 let countryBilling: Country;
-interface FormData {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  isShippingDefaultAddress: boolean;
-  isEqualAddress: boolean;
-  street: string;
-  city: string;
-  postalCode: string;
-  country: string;
-  isBillingDefaultAddress: boolean;
-  billingStreet: string;
-  billingCity: string;
-  billingCountry: string;
-  billingPostalCode: string;
-  [key: string]: string | boolean;
-}
 
-const allFields: FormData = {
-  email: '',
-  password: '',
-  firstName: '',
-  lastName: '',
-  dateOfBirth: '',
-  isShippingDefaultAddress: false,
-  isEqualAddress: false,
-  street: '',
-  city: '',
-  postalCode: '',
-  country: '',
-  isBillingDefaultAddress: false,
-  billingStreet: '',
-  billingCity: '',
-  billingCountry: '',
-  billingPostalCode: '',
-};
-
-const requiredFields: (keyof FormData)[] = [
+const requiredFields: (keyof ICustomerModel)[] = [
   'email',
   'password',
   'firstName',
@@ -69,9 +33,16 @@ const requiredFields: (keyof FormData)[] = [
 ];
 
 export const RegistrationForm: React.FC = () => {
-  const [formData, setFormData] = useState(allFields);
+  const context = useContext(CurrentUserContext);
 
-  const [errors, setErrors] = useState(allFields);
+  if (!context) {
+    throw new Error('RegistrationForm must be used within a CurrentUserContext.Provider');
+  }
+
+  const { setCurrentUser } = context;
+  const [formData, setFormData] = useState(customerModel);
+
+  const [errors, setErrors] = useState(customerModel);
 
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -230,6 +201,7 @@ export const RegistrationForm: React.FC = () => {
           generatedBillAddrID = body.customer.addresses[1].id;
           if (body.customer.email) {
             saveCredentials(formData.email, formData.password);
+            setCurrentUser({ ...newCustomer });
             await loginRequest(formData.email, formData.password);
             setTimeout(() => {
               navigation('/');
