@@ -1,0 +1,50 @@
+.filters_container {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  height: 100vh;
+  margin-top: 70px;
+  border-radius: 5px;
+  // background-color: rgba(107, 107, 107, 0.212);
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 5px;
+  font-size: 1.7rem;
+  ;
+  color: (--primary-text-color);
+}
+
+.filter_container {
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+  color: (--primary-text-color);
+}
+
+.filter_group {
+  margin-top: 1rem;
+}
+
+.option_group {
+  display: flex;
+  margin-bottom: 0.5rem;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+
+.color_option label {
+  margin-right: 0.5rem;
+}
+
+.input_container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.6rem;
+}
+
+input {
+  height: initial !important;
+  outline: initial !important;
+}

@@ -96,9 +96,9 @@ export const Form = () => {
   return (
     <>
       <form className={styles.form}>
+        <span className={myStyles.myInput_header}>EMAIL</span>
         <input
           className="inputText"
-          placeholder="Email"
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -106,10 +106,9 @@ export const Form = () => {
           required
         />
         <span className={styles.error}>{errorEmail}</span>
-
+        <span className={myStyles.myInput_header}>PASSWORD</span>
         <input
           className="inputText"
-          placeholder="Password"
           value={password}
           type={showPassword ? 'text' : 'password'}
           onChange={(e) => {
@@ -118,7 +117,6 @@ export const Form = () => {
           required
         />
         <span className={styles.error}>{errorPassword}</span>
-
         <label className={myStyles.myLabel}>
           Show Password
           <input
@@ -130,7 +128,6 @@ export const Form = () => {
             }}
           />
         </label>
-
         <button
           className={myStyles.myButton}
           type="submit"
