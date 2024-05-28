@@ -49,8 +49,9 @@ export const Header: React.FC = () => {
     setIsLoggedIn(false);
     Form();
   };
-
+  const isProductPage = location.startsWith('/product/');
   const is404Page =
+    !isProductPage &&
     location !== '/' &&
     location !== '/login' &&
     location !== '/register' &&
