@@ -1,4 +1,4 @@
-import React, { useEffect, useState /* , useRef */ } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import style from 'src/components/card/Card.module.scss';
 import { Layout } from 'src/components/layout/Layout.tsx';
@@ -10,14 +10,8 @@ export const CardOne: React.FC = () => {
   const [product, setProduct] = useState<IProductData>();
   const [error, setError] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
-  //  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    /* if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    } */
-
     if (typeof id !== 'undefined') {
       apiRoot
         .products()
