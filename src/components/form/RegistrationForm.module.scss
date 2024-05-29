@@ -84,3 +84,10 @@
 .myButton:active {
   background-color: #f0ca00;
 }
+
+.myInput_header {
+  position: relative;
+  top: 15px;
+  font-size: 1.4rem;
+  color: var(--primary-text-color);
+}

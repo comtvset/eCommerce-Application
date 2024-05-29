@@ -10,6 +10,7 @@ interface InputProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   error?: string;
+  className?: string;
 }
 
 export const InputWithLabel: React.FC<InputProps> = ({
@@ -21,9 +22,10 @@ export const InputWithLabel: React.FC<InputProps> = ({
   onChange,
   required = false,
   error,
+  className,
 }) => {
   return (
-    <div>
+    <div className={className}>
       <label htmlFor={id}>{label}</label>
       <input
         id={id}
