@@ -10,7 +10,9 @@ const ModalWindow: React.FC<ModalWindowProps> = ({ data }) => {
   const { status, message } = data;
   return (
     <div className={styles.parent}>
-      <div className={styles.children}>
+      <div
+        className={`${styles.children} ${status === 'Invalid' ? styles.error : styles.positive}`}
+      >
         <span>{status}</span>
         <span>{message}</span>
       </div>
