@@ -143,6 +143,21 @@ export const RegistrationForm: React.FC = () => {
     }));
   }, [formData.billingCountry, formData.billingPostalCode]);
 
+  useEffect(() => {
+    if (showModal) {
+      const timer = setTimeout(() => {
+        setShowModal(false);
+      }, 1000);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+    return () => {
+      ('');
+    };
+  }, [showModal]);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -200,9 +215,12 @@ export const RegistrationForm: React.FC = () => {
           generatedShippAddrID = body.customer.addresses[0].id;
           generatedBillAddrID = body.customer.addresses[1].id;
           if (body.customer.email) {
-            saveCredentials(formData.email, formData.password);
-            setCurrentUser({ ...newCustomer });
-            await loginRequest(formData.email, formData.password);
+            if (formData.password) {
+              saveCredentials(formData.email, formData.password);
+              setCurrentUser({ ...body.customer });
+              await loginRequest(formData.email, formData.password);
+            }
+
             setTimeout(() => {
               navigation('/');
             }, 1000);
@@ -276,25 +294,15 @@ export const RegistrationForm: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (showModal) {
-      const timer = setTimeout(() => {
-        setShowModal(false);
-      }, 1000);
-
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-    return () => {
-      ('');
-    };
-  }, [showModal]);
-
   return (
     <>
       <form className={style.registration} onSubmit={handleSubmit}>
-        <RegistrationMainFields formData={formData} handleChange={handleChange} errors={errors} />
+        <RegistrationMainFields
+          formData={formData}
+          showEmailAndPassword
+          handleChange={handleChange}
+          errors={errors}
+        />
         <AddressForm
           formData={formData}
           handleSameAddress={handleSameAddress}

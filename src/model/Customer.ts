@@ -1,21 +1,21 @@
 export interface ICustomerModel {
   email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
+  password: string | undefined;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  dateOfBirth: string | undefined;
   isShippingDefaultAddress: boolean;
   isEqualAddress: boolean;
-  street: string;
-  city: string;
-  postalCode: string;
-  country: string;
+  street: string | undefined;
+  city: string | undefined;
+  postalCode: string | undefined;
+  country: string | undefined;
   isBillingDefaultAddress: boolean;
-  billingStreet: string;
-  billingCity: string;
-  billingCountry: string;
-  billingPostalCode: string;
-  [key: string]: string | boolean;
+  billingStreet: string | undefined;
+  billingCity: string | undefined;
+  billingCountry: string | undefined;
+  billingPostalCode: string | undefined;
+  [key: string]: string | boolean | undefined;
 }
 
 export const customerModel: ICustomerModel = {

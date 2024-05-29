@@ -1,86 +1,89 @@
-@import 'src/styles/mixins';
-@import 'src/styles/variables';
+@import 'src/styles/mixins.scss';
 
-.registration {
+.tab_container {
   display: flex;
+  justify-content: center;
+  align-items: flex-start;
   flex-direction: column;
-  align-items: center;
-  height: 100vw;
-  background-color: var(--background-color);
-  font-size: 1.3rem;
-}
-
-.submitButton {
-  background-color: var(--register-button);
-  border-radius: 0.5rem;
-  height: auto;
-  padding: 0.5rem 0;
-  letter-spacing: 0.05rem;
-  border: 1px solid var(--background-color);
-  color: var(--background-color);
-  font-weight: 600;
-  cursor: pointer;
-  margin: 20px auto;
-  padding: 10px 65px;
-}
-
-.submitButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.register_text {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: $secondaryTextColor;
-}
-
-.login_link {
-  display: inline-block;
-  padding: 10px 75px;
-  background-color: $primaryBackgroundButton;
-  color: $secondaryTextColor;
-  font-size: 1.6rem;
-  font-weight: 700;
-  justify-self: center;
-  align-self: center;
-  margin-bottom: 20px;
-  border-radius: 0.5rem;
-
-  &:hover {
-    background-color: $primaryBackgroundButtonHover;
-    transition: background-color 0.3s ease;
-    color: $secondaryTextColor;
-  }
-
-  &:active {
-    background-color: $primaryBackgroundButtonActive;
+  margin: 50px 50px;
+  > div {
+    width: 100%;
   }
 }
 
-.myLabel {
+.tabs {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  font-size: 1.3rem;
-  color: hsla(0, 63%, 3%, 0.564);
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+  flex-wrap: wrap;
 }
 
-.myInput {
-  outline: none;
-  width: 20px;
-}
-
-.myButton {
-  outline: none;
-  background-color: #d6b258;
+.tab {
+  padding: 10px 20px;
   cursor: pointer;
+  background-color: #efe6d3;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
-.myButton:hover {
-  background-color: #f0ac00;
+.tab:hover {
+  background-color: #b4d23d;
 }
 
-.myButton:active {
-  background-color: #f0ca00;
+.activeTab {
+  background-color: #94b21b;
+  color: white;
+  :hover {
+    background-color: #b4d23d;
+  }
+}
+
+.content {
+  @include customer-info-block;
+}
+
+.content.hidden {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.content.visible {
+  opacity: 1;
+  position: relative;
+}
+
+.addresses {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  > div {
+    @include customer-info-block;
+    width: 45%;
+  }
+}
+
+@media (width < 650px) {
+  .tab_container {
+    margin: 10px 10px;
+  }
+
+  .tabs {
+    border-bottom: none;
+  }
+  .addresses {
+    flex-direction: column;
+    padding: 10px 0px;
+    margin-right: 20px;
+    > div {
+      width: 100%;
+    }
+  }
 }

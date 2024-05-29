@@ -8,19 +8,19 @@ interface AddressProps {
   formData: {
     isShippingDefaultAddress: boolean;
     isEqualAddress: boolean;
-    street: string;
-    city: string;
-    country: string;
-    postalCode: string;
+    street: string | undefined;
+    city: string | undefined;
+    country: string | undefined;
+    postalCode: string | undefined;
   };
   handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   handleBoolean: (value: boolean) => void;
   handleSameAddress: (value: boolean) => void;
   errors: {
-    street: string;
-    city: string;
-    country: string;
-    postalCode: string;
+    street: string | undefined;
+    city: string | undefined;
+    country: string | undefined;
+    postalCode: string | undefined;
   };
   title: string;
 }
@@ -34,7 +34,7 @@ export const AddressForm: React.FC<AddressProps> = ({
   title,
 }) => {
   return (
-    <>
+    <div>
       <h2 className={style.left_aligned}>{title}</h2>
       <div className={style.checkboxes}>
         <Checkbox
@@ -100,6 +100,6 @@ export const AddressForm: React.FC<AddressProps> = ({
           error={errors.postalCode}
         />
       </div>
-    </>
+    </div>
   );
 };
