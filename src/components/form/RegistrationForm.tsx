@@ -98,7 +98,7 @@ export const RegistrationForm: React.FC = () => {
 
   const validateOneField = (name: string, value: string) => {
     const error = validateField(name, value, countryShipping, countryBilling);
-    const errorValidate = error === '' ? '' : `⚠ ${error}`;
+    const errorValidate = error === '' ? '' : error;
     setErrors({
       ...errors,
       [name]: errorValidate,
@@ -130,7 +130,7 @@ export const RegistrationForm: React.FC = () => {
         if (typeof formData[field] === 'string') {
           const value = formData[field] as string;
           const error = validateField(field, value, countryShipping, countryBilling);
-          const errorValidate = error === '' ? '' : `⚠ ${error}`;
+          const errorValidate = error === '' ? '' : error;
           setErrors((prevErrors) => ({
             ...prevErrors,
             [field]: errorValidate,
