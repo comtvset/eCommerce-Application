@@ -73,7 +73,31 @@ export const UserProfileForm: React.FC = () => {
     };
   };
 
+  interface CommercetoolsErrorDetail {
+    code: string;
+    message: string;
+  }
+
+  interface CommercetoolsErrorResponse {
+    statusCode: number;
+    message: string;
+    errors: CommercetoolsErrorDetail[];
+  }
+
   useEffect(() => {
+    const isCommercetoolsError = (
+      error: unknown,
+    ): error is { body: CommercetoolsErrorResponse } => {
+      return (
+        typeof error === 'object' &&
+        error !== null &&
+        'body' in error &&
+        typeof (error as { body: unknown }).body === 'object' &&
+        (error as { body: unknown }).body !== null &&
+        'errors' in (error as { body: CommercetoolsErrorResponse }).body &&
+        Array.isArray((error as { body: CommercetoolsErrorResponse }).body.errors)
+      );
+    };
     const { client } = getLoginClient();
     const PROJECT_KEY: string = import.meta.env.VITE_CTP_PROJECT_KEY as string;
 
@@ -92,10 +116,15 @@ export const UserProfileForm: React.FC = () => {
           setFormData(customerModelData);
         })
         .catch((error: unknown) => {
-          if (error) {
-            setModalData(myStatus(false, 'Error during customer data extraction. Try later.'));
-            setShowModal(true);
+          const errorsList: string[] = [];
+
+          if (isCommercetoolsError(error)) {
+            error.body.errors.forEach((err: CommercetoolsErrorDetail) => {
+              errorsList.push(`${err.code}: ${err.message}`);
+            });
           }
+          setModalData(myStatus(false, errorsList.join('\n')));
+          setShowModal(true);
         });
     }
   }, [id]);
@@ -104,7 +133,7 @@ export const UserProfileForm: React.FC = () => {
     if (showModal) {
       const timer = setTimeout(() => {
         setShowModal(false);
-      }, 1000);
+      }, 4000);
 
       return () => {
         clearTimeout(timer);
