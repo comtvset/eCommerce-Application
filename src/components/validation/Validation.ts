@@ -32,7 +32,7 @@ export const validateEmail = (value: string) => {
   if (!/^[^@\s]+@[^.@\s]+\.[^@\s]+$/.test(value)) {
     errorMessages.push('Must be in the correct format like user@example.com');
   }
-  return errorMessages.join('\n ');
+  return errorMessages.join('\n');
 };
 
 export const validatePassword = (password: string): string => {
@@ -54,7 +54,7 @@ export const validatePassword = (password: string): string => {
     errorMessages.push('Spaces are not allowed');
   }
 
-  return errorMessages.join('\n ');
+  return errorMessages.join('\n');
 };
 
 const validateName = (name: string): string => {

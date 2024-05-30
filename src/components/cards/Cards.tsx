@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import style from 'src/components/cards/Cards.module.scss';
+import { Link } from 'src/components/link/Link.tsx';
 
 export interface IProductData {
   id: string;
@@ -53,7 +54,12 @@ export const Card: React.FC = () => {
           centAmount !== undefined ? `${currencySymbol}${(centAmount / 100).toFixed(2)}` : '';
 
         return (
-          <div className={style.card} key={product.id}>
+          <Link
+            className={style.card}
+            key={product.id}
+            id={product.id}
+            to={`/product/${product.id}`}
+          >
             <div className={style.image_container}>
               <img
                 className={style.image}
@@ -76,7 +82,7 @@ export const Card: React.FC = () => {
             <div>
               <Paragraph tag="h2" title={price} className="" />
             </div>
-          </div>
+          </Link>
         );
       })}
     </div>
