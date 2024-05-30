@@ -1,5 +1,5 @@
-export const UserProfileForm: React.FC = () => {
-  return <div />;
-};
+import React from 'react';
 
-export default UserProfileForm;
+export const UserProfileForm: React.FC = () => {
+  return <div>Profile</div>;
+};

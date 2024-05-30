@@ -13,10 +13,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { loginRequest } from 'src/services/api/loginRequest.ts';
 import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
+import { createCustomer } from 'src/services/api/registrationCustomer.ts';
+import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 import { BillingAddressForm } from '../address/BillingAddress.tsx';
-import { IResponse } from '../tempFolderForDevelop/responseHandler.ts';
-import { myStatus } from '../tempFolderForDevelop/statusHandler.ts';
 import { ModalWindow } from '../modalWindow/modalWindow.tsx';
 
 let countryShipping: Country;
@@ -75,8 +75,9 @@ export const RegistrationForm: React.FC = () => {
 
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState<IResponse | null>(null);
+  const popupMessage = { status: '', message: '' };
+
+  const [modalData, setModalData] = useState(popupMessage);
   const navigation = useNavigate();
 
   countryShipping = Country[formData.country as keyof typeof Country];
@@ -97,7 +98,7 @@ export const RegistrationForm: React.FC = () => {
 
   const validateOneField = (name: string, value: string) => {
     const error = validateField(name, value, countryShipping, countryBilling);
-    const errorValidate = error === '' ? '' : `⚠ ${error}`;
+    const errorValidate = error === '' ? '' : error;
     setErrors({
       ...errors,
       [name]: errorValidate,
@@ -129,7 +130,7 @@ export const RegistrationForm: React.FC = () => {
         if (typeof formData[field] === 'string') {
           const value = formData[field] as string;
           const error = validateField(field, value, countryShipping, countryBilling);
-          const errorValidate = error === '' ? '' : `⚠ ${error}`;
+          const errorValidate = error === '' ? '' : error;
           setErrors((prevErrors) => ({
             ...prevErrors,
             [field]: errorValidate,
@@ -154,7 +155,7 @@ export const RegistrationForm: React.FC = () => {
       (error) => error === '' || typeof error === 'boolean',
     );
     setIsFormValid(allFieldsValid);
-  }, [errors]);
+  }, [errors, formData]);
 
   useEffect(() => {
     const error = validatePostalCode(countryShipping, formData.postalCode);
@@ -162,7 +163,7 @@ export const RegistrationForm: React.FC = () => {
       ...prevErrors,
       postalCode: error,
     }));
-  }, [formData.country, formData.postalCode, formData.isEqualAddress]);
+  }, [formData.country, formData.postalCode]);
 
   useEffect(() => {
     const error = validatePostalCode(countryBilling, formData.billingPostalCode);
@@ -170,7 +171,7 @@ export const RegistrationForm: React.FC = () => {
       ...prevErrors,
       billingPostalCode: error,
     }));
-  }, [formData.billingCountry, formData.billingPostalCode, formData.isEqualAddress]);
+  }, [formData.billingCountry, formData.billingPostalCode]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -214,16 +215,7 @@ export const RegistrationForm: React.FC = () => {
         ...(formData.isBillingDefaultAddress && { defaultBillingAddress: 1 }),
       };
 
-      const createCustomer = () => {
-        return apiRoot
-          .customers()
-          .post({
-            body: newCustomer,
-          })
-          .execute();
-      };
-
-      createCustomer()
+      createCustomer(newCustomer)
         .then(async ({ body }) => {
           generatedCustomerID = body.customer.id;
           generatedShippAddrID = body.customer.addresses[0].id;
@@ -234,14 +226,12 @@ export const RegistrationForm: React.FC = () => {
             setTimeout(() => {
               navigation('/');
             }, 1000);
-            setModalData(myStatus(true, 'Login successful!'));
-            setShowModal(true);
+            setModalData({ status: 'Success', message: 'You have been registered.' });
           }
         })
         .catch((error: unknown) => {
-          if (error) {
-            setModalData(myStatus(false, 'A customer with this email already exists!'));
-            setShowModal(true);
+          if (error instanceof ServerError) {
+            setModalData({ status: 'Error', message: error.message });
           }
         });
 
@@ -305,10 +295,10 @@ export const RegistrationForm: React.FC = () => {
   };
 
   useEffect(() => {
-    if (showModal) {
+    if (modalData.status) {
       const timer = setTimeout(() => {
-        setShowModal(false);
-      }, 1000);
+        setModalData({ status: '', message: '' });
+      }, 4000);
 
       return () => {
         clearTimeout(timer);
@@ -317,7 +307,7 @@ export const RegistrationForm: React.FC = () => {
     return () => {
       ('');
     };
-  }, [showModal]);
+  }, [modalData]);
 
   return (
     <>
@@ -351,7 +341,7 @@ export const RegistrationForm: React.FC = () => {
           <Link to="/login" title="LOGIN" className={style.login_link} />
         </div>
       </form>
-      {showModal && modalData && <ModalWindow data={modalData} />}
+      {modalData.message && <ModalWindow data={modalData} />}
     </>
   );
 };
