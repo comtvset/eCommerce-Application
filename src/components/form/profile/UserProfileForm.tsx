@@ -53,19 +53,21 @@ export const UserProfileForm: React.FC = () => {
   };
 
   const mapCustomerToModel = (customer: Customer): ICustomerModel => {
+    const isShippingDefaultAddress = !!customer.defaultShippingAddressId?.toString();
+    const isBillingDefaultAddress = !!customer.defaultBillingAddressId?.toString();
     return {
       email: customer.email,
       password: customer.password,
       firstName: customer.firstName,
       lastName: customer.lastName,
       dateOfBirth: customer.dateOfBirth,
-      isShippingDefaultAddress: false,
+      isShippingDefaultAddress,
       isEqualAddress: false,
       street: customer.addresses[0].streetName,
       city: customer.addresses[0]?.city,
       postalCode: customer.addresses[0]?.postalCode,
       country: customer.addresses[0]?.country,
-      isBillingDefaultAddress: false,
+      isBillingDefaultAddress,
       billingStreet: customer.addresses[1]?.streetName,
       billingCity: customer.addresses[1]?.city,
       billingCountry: customer.addresses[1]?.country,
