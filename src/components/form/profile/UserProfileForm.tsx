@@ -10,6 +10,7 @@ import { getLoginClient } from 'src/services/api/BuildClient.ts';
 import { AddressForm } from 'src/components/address/Address.tsx';
 import { BillingAddressForm } from 'src/components/address/BillingAddress.tsx';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
+import { countryLookup } from 'src/components/country/country.ts';
 
 export const UserProfileForm: React.FC = () => {
   const [activeTab, setActiveTab] = useState('basicInfo');
@@ -55,6 +56,8 @@ export const UserProfileForm: React.FC = () => {
   const mapCustomerToModel = (customer: Customer): ICustomerModel => {
     const isShippingDefaultAddress = !!customer.defaultShippingAddressId?.toString();
     const isBillingDefaultAddress = !!customer.defaultBillingAddressId?.toString();
+    const country = countryLookup[customer.addresses[0].country];
+    const billingCountry = countryLookup[customer.addresses[1].country];
     return {
       email: customer.email,
       password: customer.password,
@@ -66,11 +69,11 @@ export const UserProfileForm: React.FC = () => {
       street: customer.addresses[0].streetName,
       city: customer.addresses[0]?.city,
       postalCode: customer.addresses[0]?.postalCode,
-      country: customer.addresses[0]?.country,
+      country,
       isBillingDefaultAddress,
       billingStreet: customer.addresses[1]?.streetName,
       billingCity: customer.addresses[1]?.city,
-      billingCountry: customer.addresses[1]?.country,
+      billingCountry,
       billingPostalCode: customer.addresses[1]?.postalCode,
     };
   };
