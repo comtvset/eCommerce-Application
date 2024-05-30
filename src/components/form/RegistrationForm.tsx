@@ -6,7 +6,6 @@ import { validatePostalCode } from 'src/components/validation/PostalCodeValidati
 import { Country } from 'src/components/country/country.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { Link } from 'src/components/link/Link.tsx';
-// import { apiRootRegistration } from 'src/services/api/ctpClientRegistration.ts';
 import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { loginRequest } from 'src/services/api/loginRequest.ts';
 import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
+import { createCustomer } from 'src/services/api/registrationCustomer.ts';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 import { BillingAddressForm } from '../address/BillingAddress.tsx';
 import { IResponse } from '../tempFolderForDevelop/responseHandler.ts';
@@ -215,16 +215,7 @@ export const RegistrationForm: React.FC = () => {
         ...(formData.isBillingDefaultAddress && { defaultBillingAddress: 1 }),
       };
 
-      const createCustomer = () => {
-        return apiRoot
-          .customers()
-          .post({
-            body: newCustomer,
-          })
-          .execute();
-      };
-
-      createCustomer()
+      createCustomer(newCustomer)
         .then(async ({ body }) => {
           generatedCustomerID = body.customer.id;
           generatedShippAddrID = body.customer.addresses[0].id;
@@ -236,15 +227,14 @@ export const RegistrationForm: React.FC = () => {
               navigation('/');
             }, 1000);
             setModalData(myStatus(true, 'Login successful!'));
-            setShowModal(true);
           }
         })
         .catch((error: unknown) => {
           if (error) {
             setModalData(myStatus(false, 'A customer with this email already exists!'));
-            setShowModal(true);
           }
         });
+      setShowModal(true);
 
       if (formData.isShippingDefaultAddress) {
         const setDefualtAdd = () => {
