@@ -5,6 +5,7 @@ import { IProductData } from 'src/components/cards/Cards.tsx';
 import { Layout } from 'src/components/layout/Layout.tsx';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
+import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -25,6 +26,15 @@ export const CardOne: React.FC = () => {
 
   const isImages = product?.masterData.staged.masterVariant.images ?? [];
   const isLength = isImages.length > 1;
+  const isFirstPrice = product?.masterData.current.masterVariant.prices;
+  const isDiscount = isFirstPrice
+    ? ((isFirstPrice[0].discounted?.value.centAmount ?? 0) / 100).toFixed(2)
+    : '';
+  const isNoDiscount = isFirstPrice
+    ? ((isFirstPrice[0]?.value.centAmount ?? 0) / 100).toFixed(2).toString()
+    : '';
+  const isCurrencyCode = isFirstPrice ? isFirstPrice[0].discounted?.value.currencyCode : '';
+  const currencyCode = getCurrencySymbol(isCurrencyCode) ?? '';
 
   useEffect(() => {
     if (typeof id !== 'undefined') {
@@ -107,7 +117,29 @@ export const CardOne: React.FC = () => {
               title={product.masterData.current.description?.['en-US'] ?? ''}
               className={style.description}
             />
-            <Paragraph tag="p" title="price" className={style.description} />
+            <Paragraph tag="p" title="PRICE" className={style.price} />
+            <div className={style.prices}>
+              {isFirstPrice?.[0].discounted ? (
+                <>
+                  <Paragraph
+                    tag="p"
+                    title={`${currencyCode}${isNoDiscount}`}
+                    className={`${style.price_start} ${style.price_sale}`}
+                  />
+                  <Paragraph
+                    tag="p"
+                    title={`${currencyCode}${isDiscount} SALE`}
+                    className={style.price_finish}
+                  />
+                </>
+              ) : (
+                <Paragraph
+                  tag="p"
+                  title={`${currencyCode}${isNoDiscount}`}
+                  className={style.price_start}
+                />
+              )}
+            </div>
           </div>
         </div>
       )}
