@@ -170,6 +170,7 @@ export const UserProfileForm: React.FC = () => {
                 handleChange={handleChange}
                 errors={errors}
                 title="Shipping address"
+                showIsTheSameAddress={false}
               />
               <BillingAddressForm
                 formData={formData}

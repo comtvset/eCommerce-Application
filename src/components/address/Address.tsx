@@ -23,6 +23,7 @@ interface AddressProps {
     postalCode: string | undefined;
   };
   title: string;
+  showIsTheSameAddress?: boolean;
 }
 
 export const AddressForm: React.FC<AddressProps> = ({
@@ -32,6 +33,7 @@ export const AddressForm: React.FC<AddressProps> = ({
   handleSameAddress,
   errors,
   title,
+  showIsTheSameAddress = true,
 }) => {
   return (
     <div>
@@ -43,12 +45,14 @@ export const AddressForm: React.FC<AddressProps> = ({
           checked={formData.isShippingDefaultAddress}
           onChange={handleBoolean}
         />
-        <Checkbox
-          id="isEqualAddress"
-          label="Shipping and Billing address are the same"
-          checked={formData.isEqualAddress}
-          onChange={handleSameAddress}
-        />
+        {showIsTheSameAddress && (
+          <Checkbox
+            id="isEqualAddress"
+            label="Shipping and Billing address are the same"
+            checked={formData.isEqualAddress}
+            onChange={handleSameAddress}
+          />
+        )}
       </div>
       <div className={style.formbody}>
         <InputWithLabel
