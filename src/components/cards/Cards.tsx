@@ -4,24 +4,12 @@ import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import style from 'src/components/cards/Cards.module.scss';
 import { Link } from 'src/components/link/Link.tsx';
+import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
 
 export interface IProductData {
   id: string;
   masterData: ProductCatalogData;
 }
-
-const getCurrencySymbol = (currencyCode: string | undefined) => {
-  switch (currencyCode) {
-    case 'USD':
-      return '$';
-    case 'EUR':
-      return '€';
-    case 'GBP':
-      return '£';
-    default:
-      return currencyCode;
-  }
-};
 
 export const Card: React.FC = () => {
   const [products, setProducts] = useState<IProductData[]>([]);
