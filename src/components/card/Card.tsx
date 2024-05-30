@@ -56,6 +56,7 @@ export const CardOne: React.FC = () => {
     slidesToShow: isImages.length,
     slidesToScroll: 1,
   };
+  const { dots, infinite, speed, slidesToShow, slidesToScroll } = settings;
 
   return (
     <Layout className={style.container}>
@@ -74,7 +75,11 @@ export const CardOne: React.FC = () => {
             </div>
             {isLength && (
               <Slider
-                {...settings}
+                dots={dots}
+                infinite={infinite}
+                speed={speed}
+                slidesToShow={slidesToShow}
+                slidesToScroll={slidesToScroll}
                 className={style.images_container}
                 afterChange={(currentSlide: number) => {
                   handleImageChange(isImages[currentSlide]);

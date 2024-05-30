@@ -44,7 +44,6 @@ module.exports = {
     eqeqeq: 'error',
     'operator-linebreak': ['error', 'after', { overrides: { '?': 'before', ':': 'before' } }],
     'no-console': 'warn',
-    'react/jsx-props-no-spreading': 'off',
     'no-undef': 'off',
     'no-unused-vars': 'off',
     'no-shadow': 'off',
