@@ -1,4 +1,5 @@
 import { CustomerDraft, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { ctpClient } from './BuildClient.ts';
 
 export const createCustomer = (newCustomer: CustomerDraft) => {
@@ -11,5 +12,8 @@ export const createCustomer = (newCustomer: CustomerDraft) => {
     .post({
       body: newCustomer,
     })
-    .execute();
+    .execute()
+    .catch((error: unknown) => {
+      throw new ServerError('Error during customer registration.', error);
+    });
 };
