@@ -10,9 +10,12 @@ import { getLoginClient } from 'src/services/api/BuildClient.ts';
 import { AddressForm } from 'src/components/address/Address.tsx';
 import { BillingAddressForm } from 'src/components/address/BillingAddress.tsx';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
-import { countryLookup } from 'src/components/country/country.ts';
+import { countryLookup, Country } from 'src/components/country/country.ts';
+import { validateField } from 'src/components/validation/Validation.ts';
 
 export const UserProfileForm: React.FC = () => {
+  let countryShipping: Country;
+  let countryBilling: Country;
   const [activeTab, setActiveTab] = useState('basicInfo');
 
   const [formData, setFormData] = useState(customerModel);
@@ -22,10 +25,6 @@ export const UserProfileForm: React.FC = () => {
   const [modalData, setModalData] = useState<IResponse | null>(null);
 
   const id: string | null = localStorage.getItem('fullID');
-
-  const handleChange = () => {
-    //  console.log('TODO');
-  };
 
   const handleDefaultAddress = (checked: boolean) => {
     setFormData({
@@ -51,6 +50,25 @@ export const UserProfileForm: React.FC = () => {
         billingPostalCode: prevFormData.postalCode,
       }),
     }));
+  };
+
+  const validateOneField = (name: string, value: string) => {
+    const error = validateField(name, value, countryShipping, countryBilling);
+    const errorValidate = error === '' ? '' : error;
+    setErrors({
+      ...errors,
+      [name]: errorValidate,
+    });
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    validateOneField(name, value);
   };
 
   const mapCustomerToModel = (customer: Customer): ICustomerModel => {
