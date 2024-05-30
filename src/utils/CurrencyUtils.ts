@@ -1,12 +1,9 @@
-export const getCurrencySymbol = (currencyCode: string | undefined) => {
-  switch (currencyCode) {
-    case 'USD':
-      return '$';
-    case 'EUR':
-      return '€';
-    case 'GBP':
-      return '£';
-    default:
-      return currencyCode;
-  }
+enum CurrencySymbol {
+  USD = '$',
+  EUR = '€',
+  GBP = '£',
+}
+
+export const getCurrencySymbol = (currencyCode: string | undefined): string | undefined => {
+  return currencyCode ? CurrencySymbol[currencyCode as keyof typeof CurrencySymbol] : undefined;
 };
