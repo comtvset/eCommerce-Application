@@ -14,16 +14,34 @@ interface SelectorProps {
   onChange: React.ChangeEventHandler<HTMLSelectElement>;
   onBlur: React.ChangeEventHandler<HTMLSelectElement>;
   error?: string;
+  disabledMode?: boolean;
 }
 
 const Selector: React.FC<{ selectorProps: SelectorProps }> = ({ selectorProps }) => {
-  const { id, name, value, label, options, onChange, onBlur, error } = selectorProps;
+  const {
+    id,
+    name,
+    value,
+    label,
+    options,
+    onChange,
+    onBlur,
+    error,
+    disabledMode = false,
+  } = selectorProps;
 
   return (
     <div>
       <label htmlFor={id}>{label}</label>
 
-      <select id={id} name={name} value={value} onChange={onChange} onBlur={onBlur}>
+      <select
+        id={id}
+        name={name}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        disabled={disabledMode}
+      >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

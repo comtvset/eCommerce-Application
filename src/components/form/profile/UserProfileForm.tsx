@@ -17,6 +17,8 @@ export const UserProfileForm: React.FC = () => {
   let countryShipping: Country;
   let countryBilling: Country;
   const [activeTab, setActiveTab] = useState('basicInfo');
+  const [isDisabledUserInfo, setEditUserInfo] = useState(true);
+  const [isDisabledPassword, setEditPassword] = useState(true);
 
   const [formData, setFormData] = useState(customerModel);
   const [errors, setErrors] = useState<ICustomerModel>(customerModel);
@@ -69,6 +71,28 @@ export const UserProfileForm: React.FC = () => {
     });
 
     validateOneField(name, value);
+  };
+
+  const handleUserInfoTab = () => {
+    if (isDisabledUserInfo) {
+      // send saving reqest to server
+    }
+    setEditUserInfo(!isDisabledUserInfo);
+  };
+
+  const handlePasswordTab = () => {
+    if (isDisabledPassword) {
+      // send saving reqest to server
+    }
+    setEditPassword(!isDisabledPassword);
+  };
+
+  const handleChangeMode = (tab: string) => {
+    if (tab === 'basicInfo') {
+      handleUserInfoTab();
+    } else if (tab === 'password') {
+      handlePasswordTab();
+    }
   };
 
   const mapCustomerToModel = (customer: Customer): ICustomerModel => {
@@ -167,7 +191,7 @@ export const UserProfileForm: React.FC = () => {
     };
   }, [showModal]);
 
-  const renderContent = () => {
+  const handleSwitchTab = () => {
     switch (activeTab) {
       case 'basicInfo':
         return (
@@ -178,6 +202,7 @@ export const UserProfileForm: React.FC = () => {
                 handleChange={handleChange}
                 errors={errors}
                 showEmailAndPassword={false}
+                disabledMode={isDisabledUserInfo}
               />
             </div>
             <div className={styles.addresses}>
@@ -189,6 +214,7 @@ export const UserProfileForm: React.FC = () => {
                 errors={errors}
                 title="Shipping address"
                 showIsTheSameAddress={false}
+                disabledMode={isDisabledUserInfo}
               />
               <BillingAddressForm
                 formData={formData}
@@ -196,13 +222,31 @@ export const UserProfileForm: React.FC = () => {
                 handleChange={handleChange}
                 errors={errors}
                 title="Billing address"
+                disabledMode={isDisabledUserInfo}
               />
             </div>
+            <button
+              type="button"
+              onClick={() => {
+                handleChangeMode(activeTab);
+              }}
+            >
+              {isDisabledUserInfo ? 'Edit' : 'Save'}
+            </button>
             {showModal && modalData && <ModalWindow data={modalData} />}
           </>
         );
       case 'password':
-        return <div>Not implemented</div>;
+        return (
+          <button
+            type="button"
+            onClick={() => {
+              handleChangeMode(activeTab);
+            }}
+          >
+            {isDisabledPassword ? 'Edit' : 'Save'}
+          </button>
+        );
       default:
         return null;
     }
@@ -229,7 +273,7 @@ export const UserProfileForm: React.FC = () => {
           Password
         </button>
       </div>
-      <div className={styles.contentWrapper}>{renderContent()}</div>
+      <div className={styles.contentWrapper}>{handleSwitchTab()}</div>
     </div>
   );
 };

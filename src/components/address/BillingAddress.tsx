@@ -21,6 +21,7 @@ interface BillingAddressProps {
     billingPostalCode: string | undefined;
   };
   title: string;
+  disabledMode?: boolean;
 }
 
 export const BillingAddressForm: React.FC<BillingAddressProps> = ({
@@ -29,6 +30,7 @@ export const BillingAddressForm: React.FC<BillingAddressProps> = ({
   handleBoolean,
   errors,
   title,
+  disabledMode = false,
 }) => {
   return (
     <div>
@@ -39,6 +41,7 @@ export const BillingAddressForm: React.FC<BillingAddressProps> = ({
           label="Set as default address"
           checked={formData.isBillingDefaultAddress}
           onChange={handleBoolean}
+          disabledMode={disabledMode}
         />
       </div>
       <div className={style.formbody}>
@@ -51,6 +54,7 @@ export const BillingAddressForm: React.FC<BillingAddressProps> = ({
           onChange={handleChange}
           required
           error={errors.billingStreet}
+          disabledMode={disabledMode}
         />
         <InputWithLabel
           id="billingCity"
@@ -61,6 +65,7 @@ export const BillingAddressForm: React.FC<BillingAddressProps> = ({
           onChange={handleChange}
           required
           error={errors.billingCity}
+          disabledMode={disabledMode}
         />
         <Selector
           selectorProps={{
@@ -78,6 +83,7 @@ export const BillingAddressForm: React.FC<BillingAddressProps> = ({
             onChange: handleChange,
             onBlur: handleChange,
             error: errors.billingCountry,
+            disabledMode,
           }}
         />
         <InputWithLabel
@@ -89,6 +95,7 @@ export const BillingAddressForm: React.FC<BillingAddressProps> = ({
           onChange={handleChange}
           required
           error={errors.billingPostalCode}
+          disabledMode={disabledMode}
         />
       </div>
     </div>
