@@ -20,6 +20,7 @@ export interface RegistrationMainFieldsProps {
     dateOfBirth: string | undefined;
   };
   showEmailAndPassword?: boolean;
+  disabledMode?: boolean;
 }
 
 export const RegistrationMainFields: React.FC<RegistrationMainFieldsProps> = ({
@@ -27,6 +28,7 @@ export const RegistrationMainFields: React.FC<RegistrationMainFieldsProps> = ({
   handleChange,
   errors,
   showEmailAndPassword = true,
+  disabledMode = false,
 }) => {
   return (
     <div className={styleAddr.formbody}>
@@ -41,6 +43,7 @@ export const RegistrationMainFields: React.FC<RegistrationMainFieldsProps> = ({
             onChange={handleChange}
             required
             error={errors.email}
+            disabledMode={disabledMode}
           />
           <InputWithLabel
             id="password"
@@ -51,6 +54,7 @@ export const RegistrationMainFields: React.FC<RegistrationMainFieldsProps> = ({
             onChange={handleChange}
             required
             error={errors.password}
+            disabledMode={disabledMode}
           />
         </>
       )}
@@ -64,6 +68,7 @@ export const RegistrationMainFields: React.FC<RegistrationMainFieldsProps> = ({
         onChange={handleChange}
         required
         error={errors.firstName}
+        disabledMode={disabledMode}
       />
       <InputWithLabel
         id="lastName"
@@ -74,6 +79,7 @@ export const RegistrationMainFields: React.FC<RegistrationMainFieldsProps> = ({
         onChange={handleChange}
         required
         error={errors.lastName}
+        disabledMode={disabledMode}
       />
       <InputWithLabel
         id="dateOfBirth"
@@ -84,6 +90,7 @@ export const RegistrationMainFields: React.FC<RegistrationMainFieldsProps> = ({
         onChange={handleChange}
         required
         error={errors.dateOfBirth}
+        disabledMode={disabledMode}
       />
     </div>
   );

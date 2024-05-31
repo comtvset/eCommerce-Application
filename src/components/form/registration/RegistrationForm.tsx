@@ -15,11 +15,10 @@ import { loginRequest } from 'src/services/api/loginRequest.ts';
 import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
 import { BillingAddressForm } from 'src/components/address/BillingAddress.tsx';
-
+import { IResponse } from 'src/components/tempFolderForDevelop/responseHandler.ts';
+import { myStatus } from 'src/components/tempFolderForDevelop/statusHandler.ts';
 import { customerModel, ICustomerModel } from 'src/model/Customer.ts';
 import { CurrentUserContext } from 'src/App.tsx';
-import { createCustomer } from 'src/services/api/registrationCustomer.ts';
-import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
 
 let countryShipping: Country;
@@ -47,9 +46,8 @@ export const RegistrationForm: React.FC = () => {
 
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const popupMessage = { status: '', message: '' };
-
-  const [modalData, setModalData] = useState(popupMessage);
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState<IResponse | null>(null);
   const navigation = useNavigate();
 
   countryShipping = Country[formData.country as keyof typeof Country];
@@ -146,10 +144,10 @@ export const RegistrationForm: React.FC = () => {
   }, [formData.billingCountry, formData.billingPostalCode]);
 
   useEffect(() => {
-    if (modalData.status) {
+    if (showModal) {
       const timer = setTimeout(() => {
-        setModalData({ status: '', message: '' });
-      }, 4000);
+        setShowModal(false);
+      }, 1000);
 
       return () => {
         clearTimeout(timer);
@@ -158,7 +156,7 @@ export const RegistrationForm: React.FC = () => {
     return () => {
       ('');
     };
-  }, [modalData]);
+  }, [showModal]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -202,7 +200,16 @@ export const RegistrationForm: React.FC = () => {
         ...(formData.isBillingDefaultAddress && { defaultBillingAddress: 1 }),
       };
 
-      createCustomer(newCustomer)
+      const createCustomer = () => {
+        return apiRoot
+          .customers()
+          .post({
+            body: newCustomer,
+          })
+          .execute();
+      };
+
+      createCustomer()
         .then(async ({ body }) => {
           generatedCustomerID = body.customer.id;
           generatedShippAddrID = body.customer.addresses[0].id;
@@ -217,12 +224,14 @@ export const RegistrationForm: React.FC = () => {
             setTimeout(() => {
               navigation('/');
             }, 1000);
-            setModalData({ status: 'Success', message: 'You have been registered.' });
+            setModalData(myStatus(true, 'Login successful!'));
+            setShowModal(true);
           }
         })
         .catch((error: unknown) => {
-          if (error instanceof ServerError) {
-            setModalData({ status: 'Error', message: error.message });
+          if (error) {
+            setModalData(myStatus(false, 'A customer with this email already exists!'));
+            setShowModal(true);
           }
         });
 
@@ -322,7 +331,7 @@ export const RegistrationForm: React.FC = () => {
           <Link to="/login" title="LOGIN" className={style.login_link} />
         </div>
       </form>
-      {modalData.message && <ModalWindow data={modalData} />}
+      {showModal && modalData && <ModalWindow data={modalData} />}
     </>
   );
 };

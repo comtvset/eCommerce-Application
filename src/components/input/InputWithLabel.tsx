@@ -11,6 +11,7 @@ interface InputProps {
   required?: boolean;
   error?: string;
   className?: string;
+  disabledMode?: boolean;
 }
 
 export const InputWithLabel: React.FC<InputProps> = ({
@@ -23,6 +24,7 @@ export const InputWithLabel: React.FC<InputProps> = ({
   required = false,
   error,
   className,
+  disabledMode = false,
 }) => {
   return (
     <div className={className}>
@@ -35,6 +37,7 @@ export const InputWithLabel: React.FC<InputProps> = ({
         onChange={onChange}
         required={required}
         aria-invalid={!!error}
+        disabled={disabledMode}
       />
       {error && (
         <div className={style.error_tooltip} role="alert">

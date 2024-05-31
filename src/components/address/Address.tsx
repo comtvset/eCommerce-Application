@@ -24,6 +24,7 @@ interface AddressProps {
   };
   title: string;
   showIsTheSameAddress?: boolean;
+  disabledMode?: boolean;
 }
 
 export const AddressForm: React.FC<AddressProps> = ({
@@ -34,6 +35,8 @@ export const AddressForm: React.FC<AddressProps> = ({
   errors,
   title,
   showIsTheSameAddress = true,
+
+  disabledMode = false,
 }) => {
   return (
     <div>
@@ -44,6 +47,7 @@ export const AddressForm: React.FC<AddressProps> = ({
           label="Set as default address"
           checked={formData.isShippingDefaultAddress}
           onChange={handleBoolean}
+          disabledMode={disabledMode}
         />
         {showIsTheSameAddress && (
           <Checkbox
@@ -51,6 +55,7 @@ export const AddressForm: React.FC<AddressProps> = ({
             label="Shipping and Billing address are the same"
             checked={formData.isEqualAddress}
             onChange={handleSameAddress}
+            disabledMode={disabledMode}
           />
         )}
       </div>
@@ -64,6 +69,7 @@ export const AddressForm: React.FC<AddressProps> = ({
           onChange={handleChange}
           required
           error={errors.street}
+          disabledMode={disabledMode}
         />
         <InputWithLabel
           id="city"
@@ -74,6 +80,7 @@ export const AddressForm: React.FC<AddressProps> = ({
           onChange={handleChange}
           required
           error={errors.city}
+          disabledMode={disabledMode}
         />
         <Selector
           selectorProps={{
@@ -91,6 +98,7 @@ export const AddressForm: React.FC<AddressProps> = ({
             onChange: handleChange,
             onBlur: handleChange,
             error: errors.country,
+            disabledMode,
           }}
         />
         <InputWithLabel
@@ -102,6 +110,7 @@ export const AddressForm: React.FC<AddressProps> = ({
           onChange={handleChange}
           required
           error={errors.postalCode}
+          disabledMode={disabledMode}
         />
       </div>
     </div>
