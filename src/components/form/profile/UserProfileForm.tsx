@@ -22,6 +22,7 @@ export const UserProfileForm: React.FC = () => {
 
   const [formData, setFormData] = useState(customerModel);
   const [errors, setErrors] = useState<ICustomerModel>(customerModel);
+  const [isEmail, setEmail] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState<IResponse | null>(null);
@@ -75,14 +76,16 @@ export const UserProfileForm: React.FC = () => {
 
   const handleUserInfoTab = () => {
     if (isDisabledUserInfo) {
-      // send saving reqest to server
+      // TODO send saving reqest to server
+      setEmail(!isEmail);
     }
     setEditUserInfo(!isDisabledUserInfo);
+    setEmail(!isEmail);
   };
 
   const handlePasswordTab = () => {
     if (isDisabledPassword) {
-      // send saving reqest to server
+      // TODO send saving reqest to server
     }
     setEditPassword(!isDisabledPassword);
   };
@@ -201,7 +204,13 @@ export const UserProfileForm: React.FC = () => {
                 formData={formData}
                 handleChange={handleChange}
                 errors={errors}
-                showEmailAndPassword={false}
+                showFields={{
+                  email: isEmail,
+                  password: false,
+                  firstName: true,
+                  lastName: true,
+                  dateOfBirth: true,
+                }}
                 disabledMode={isDisabledUserInfo}
               />
             </div>
