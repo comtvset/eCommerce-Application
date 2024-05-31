@@ -45,6 +45,7 @@
 .images {
   display: block;
   width: 10%;
+  background-color: #ffffff;
   height: 25vh;
   object-fit: cover;
 }
@@ -92,4 +93,30 @@
     width: 100%;
     margin-top: 30px;
   }
+}
+
+.price {
+  font-size: 2rem;
+  color: $secondaryTextColor;
+  margin-bottom: 0px;
+}
+.prices {
+  display: flex;
+  gap: 10%;
+}
+
+.price_start,
+.price_finish {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 10px;
+}
+.price_start {
+  color: $secondaryTextColor;
+}
+.price_sale {
+  text-decoration: line-through;
+}
+.price_finish {
+  color: $priceSale;
 }

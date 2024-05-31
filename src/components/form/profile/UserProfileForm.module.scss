@@ -1,0 +1,89 @@
+@import 'src/styles/mixins.scss';
+
+.tab_container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  margin: 50px 50px;
+  > div {
+    width: 100%;
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #efe6d3;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.tab:hover {
+  background-color: #b4d23d;
+}
+
+.activeTab {
+  background-color: #94b21b;
+  color: white;
+  :hover {
+    background-color: #b4d23d;
+  }
+}
+
+.content {
+  @include customer-info-block;
+}
+
+.content.hidden {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.content.visible {
+  opacity: 1;
+  position: relative;
+}
+
+.addresses {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  > div {
+    @include customer-info-block;
+    width: 45%;
+  }
+}
+
+@media (width < 650px) {
+  .tab_container {
+    margin: 10px 10px;
+  }
+
+  .tabs {
+    border-bottom: none;
+  }
+  .addresses {
+    flex-direction: column;
+    padding: 10px 0px;
+    margin-right: 20px;
+    > div {
+      width: 100%;
+    }
+  }
+}

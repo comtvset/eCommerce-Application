@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import style from 'src/components/form/RegistrationForm.module.scss';
+import React, { useEffect, useState, useContext } from 'react';
+import style from 'src/components/form/registration/RegistrationForm.module.scss';
 import { AddressForm } from 'src/components/address/Address.tsx';
 import { validateField } from 'src/components/validation/Validation.ts';
 import { validatePostalCode } from 'src/components/validation/PostalCodeValidation.ts';
@@ -13,54 +13,18 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { loginRequest } from 'src/services/api/loginRequest.ts';
 import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
-import { createCustomer } from 'src/services/api/registrationCustomer.ts';
-import { ServerError } from 'src/utils/error/RequestErrors.ts';
+import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
+import { BillingAddressForm } from 'src/components/address/BillingAddress.tsx';
+import { IResponse } from 'src/components/tempFolderForDevelop/responseHandler.ts';
+import { myStatus } from 'src/components/tempFolderForDevelop/statusHandler.ts';
+import { customerModel, ICustomerModel } from 'src/model/Customer.ts';
+import { CurrentUserContext } from 'src/App.tsx';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
-import { BillingAddressForm } from '../address/BillingAddress.tsx';
-import { ModalWindow } from '../modalWindow/modalWindow.tsx';
 
 let countryShipping: Country;
 let countryBilling: Country;
-interface FormData {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  isShippingDefaultAddress: boolean;
-  isEqualAddress: boolean;
-  street: string;
-  city: string;
-  postalCode: string;
-  country: string;
-  isBillingDefaultAddress: boolean;
-  billingStreet: string;
-  billingCity: string;
-  billingCountry: string;
-  billingPostalCode: string;
-  [key: string]: string | boolean;
-}
 
-const allFields: FormData = {
-  email: '',
-  password: '',
-  firstName: '',
-  lastName: '',
-  dateOfBirth: '',
-  isShippingDefaultAddress: false,
-  isEqualAddress: false,
-  street: '',
-  city: '',
-  postalCode: '',
-  country: '',
-  isBillingDefaultAddress: false,
-  billingStreet: '',
-  billingCity: '',
-  billingCountry: '',
-  billingPostalCode: '',
-};
-
-const requiredFields: (keyof FormData)[] = [
+const requiredFields: (keyof ICustomerModel)[] = [
   'email',
   'password',
   'firstName',
@@ -69,15 +33,21 @@ const requiredFields: (keyof FormData)[] = [
 ];
 
 export const RegistrationForm: React.FC = () => {
-  const [formData, setFormData] = useState(allFields);
+  const context = useContext(CurrentUserContext);
 
-  const [errors, setErrors] = useState(allFields);
+  if (!context) {
+    throw new Error('RegistrationForm must be used within a CurrentUserContext.Provider');
+  }
+
+  const { setCurrentUser } = context;
+  const [formData, setFormData] = useState(customerModel);
+
+  const [errors, setErrors] = useState(customerModel);
 
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const popupMessage = { status: '', message: '' };
-
-  const [modalData, setModalData] = useState(popupMessage);
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState<IResponse | null>(null);
   const navigation = useNavigate();
 
   countryShipping = Country[formData.country as keyof typeof Country];
@@ -173,6 +143,21 @@ export const RegistrationForm: React.FC = () => {
     }));
   }, [formData.billingCountry, formData.billingPostalCode]);
 
+  useEffect(() => {
+    if (showModal) {
+      const timer = setTimeout(() => {
+        setShowModal(false);
+      }, 1000);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+    return () => {
+      ('');
+    };
+  }, [showModal]);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -215,23 +200,38 @@ export const RegistrationForm: React.FC = () => {
         ...(formData.isBillingDefaultAddress && { defaultBillingAddress: 1 }),
       };
 
-      createCustomer(newCustomer)
+      const createCustomer = () => {
+        return apiRoot
+          .customers()
+          .post({
+            body: newCustomer,
+          })
+          .execute();
+      };
+
+      createCustomer()
         .then(async ({ body }) => {
           generatedCustomerID = body.customer.id;
           generatedShippAddrID = body.customer.addresses[0].id;
           generatedBillAddrID = body.customer.addresses[1].id;
           if (body.customer.email) {
-            saveCredentials(formData.email, formData.password);
-            await loginRequest(formData.email, formData.password);
+            if (formData.password) {
+              saveCredentials(formData.email, formData.password);
+              setCurrentUser({ ...body.customer });
+              await loginRequest(formData.email, formData.password);
+            }
+
             setTimeout(() => {
               navigation('/');
             }, 1000);
-            setModalData({ status: 'Success', message: 'You have been registered.' });
+            setModalData(myStatus(true, 'Login successful!'));
+            setShowModal(true);
           }
         })
         .catch((error: unknown) => {
-          if (error instanceof ServerError) {
-            setModalData({ status: 'Error', message: error.message });
+          if (error) {
+            setModalData(myStatus(false, 'A customer with this email already exists!'));
+            setShowModal(true);
           }
         });
 
@@ -294,25 +294,15 @@ export const RegistrationForm: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (modalData.status) {
-      const timer = setTimeout(() => {
-        setModalData({ status: '', message: '' });
-      }, 4000);
-
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-    return () => {
-      ('');
-    };
-  }, [modalData]);
-
   return (
     <>
       <form className={style.registration} onSubmit={handleSubmit}>
-        <RegistrationMainFields formData={formData} handleChange={handleChange} errors={errors} />
+        <RegistrationMainFields
+          formData={formData}
+          showEmailAndPassword
+          handleChange={handleChange}
+          errors={errors}
+        />
         <AddressForm
           formData={formData}
           handleSameAddress={handleSameAddress}
@@ -341,7 +331,7 @@ export const RegistrationForm: React.FC = () => {
           <Link to="/login" title="LOGIN" className={style.login_link} />
         </div>
       </form>
-      {modalData.message && <ModalWindow data={modalData} />}
+      {showModal && modalData && <ModalWindow data={modalData} />}
     </>
   );
 };

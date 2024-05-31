@@ -9,6 +9,16 @@
   align-items: center;
 }
 
+@mixin customer-info-block {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 0 5px 5px 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease-in-out;
+  margin-bottom: 20px;
+  margin-right: 20px;
+}
+
 @mixin media-1200 {
   @media (max-width: $screen-width-1200) {
     @content;

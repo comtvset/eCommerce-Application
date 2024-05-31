@@ -1,14 +1,14 @@
 import React from 'react';
 
 interface Option {
-  value: string;
+  value: string | undefined;
   label: string;
 }
 
 interface SelectorProps {
   id: string;
   name: string;
-  value: string;
+  value: string | undefined;
   label: string;
   options: Option[];
   onChange: React.ChangeEventHandler<HTMLSelectElement>;
