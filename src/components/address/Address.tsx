@@ -24,7 +24,7 @@ interface AddressProps {
   };
   title: string;
   showIsTheSameAddress?: boolean;
-  disabledMode: boolean;
+  disabledMode?: boolean;
 }
 
 export const AddressForm: React.FC<AddressProps> = ({
@@ -35,6 +35,7 @@ export const AddressForm: React.FC<AddressProps> = ({
   errors,
   title,
   showIsTheSameAddress = true,
+
   disabledMode = false,
 }) => {
   return (

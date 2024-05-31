@@ -247,6 +247,7 @@ export const UserProfileForm: React.FC = () => {
             {isDisabledPassword ? 'Edit' : 'Save'}
           </button>
         );
+
       default:
         return null;
     }
