@@ -1,16 +1,22 @@
 .checkboxes {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  margin: 15px;
   gap: 15px;
-  align-items: center;
+  align-items: flex-start;
   width: 160px;
+}
+
+.checkbox_billing {
+  margin: 15px;
+  gap: 15px;
 }
 
 .formbody {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  width: 400px;
   font-size: 1.4rem;
   text-transform: uppercase;
 
@@ -33,10 +39,4 @@
 
 .error_tooltip {
   white-space: pre-wrap;
-}
-
-@media (width < 650px) {
-  .formbody {
-    width: 200px;
-  }
 }
