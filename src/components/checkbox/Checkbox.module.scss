@@ -26,8 +26,8 @@
 }
 
 .custom_checkbox input[type='checkbox']:checked:disabled::before,
-.custom_checkbox input[type='checkbox']:disabled::before{
-  background-color:var(--background-color);
+.custom_checkbox input[type='checkbox']:disabled::before {
+  background-color: var(--background-color);
 }
 
 .custom_checkbox input[type='checkbox']:checked::before {
