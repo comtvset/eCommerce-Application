@@ -1,10 +1,12 @@
-import { ProductCatalogData } from '@commercetools/platform-sdk';
+import { ProductCatalogData, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import React, { useState, useEffect } from 'react';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import style from 'src/components/cards/Cards.module.scss';
 import { Link } from 'src/components/link/Link.tsx';
 import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
+import { getLoginClient } from 'src/services/api/BuildClient.ts';
+import { PROJECT_KEY } from 'src/services/api/BuildClientRegistration.ts';
 
 export interface IProductData {
   id: string;
@@ -13,9 +15,15 @@ export interface IProductData {
 
 export const Card: React.FC = () => {
   const [products, setProducts] = useState<IProductData[]>([]);
+  const [id] = useState(localStorage.getItem('fullID'));
 
   useEffect(() => {
-    apiRoot
+    const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
+      projectKey: PROJECT_KEY,
+    });
+
+    const api = localStorage.getItem('fullID') ? apiRoot2 : apiRoot;
+    api
       .products()
       .get({
         queryArgs: {
@@ -29,7 +37,7 @@ export const Card: React.FC = () => {
       .catch((error: unknown) => {
         return error;
       });
-  }, []);
+  }, [id]);
 
   return (
     <div className={style.cards_container}>

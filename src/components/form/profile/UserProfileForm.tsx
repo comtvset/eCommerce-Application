@@ -2,32 +2,44 @@ import React, { useEffect, useState } from 'react';
 import { RegistrationMainFields } from 'src/components/form/registration/RegistrationMainFields.tsx';
 import { ICustomerModel, customerModel } from 'src/model/Customer.ts';
 import styles from 'src/components/form/profile/UserProfileForm.module.scss';
-import { myStatus } from 'src/components/tempFolderForDevelop/statusHandler.ts';
-import { Customer, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 
-import { IResponse } from 'src/components/tempFolderForDevelop/responseHandler.ts';
 import { getLoginClient } from 'src/services/api/BuildClient.ts';
 import { AddressForm } from 'src/components/address/Address.tsx';
 import { BillingAddressForm } from 'src/components/address/BillingAddress.tsx';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
-import { countryLookup, Country } from 'src/components/country/country.ts';
+import { Country } from 'src/components/country/country.ts';
 import { validateField } from 'src/components/validation/Validation.ts';
+import { validatePostalCode } from 'src/components/validation/PostalCodeValidation.ts';
+import { ServerError } from 'src/utils/error/RequestErrors.ts';
+import { mapCustomerToModel } from 'src/services/DTO/Customer.ts';
+import { updateCustomerField } from 'src/services/api/updateCustomer.ts';
+import { updateEmail } from 'src/services/userData/saveEmailPassword.ts';
+
+const PROJECT_KEY: string = import.meta.env.VITE_CTP_PROJECT_KEY as string;
 
 export const UserProfileForm: React.FC = () => {
-  let countryShipping: Country;
-  let countryBilling: Country;
+  const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
+    projectKey: PROJECT_KEY,
+  });
+  const [api, setAPI] = useState(apiRoot2);
   const [activeTab, setActiveTab] = useState('basicInfo');
   const [isDisabledUserInfo, setEditUserInfo] = useState(true);
+  const [isDisabledAddress, setEditAddress] = useState(true);
   const [isDisabledPassword, setEditPassword] = useState(true);
+  const [countryShipping, setCountryShipping] = useState<Country>(Country.Underfined);
+  const [countryBilling, setCountryBilling] = useState<Country>(Country.Underfined);
+  const [isEmail, setEmail] = useState(false);
+  const [id] = useState(localStorage.getItem('fullID') ?? '');
+  const [customerVersion, setCustomerVersion] = useState(-1);
 
   const [formData, setFormData] = useState(customerModel);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const popupMessage = { status: '', message: '' };
+  const [modalData, setModalData] = useState(popupMessage);
+
   const [errors, setErrors] = useState<ICustomerModel>(customerModel);
-  const [isEmail, setEmail] = useState(false);
-
-  const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState<IResponse | null>(null);
-
-  const id: string | null = localStorage.getItem('fullID');
 
   const handleDefaultAddress = (checked: boolean) => {
     setFormData({
@@ -35,24 +47,12 @@ export const UserProfileForm: React.FC = () => {
       isShippingDefaultAddress: checked,
     });
   };
+
   const handleBillingAddress = (checked: boolean) => {
     setFormData({
       ...formData,
       isBillingDefaultAddress: checked,
     });
-  };
-
-  const handleSameAddress = (checked: boolean) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      isEqualAddress: checked,
-      ...(checked && {
-        billingStreet: prevFormData.street,
-        billingCity: prevFormData.city,
-        billingCountry: prevFormData.country,
-        billingPostalCode: prevFormData.postalCode,
-      }),
-    }));
   };
 
   const validateOneField = (name: string, value: string) => {
@@ -74,13 +74,81 @@ export const UserProfileForm: React.FC = () => {
     validateOneField(name, value);
   };
 
+  useEffect(() => {
+    const allFieldsValid = Object.values(errors).every(
+      (error) => error === '' || typeof error === 'boolean',
+    );
+    setIsFormValid(allFieldsValid);
+  }, [errors, formData]);
+
+  useEffect(() => {
+    const error = validatePostalCode(countryShipping, formData.postalCode);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      postalCode: error,
+    }));
+  }, [countryShipping, formData.postalCode]);
+
+  useEffect(() => {
+    const error = validatePostalCode(countryBilling, formData.billingPostalCode);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      billingPostalCode: error,
+    }));
+  }, [countryBilling, formData.billingPostalCode]);
+
   const handleUserInfoTab = () => {
     if (isDisabledUserInfo) {
-      // TODO send saving reqest to server
       setEmail(!isEmail);
     }
     setEditUserInfo(!isDisabledUserInfo);
     setEmail(!isEmail);
+
+    if (isFormValid) {
+      if (id) {
+        updateCustomerField(
+          api,
+          id,
+          customerVersion,
+          formData.firstName ?? '',
+          formData.lastName ?? '',
+          formData.dateOfBirth ?? '',
+          formData.email,
+        )
+          .then((response) => {
+            const customerData = mapCustomerToModel(response.body);
+
+            updateEmail(formData.email);
+
+            setAPI(
+              createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
+                projectKey: PROJECT_KEY,
+              }),
+            );
+
+            setFormData(customerData);
+            setCustomerVersion(response.body.version);
+          })
+          .catch((error: unknown) => {
+            if (error instanceof ServerError) {
+              setModalData({ status: 'Error', message: error.message });
+            }
+          });
+      } else {
+        setModalData({ status: 'Error', message: 'Please, make relogin again.' });
+      }
+    }
+  };
+
+  const handleAddressTab = () => {
+    if (isDisabledAddress) {
+      setCountryShipping(Country[formData.country as keyof typeof Country]);
+      setCountryBilling(Country[formData.billingCountry as keyof typeof Country]);
+      if (isFormValid) {
+        // TODO send saving reqest to server
+      }
+    }
+    setEditAddress(!isDisabledAddress);
   };
 
   const handlePasswordTab = () => {
@@ -95,94 +163,15 @@ export const UserProfileForm: React.FC = () => {
       handleUserInfoTab();
     } else if (tab === 'password') {
       handlePasswordTab();
+    } else if (tab === 'address') {
+      handleAddressTab();
     }
   };
 
-  const mapCustomerToModel = (customer: Customer): ICustomerModel => {
-    const isShippingDefaultAddress = !!customer.defaultShippingAddressId?.toString();
-    const isBillingDefaultAddress = !!customer.defaultBillingAddressId?.toString();
-    const country = countryLookup[customer.addresses[0].country];
-    const billingCountry = countryLookup[customer.addresses[1].country];
-    return {
-      email: customer.email,
-      password: customer.password,
-      firstName: customer.firstName,
-      lastName: customer.lastName,
-      dateOfBirth: customer.dateOfBirth,
-      isShippingDefaultAddress,
-      isEqualAddress: false,
-      street: customer.addresses[0].streetName,
-      city: customer.addresses[0]?.city,
-      postalCode: customer.addresses[0]?.postalCode,
-      country,
-      isBillingDefaultAddress,
-      billingStreet: customer.addresses[1]?.streetName,
-      billingCity: customer.addresses[1]?.city,
-      billingCountry,
-      billingPostalCode: customer.addresses[1]?.postalCode,
-    };
-  };
-
-  interface CommercetoolsErrorDetail {
-    code: string;
-    message: string;
-  }
-
-  interface CommercetoolsErrorResponse {
-    statusCode: number;
-    message: string;
-    errors: CommercetoolsErrorDetail[];
-  }
-
   useEffect(() => {
-    const isCommercetoolsError = (
-      error: unknown,
-    ): error is { body: CommercetoolsErrorResponse } => {
-      return (
-        typeof error === 'object' &&
-        error !== null &&
-        'body' in error &&
-        typeof (error as { body: unknown }).body === 'object' &&
-        (error as { body: unknown }).body !== null &&
-        'errors' in (error as { body: CommercetoolsErrorResponse }).body &&
-        Array.isArray((error as { body: CommercetoolsErrorResponse }).body.errors)
-      );
-    };
-    const { client } = getLoginClient();
-    const PROJECT_KEY: string = import.meta.env.VITE_CTP_PROJECT_KEY as string;
-
-    const apiRoot2 = createApiBuilderFromCtpClient(client).withProjectKey({
-      projectKey: PROJECT_KEY,
-    });
-    if (id) {
-      apiRoot2
-        .customers()
-        .withId({ ID: id })
-        .get()
-        .execute()
-        .then((response) => {
-          const customerModelData = mapCustomerToModel(response.body);
-
-          setFormData(customerModelData);
-        })
-        .catch((error: unknown) => {
-          const errorsList: string[] = [];
-
-          if (isCommercetoolsError(error)) {
-            error.body.errors.forEach((err: CommercetoolsErrorDetail) => {
-              errorsList.push(`${err.code}: ${err.message}`);
-            });
-          }
-          setModalData(myStatus(false, errorsList.join('\n')));
-          setShowModal(true);
-        });
-    }
-  }, [id]);
-
-  useEffect(() => {
-    if (showModal) {
+    if (modalData.status) {
       const timer = setTimeout(() => {
-        setShowModal(false);
+        setModalData({ status: '', message: '' });
       }, 4000);
 
       return () => {
@@ -192,7 +181,31 @@ export const UserProfileForm: React.FC = () => {
     return () => {
       ('');
     };
-  }, [showModal]);
+  }, [modalData]);
+
+  useEffect(() => {
+    if (id) {
+      api
+        .customers()
+        .withId({ ID: id })
+        .get()
+        .execute()
+        .then((response) => {
+          const customerData = mapCustomerToModel(response.body);
+          setFormData(customerData);
+          setCustomerVersion(response.body.version);
+        })
+        .catch((error: unknown) => {
+          if (error instanceof ServerError) {
+            setModalData({ status: 'Error', message: error.message });
+          } else {
+            setModalData({ status: 'Error', message: 'Unexpected error occurred.' });
+          }
+        });
+    } else {
+      setModalData({ status: 'Error', message: 'Please, make relogin again.' });
+    }
+  }, [id, api]);
 
   const handleSwitchTab = () => {
     switch (activeTab) {
@@ -214,26 +227,6 @@ export const UserProfileForm: React.FC = () => {
                 disabledMode={isDisabledUserInfo}
               />
             </div>
-            <div className={styles.addresses}>
-              <AddressForm
-                formData={formData}
-                handleSameAddress={handleSameAddress}
-                handleBoolean={handleDefaultAddress}
-                handleChange={handleChange}
-                errors={errors}
-                title="Shipping address"
-                showIsTheSameAddress={false}
-                disabledMode={isDisabledUserInfo}
-              />
-              <BillingAddressForm
-                formData={formData}
-                handleBoolean={handleBillingAddress}
-                handleChange={handleChange}
-                errors={errors}
-                title="Billing address"
-                disabledMode={isDisabledUserInfo}
-              />
-            </div>
             <button
               type="button"
               onClick={() => {
@@ -242,7 +235,40 @@ export const UserProfileForm: React.FC = () => {
             >
               {isDisabledUserInfo ? 'Edit' : 'Save'}
             </button>
-            {showModal && modalData && <ModalWindow data={modalData} />}
+            {modalData.message && <ModalWindow data={modalData} />}
+          </>
+        );
+      case 'address':
+        return (
+          <>
+            <div className={styles.addresses}>
+              <AddressForm
+                formData={formData}
+                handleBoolean={handleDefaultAddress}
+                handleChange={handleChange}
+                errors={errors}
+                title="Shipping address"
+                showIsTheSameAddress={false}
+                disabledMode={isDisabledAddress}
+              />
+              <BillingAddressForm
+                formData={formData}
+                handleBoolean={handleBillingAddress}
+                handleChange={handleChange}
+                errors={errors}
+                title="Billing address"
+                disabledMode={isDisabledAddress}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                handleChangeMode(activeTab);
+              }}
+            >
+              {isDisabledAddress ? 'Edit' : 'Save'}
+            </button>
+            {modalData.message && <ModalWindow data={modalData} />}
           </>
         );
       case 'password':
@@ -272,6 +298,15 @@ export const UserProfileForm: React.FC = () => {
           }}
         >
           User Basic Info
+        </button>
+        <button
+          type="button"
+          className={`${styles.tab} ${activeTab === 'address' ? styles.activeTab : ''}`}
+          onClick={() => {
+            setActiveTab('address');
+          }}
+        >
+          Addresses
         </button>
         <button
           type="button"
