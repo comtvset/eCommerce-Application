@@ -16,6 +16,7 @@ export const Card: React.FC<CardProps> = ({ products }) => {
       {products.map((product) => {
         const priceObj = product.masterVariant.prices?.[0].value;
         const priceDiscountObj = product.masterVariant.prices?.[0].discounted?.value;
+
         const centAmount = priceObj?.centAmount;
         const centAmountDiscount = priceDiscountObj?.centAmount;
         const currencyCode = priceObj?.currencyCode;
