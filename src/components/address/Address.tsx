@@ -15,7 +15,7 @@ interface AddressProps {
   };
   handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   handleBoolean: (value: boolean) => void;
-  handleSameAddress: (value: boolean) => void;
+  handleSameAddress?: (value: boolean) => void;
   errors: {
     street: string | undefined;
     city: string | undefined;
@@ -38,6 +38,11 @@ export const AddressForm: React.FC<AddressProps> = ({
 
   disabledMode = false,
 }) => {
+  const noop = () => {
+    // Intentionally do nothing
+  };
+  const handleCheckboxChange = handleSameAddress ?? noop;
+
   return (
     <div>
       <h2 className={style.left_aligned}>{title}</h2>
@@ -54,7 +59,7 @@ export const AddressForm: React.FC<AddressProps> = ({
             id="isEqualAddress"
             label="Shipping and Billing address are the same"
             checked={formData.isEqualAddress}
-            onChange={handleSameAddress}
+            onChange={handleCheckboxChange}
             disabledMode={disabledMode}
           />
         )}

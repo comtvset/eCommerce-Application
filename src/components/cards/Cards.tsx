@@ -1,5 +1,5 @@
-import React from 'react';
 import { ProductProjection } from '@commercetools/platform-sdk';
+import React from 'react';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import style from 'src/components/cards/Cards.module.scss';
 import { Link } from 'src/components/link/Link.tsx';
