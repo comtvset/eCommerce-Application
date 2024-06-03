@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import style from 'src/components/card/Card.module.scss';
 import { Layout } from 'src/components/layout/Layout.tsx';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
+import { Modal } from 'src/components/modalWindow/modalImage.tsx';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
 import Slider from 'react-slick';
@@ -23,10 +24,19 @@ export const CardOne: React.FC = () => {
   const [product, setProduct] = useState<IProductData>();
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+  const [modal, setModal] = useState(false);
   const { id } = useParams<{ id: string }>();
 
   const handleImageChange = (newImage: Image) => {
     setSelectedImage(newImage);
+  };
+
+  const showModalWindow = () => {
+    setModal(true);
+  };
+
+  const closeModalWindow = () => {
+    setModal(false);
   };
 
   const isImages = product?.masterData.staged.masterVariant.images ?? [];
@@ -39,7 +49,9 @@ export const CardOne: React.FC = () => {
     ? ((isFirstPrice[0]?.value.centAmount ?? 0) / 100).toFixed(2).toString()
     : '';
   const isCurrencyCode = isFirstPrice ? isFirstPrice[0].discounted?.value.currencyCode : '';
+  const isCurrencyNoDiscount = isFirstPrice ? isFirstPrice[0].value.currencyCode : '';
   const currencyCode = getCurrencySymbol(isCurrencyCode) ?? '';
+  const currencyNoDiscount = getCurrencySymbol(isCurrencyNoDiscount) ?? '';
 
   useEffect(() => {
     if (typeof id !== 'undefined') {
@@ -64,6 +76,14 @@ export const CardOne: React.FC = () => {
     }
   }, [product]);
 
+  useEffect(() => {
+    if (modal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [modal]);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -81,11 +101,22 @@ export const CardOne: React.FC = () => {
           <div className={style.container_images}>
             <div className={style.main_image}>
               {selectedImage && (
-                <img
-                  className={style.image}
-                  src={selectedImage.url}
-                  alt={product.masterData.current.name['en-US']}
-                />
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={showModalWindow}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      showModalWindow();
+                    }
+                  }}
+                >
+                  <img
+                    className={style.image}
+                    src={selectedImage.url}
+                    alt={product.masterData.current.name['en-US']}
+                  />
+                </div>
               )}
             </div>
             {isLength && (
@@ -140,7 +171,7 @@ export const CardOne: React.FC = () => {
               ) : (
                 <Paragraph
                   tag="p"
-                  title={`${currencyCode}${isNoDiscount}`}
+                  title={`${currencyNoDiscount}${isNoDiscount}`}
                   className={style.price_start}
                 />
               )}
@@ -148,6 +179,16 @@ export const CardOne: React.FC = () => {
           </div>
         </div>
       )}
+      {product && selectedImage && modal && (
+        <Modal closeModalWindow={closeModalWindow}>
+          <img
+            className={style.modal_image}
+            src={selectedImage.url}
+            alt={product.masterData.current.name['en-US']}
+          />
+        </Modal>
+      )}
+      {modal && <div className={style.background} />}
     </Layout>
   );
 };
