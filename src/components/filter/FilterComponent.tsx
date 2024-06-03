@@ -9,14 +9,16 @@ export interface FilterOption {
 interface FilterComponentProps {
   options: FilterOption[];
   title: string;
-  type: 'checkbox' | 'radio'; // Add type definition
+  type: 'checkbox' | 'radio';
+  handleChange?(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-export const FilterComponent: React.FC<FilterComponentProps> = ({ options, title, type }) => {
-  const handleChange = () => {
-    return '';
-  };
-
+export const FilterComponent: React.FC<FilterComponentProps> = ({
+  options,
+  title,
+  type,
+  handleChange,
+}) => {
   return (
     <div className={style.filter_container}>
       <h4>{title}</h4>

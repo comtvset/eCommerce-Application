@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import style from 'src/components/card/Card.module.scss';
-import { IProductData } from 'src/components/cards/Cards.tsx';
 import { Layout } from 'src/components/layout/Layout.tsx';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
@@ -9,9 +8,15 @@ import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { ProductCatalogData } from '@commercetools/platform-sdk';
 
 interface Image {
   url: string;
+}
+
+interface IProductData {
+  id: string;
+  masterData: ProductCatalogData;
 }
 
 export const CardOne: React.FC = () => {

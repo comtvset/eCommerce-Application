@@ -1,48 +1,19 @@
-import { ProductCatalogData, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import React, { useState, useEffect } from 'react';
-import { apiRoot } from 'src/services/api/ctpClient.ts';
+import { ProductProjection } from '@commercetools/platform-sdk';
+import React from 'react';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import style from 'src/components/cards/Cards.module.scss';
 import { Link } from 'src/components/link/Link.tsx';
 import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
-import { getLoginClient } from 'src/services/api/BuildClient.ts';
-import { PROJECT_KEY } from 'src/services/api/BuildClientRegistration.ts';
 
-export interface IProductData {
-  id: string;
-  masterData: ProductCatalogData;
+interface CardProps {
+  products: ProductProjection[];
 }
 
-export const Card: React.FC = () => {
-  const [products, setProducts] = useState<IProductData[]>([]);
-  const [id] = useState(localStorage.getItem('fullID'));
-
-  useEffect(() => {
-    const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
-      projectKey: PROJECT_KEY,
-    });
-
-    const api = localStorage.getItem('fullID') ? apiRoot2 : apiRoot;
-    api
-      .products()
-      .get({
-        queryArgs: {
-          limit: 117,
-        },
-      })
-      .execute()
-      .then((response) => {
-        setProducts(response.body.results);
-      })
-      .catch((error: unknown) => {
-        return error;
-      });
-  }, [id]);
-
+export const Card: React.FC<CardProps> = ({ products }) => {
   return (
     <div className={style.cards_container}>
       {products.map((product) => {
-        const priceObj = product.masterData.staged.masterVariant.prices?.[0].value;
+        const priceObj = product.masterVariant.prices?.[0].value;
         const centAmount = priceObj?.centAmount;
         const currencyCode = priceObj?.currencyCode;
         const currencySymbol = getCurrencySymbol(currencyCode) ?? '';
@@ -59,19 +30,15 @@ export const Card: React.FC = () => {
             <div className={style.image_container}>
               <img
                 className={style.image}
-                src={product.masterData.staged.masterVariant.images?.[0].url}
-                alt={product.masterData.current.name['en-US']}
+                src={product.masterVariant.images?.[0].url}
+                alt={product.name['en-US']}
               />
             </div>
             <div className={style.card_info}>
-              <Paragraph
-                tag="h2"
-                title={product.masterData.current.name['en-US']}
-                className={style.name_thing}
-              />
+              <Paragraph tag="h2" title={product.name['en-US']} className={style.name_thing} />
               <Paragraph
                 tag="p"
-                title={product.masterData.current.description?.['en-US'].split('.')[0] ?? ''}
+                title={product.description?.['en-US'].split('.')[0] ?? ''}
                 className={style.description}
               />
             </div>
