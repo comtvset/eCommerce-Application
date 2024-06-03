@@ -9,6 +9,8 @@ interface CommercetoolsErrorResponse {
   errors: CommercetoolsErrorDetail[];
 }
 
+export const ErrorType = ['Invalid', 'Error'];
+
 const isCommercetoolsError = (error: unknown): error is { body: CommercetoolsErrorResponse } => {
   return (
     typeof error === 'object' &&

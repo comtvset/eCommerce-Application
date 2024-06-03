@@ -1,6 +1,7 @@
 import styles from 'src/components/modalWindow/modalWindow.module.scss';
 import { IResponse } from 'src/components/tempFolderForDevelop/responseHandler.ts';
 import PropTypes from 'prop-types';
+import { ErrorType } from 'src/utils/error/RequestErrors.ts';
 
 interface ModalWindowProps {
   data: IResponse;
@@ -11,7 +12,7 @@ const ModalWindow: React.FC<ModalWindowProps> = ({ data }) => {
   return (
     <div className={styles.parent}>
       <div
-        className={`${styles.children} ${status === 'Invalid' ? styles.error : styles.positive}`}
+        className={`${styles.children} ${ErrorType.includes(status) ? styles.error : styles.positive}`}
       >
         <span>{status}</span>
         <span>{message}</span>
