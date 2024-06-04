@@ -7,9 +7,11 @@ import {
   fetchAllProducts,
   fetchColorProducts,
   fetchPriceProducts,
+  fetchSearchProducts,
   fetchSizeProducts,
 } from 'src/services/api/filterRequests.ts';
 import { ProductProjection } from '@commercetools/platform-sdk';
+import { SearchComponent } from 'src/components/search/Search.tsx';
 
 const initializeFilters = async () => {
   const [colors, sizes, prices] = await filterTools();
@@ -164,18 +166,36 @@ export const Catalog: React.FC = () => {
     setPricesArray([]);
   };
 
+  const handleSearch = (query: string) => {
+    const fetchAndSetProducts = async () => {
+      try {
+        const searchProducts = await fetchSearchProducts(query);
+        setProductState(searchProducts);
+      } catch (error: unknown) {
+        setErrorState('Error searching products');
+      }
+    };
+
+    fetchAndSetProducts().catch(() => {
+      setErrorState('Error handling change');
+    });
+  };
+
   return (
-    <div className={style.layout}>
+    <>
       {errorState && <div className={style.error}>{errorState}</div>}
       <div className={style.dots} />
-      <Filter
-        colors={filters.colors}
-        sizes={filters.sizes}
-        prices={filters.prices}
-        handleChange={handleChange}
-        onReset={handleReset}
-      />
-      <Card products={productState} />
-    </div>
+      <SearchComponent onSearch={handleSearch} />
+      <div className={style.layout}>
+        <Filter
+          colors={filters.colors}
+          sizes={filters.sizes}
+          prices={filters.prices}
+          handleChange={handleChange}
+          onReset={handleReset}
+        />
+        <Card products={productState} />
+      </div>
+    </>
   );
 };

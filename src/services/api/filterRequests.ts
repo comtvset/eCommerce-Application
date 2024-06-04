@@ -5,6 +5,19 @@ export const fetchAllProducts = async () => {
   return response.body.results;
 };
 
+export const fetchSearchProducts = async (query: string) => {
+  const response = await apiRoot
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        'text.en-US': query,
+      },
+    })
+    .execute();
+  return response.body.results;
+};
+
 export const fetchColorProducts = async (
   colors: string[],
   sizesArray: string[],

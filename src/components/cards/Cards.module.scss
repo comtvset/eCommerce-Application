@@ -71,3 +71,9 @@
   margin-bottom: 0px;
   font-size: 1.6rem;
 }
+
+@media (max-width: 510px) {
+  .image_container:hover {
+    transform: none;
+  }
+}
