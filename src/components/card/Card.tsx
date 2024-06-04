@@ -24,11 +24,13 @@ export const CardOne: React.FC = () => {
   const [product, setProduct] = useState<IProductData>();
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [modal, setModal] = useState(false);
   const { id } = useParams<{ id: string }>();
 
-  const handleImageChange = (newImage: Image) => {
+  const handleImageChange = (newImage: Image, index: number) => {
     setSelectedImage(newImage);
+    setSelectedIndex(index);
   };
 
   const showModalWindow = () => {
@@ -93,6 +95,16 @@ export const CardOne: React.FC = () => {
   };
   const { dots, infinite, speed, slidesToShow, slidesToScroll } = settings;
 
+  const settings2 = {
+    initialSlide: selectedIndex,
+    dot: true,
+    infinit: true,
+    spee: 500,
+    slidesToSho: 1,
+    slidesToScrol: 1,
+  };
+  const { initialSlide, dot, infinit, spee, slidesToSho, slidesToScrol } = settings2;
+
   return (
     <Layout className={style.container}>
       {error && <div className={style.error}>{error}</div>}
@@ -128,7 +140,7 @@ export const CardOne: React.FC = () => {
                 slidesToScroll={slidesToScroll}
                 className={style.images_container}
                 afterChange={(currentSlide: number) => {
-                  handleImageChange(isImages[currentSlide]);
+                  handleImageChange(isImages[currentSlide], selectedIndex);
                 }}
               >
                 {product.masterData.staged.masterVariant.images?.map((image) => (
@@ -181,11 +193,36 @@ export const CardOne: React.FC = () => {
       )}
       {product && selectedImage && modal && (
         <Modal closeModalWindow={closeModalWindow}>
-          <img
-            className={style.modal_image}
-            src={selectedImage.url}
-            alt={product.masterData.current.name['en-US']}
-          />
+          {!isLength && (
+            <img
+              className={style.modal_image}
+              src={selectedImage.url}
+              alt={product.masterData.current.name['en-US']}
+            />
+          )}
+          {isLength && (
+            <Slider
+              initialSlide={initialSlide}
+              dots={dot}
+              infinite={infinit}
+              speed={spee}
+              slidesToShow={slidesToSho}
+              slidesToScroll={slidesToScrol}
+              className={style.images_container2}
+              afterChange={(currentSlide) => {
+                handleImageChange(isImages[currentSlide], currentSlide);
+              }}
+            >
+              {product.masterData.staged.masterVariant.images?.map((image) => (
+                <img
+                  key={image.url}
+                  className={style.images2}
+                  src={image.url}
+                  alt={product.masterData.current.name['en-US']}
+                />
+              ))}
+            </Slider>
+          )}
         </Modal>
       )}
       {modal && <div className={style.background} />}
