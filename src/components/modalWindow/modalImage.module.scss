@@ -2,38 +2,28 @@
 @import 'src/styles/mixins';
 
 .modal {
-  display: flex;
-  justify-content: center;
-  flex-direction: row-reverse;
-  width: 90%;
+  width: 80%;
   height: 80vh;
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -55%);
   z-index: 10;
 }
 
 .modal_content {
   display: flex;
+  width: 100%;
   margin: 0 auto;
   @include media-600 {
     width: 80%;
-    height: 70vh;
     align-self: center;
-  }
-  @include media-500 {
-    height: 60vh;
-  }
-  @include media-400 {
-    height: 50vh;
   }
 }
 
 .close_container {
   width: 36px;
   height: 36px;
-  margin-left: 5%;
   &:hover {
     cursor: pointer;
   }
