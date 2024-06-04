@@ -1,4 +1,4 @@
-import { fetchAllProducts } from '../api/filterRequests.ts';
+import { fetchAllProducts } from 'src/services/api/filterRequests.ts';
 
 interface Attribute {
   name: string;
