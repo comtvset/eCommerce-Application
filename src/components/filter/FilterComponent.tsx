@@ -11,6 +11,7 @@ interface FilterComponentProps {
   title: string;
   type: 'checkbox' | 'radio';
   handleChange?(event: React.ChangeEvent<HTMLInputElement>): void;
+  checked?: (value: string) => boolean;
 }
 
 export const FilterComponent: React.FC<FilterComponentProps> = ({
@@ -18,6 +19,7 @@ export const FilterComponent: React.FC<FilterComponentProps> = ({
   title,
   type,
   handleChange,
+  checked,
 }) => {
   return (
     <div className={style.filter_container}>
@@ -30,6 +32,7 @@ export const FilterComponent: React.FC<FilterComponentProps> = ({
               type={type}
               name={title.toLowerCase()}
               value={option.value}
+              checked={checked ? checked(option.value) : false}
               onChange={handleChange}
             />
             <label htmlFor={`${title.toLowerCase()}-${option.value}`} className={style.label}>

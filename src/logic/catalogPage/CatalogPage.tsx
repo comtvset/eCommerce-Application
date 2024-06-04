@@ -157,6 +157,13 @@ export const Catalog: React.FC = () => {
     });
   };
 
+  const handleReset = (products: ProductProjection[]) => {
+    setProductState(products);
+    setColorsArray([]);
+    setSizesArray([]);
+    setPricesArray([]);
+  };
+
   return (
     <div className={style.layout}>
       {errorState && <div className={style.error}>{errorState}</div>}
@@ -166,6 +173,7 @@ export const Catalog: React.FC = () => {
         sizes={filters.sizes}
         prices={filters.prices}
         handleChange={handleChange}
+        onReset={handleReset}
       />
       <Card products={productState} />
     </div>
