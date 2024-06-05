@@ -6,7 +6,7 @@ interface SearchComponentProps {
 }
 
 export const SearchComponent: React.FC<SearchComponentProps> = ({ onSearch }) => {
-  const [query, setQuery] = useState<string>('');
+  const [query, setQuery] = useState('');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);

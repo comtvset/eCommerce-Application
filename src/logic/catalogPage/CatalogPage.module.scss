@@ -7,6 +7,12 @@
   justify-content: center;
 }
 
+.test {
+  display: flex;
+  flex-direction: column;
+  width: 20%
+}
+
 .dots {
   height: 5px;
 }

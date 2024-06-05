@@ -9,9 +9,12 @@ import {
   fetchPriceProducts,
   fetchSearchProducts,
   fetchSizeProducts,
+  fetchSortNameProducts,
+  fetchSortPriceProducts,
 } from 'src/services/api/filterRequests.ts';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { SearchComponent } from 'src/components/search/Search.tsx';
+import { SortComponent } from 'src/components/sort/Sort.tsx';
 
 const initializeFilters = async () => {
   const [colors, sizes, prices] = await filterTools();
@@ -181,19 +184,81 @@ export const Catalog: React.FC = () => {
     });
   };
 
+  const handleSort = (criteria: string) => {
+    if (criteria === 'price high') {
+      const fetchAndSetProducts = async () => {
+        try {
+          const sortPriceProducts = await fetchSortPriceProducts('desc');
+          setProductState(sortPriceProducts);
+        } catch (error: unknown) {
+          setErrorState('Error searching products');
+        }
+      };
+
+      fetchAndSetProducts().catch(() => {
+        setErrorState('Error handling change');
+      });
+    }
+    if (criteria === 'price low') {
+      const fetchAndSetProducts = async () => {
+        try {
+          const sortPriceProducts = await fetchSortPriceProducts('asc');
+          setProductState(sortPriceProducts);
+        } catch (error: unknown) {
+          setErrorState('Error searching products');
+        }
+      };
+
+      fetchAndSetProducts().catch(() => {
+        setErrorState('Error handling change');
+      });
+    }
+    if (criteria === 'name a-z') {
+      const fetchAndSetProducts = async () => {
+        try {
+          const sortNameProducts = await fetchSortNameProducts('asc');
+          setProductState(sortNameProducts);
+        } catch (error: unknown) {
+          setErrorState('Error searching products');
+        }
+      };
+
+      fetchAndSetProducts().catch(() => {
+        setErrorState('Error handling change');
+      });
+    }
+    if (criteria === 'name z-a') {
+      const fetchAndSetProducts = async () => {
+        try {
+          const sortNameProducts = await fetchSortNameProducts('desc');
+          setProductState(sortNameProducts);
+        } catch (error: unknown) {
+          setErrorState('Error searching products');
+        }
+      };
+
+      fetchAndSetProducts().catch(() => {
+        setErrorState('Error handling change');
+      });
+    }
+  };
+
   return (
     <>
       {errorState && <div className={style.error}>{errorState}</div>}
       <div className={style.dots} />
       <SearchComponent onSearch={handleSearch} />
       <div className={style.layout}>
-        <Filter
-          colors={filters.colors}
-          sizes={filters.sizes}
-          prices={filters.prices}
-          handleChange={handleChange}
-          onReset={handleReset}
-        />
+        <div className={style.test}>
+          <SortComponent onSort={handleSort} />
+          <Filter
+            colors={filters.colors}
+            sizes={filters.sizes}
+            prices={filters.prices}
+            handleChange={handleChange}
+            onReset={handleReset}
+          />
+        </div>
         <Card products={productState} />
       </div>
     </>
