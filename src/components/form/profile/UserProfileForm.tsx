@@ -15,6 +15,7 @@ import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { mapCustomerToModel } from 'src/services/DTO/Customer.ts';
 import { updateCustomerField } from 'src/services/api/updateCustomer.ts';
 import { updateEmail } from 'src/services/userData/saveEmailPassword.ts';
+import { ChangePasswordForm } from 'src/components/form/profile/ChangePasswordForm.tsx';
 
 const PROJECT_KEY: string = import.meta.env.VITE_CTP_PROJECT_KEY as string;
 
@@ -26,7 +27,6 @@ export const UserProfileForm: React.FC = () => {
   const [activeTab, setActiveTab] = useState('basicInfo');
   const [isDisabledUserInfo, setEditUserInfo] = useState(true);
   const [isDisabledAddress, setEditAddress] = useState(true);
-  const [isDisabledPassword, setEditPassword] = useState(true);
   const [countryShipping, setCountryShipping] = useState<Country>(Country.Underfined);
   const [countryBilling, setCountryBilling] = useState<Country>(Country.Underfined);
   const [isEmail, setEmail] = useState(false);
@@ -151,18 +151,9 @@ export const UserProfileForm: React.FC = () => {
     setEditAddress(!isDisabledAddress);
   };
 
-  const handlePasswordTab = () => {
-    if (isDisabledPassword) {
-      // TODO send saving reqest to server
-    }
-    setEditPassword(!isDisabledPassword);
-  };
-
   const handleChangeMode = (tab: string) => {
     if (tab === 'basicInfo') {
       handleUserInfoTab();
-    } else if (tab === 'password') {
-      handlePasswordTab();
     } else if (tab === 'address') {
       handleAddressTab();
     }
@@ -272,17 +263,7 @@ export const UserProfileForm: React.FC = () => {
           </>
         );
       case 'password':
-        return (
-          <button
-            type="button"
-            onClick={() => {
-              handleChangeMode(activeTab);
-            }}
-          >
-            {isDisabledPassword ? 'Edit' : 'Save'}
-          </button>
-        );
-
+        return <ChangePasswordForm version={customerVersion} />;
       default:
         return null;
     }
