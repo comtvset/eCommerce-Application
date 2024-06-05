@@ -18,6 +18,32 @@ export const fetchSearchProducts = async (query: string) => {
   return response.body.results;
 };
 
+export const fetchSortPriceProducts = async (value: string) => {
+  const response = await apiRoot
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        sort: `price ${value}`,
+      },
+    })
+    .execute();
+  return response.body.results;
+};
+
+export const fetchSortNameProducts = async (value: string) => {
+  const response = await apiRoot
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        sort: `name.en-US ${value}`,
+      },
+    })
+    .execute();
+  return response.body.results;
+};
+
 export const fetchColorProducts = async (
   colors: string[],
   sizesArray: string[],
