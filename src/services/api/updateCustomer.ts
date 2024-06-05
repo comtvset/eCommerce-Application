@@ -1,5 +1,4 @@
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
-import { ServerError } from 'src/utils/error/RequestErrors.ts';
 
 export const updateCustomerField = async (
   apiRoot2: ByProjectKeyRequestBuilder,
@@ -10,7 +9,7 @@ export const updateCustomerField = async (
   dateOfBirth: string,
   email: string,
 ) => {
-  return apiRoot2
+  const response = await apiRoot2
     .customers()
     .withId({ ID: id })
     .post({
@@ -36,8 +35,7 @@ export const updateCustomerField = async (
         ],
       },
     })
-    .execute()
-    .catch((error: unknown) => {
-      throw new ServerError('Error during update customer.', error);
-    });
+    .execute();
+
+  return response;
 };
