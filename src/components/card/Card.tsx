@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import style from 'src/components/card/Card.module.scss';
 import { Layout } from 'src/components/layout/Layout.tsx';
 import { apiRoot } from 'src/services/api/ctpClient.ts';
+import { Modal } from 'src/components/modalWindow/modalImage.tsx';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
 import Slider from 'react-slick';
@@ -23,10 +24,21 @@ export const CardOne: React.FC = () => {
   const [product, setProduct] = useState<IProductData>();
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [modal, setModal] = useState(false);
   const { id } = useParams<{ id: string }>();
 
-  const handleImageChange = (newImage: Image) => {
+  const handleImageChange = (newImage: Image, index: number) => {
     setSelectedImage(newImage);
+    setSelectedIndex(index);
+  };
+
+  const showModalWindow = () => {
+    setModal(true);
+  };
+
+  const closeModalWindow = () => {
+    setModal(false);
   };
 
   const isImages = product?.masterData.staged.masterVariant.images ?? [];
@@ -39,7 +51,9 @@ export const CardOne: React.FC = () => {
     ? ((isFirstPrice[0]?.value.centAmount ?? 0) / 100).toFixed(2).toString()
     : '';
   const isCurrencyCode = isFirstPrice ? isFirstPrice[0].discounted?.value.currencyCode : '';
+  const isCurrencyNoDiscount = isFirstPrice ? isFirstPrice[0].value.currencyCode : '';
   const currencyCode = getCurrencySymbol(isCurrencyCode) ?? '';
+  const currencyNoDiscount = getCurrencySymbol(isCurrencyNoDiscount) ?? '';
 
   useEffect(() => {
     if (typeof id !== 'undefined') {
@@ -64,6 +78,14 @@ export const CardOne: React.FC = () => {
     }
   }, [product]);
 
+  useEffect(() => {
+    if (modal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [modal]);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -73,6 +95,16 @@ export const CardOne: React.FC = () => {
   };
   const { dots, infinite, speed, slidesToShow, slidesToScroll } = settings;
 
+  const settings2 = {
+    initialSlide: selectedIndex,
+    dot: true,
+    infinit: true,
+    spee: 500,
+    slidesToSho: 1,
+    slidesToScrol: 1,
+  };
+  const { initialSlide, dot, infinit, spee, slidesToSho, slidesToScrol } = settings2;
+
   return (
     <Layout className={style.container}>
       {error && <div className={style.error}>{error}</div>}
@@ -81,11 +113,22 @@ export const CardOne: React.FC = () => {
           <div className={style.container_images}>
             <div className={style.main_image}>
               {selectedImage && (
-                <img
-                  className={style.image}
-                  src={selectedImage.url}
-                  alt={product.masterData.current.name['en-US']}
-                />
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={showModalWindow}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      showModalWindow();
+                    }
+                  }}
+                >
+                  <img
+                    className={style.image}
+                    src={selectedImage.url}
+                    alt={product.masterData.current.name['en-US']}
+                  />
+                </div>
               )}
             </div>
             {isLength && (
@@ -97,7 +140,7 @@ export const CardOne: React.FC = () => {
                 slidesToScroll={slidesToScroll}
                 className={style.images_container}
                 afterChange={(currentSlide: number) => {
-                  handleImageChange(isImages[currentSlide]);
+                  handleImageChange(isImages[currentSlide], selectedIndex);
                 }}
               >
                 {product.masterData.staged.masterVariant.images?.map((image) => (
@@ -140,7 +183,7 @@ export const CardOne: React.FC = () => {
               ) : (
                 <Paragraph
                   tag="p"
-                  title={`${currencyCode}${isNoDiscount}`}
+                  title={`${currencyNoDiscount}${isNoDiscount}`}
                   className={style.price_start}
                 />
               )}
@@ -148,6 +191,41 @@ export const CardOne: React.FC = () => {
           </div>
         </div>
       )}
+      {product && selectedImage && modal && (
+        <Modal closeModalWindow={closeModalWindow}>
+          {!isLength && (
+            <img
+              className={style.modal_image}
+              src={selectedImage.url}
+              alt={product.masterData.current.name['en-US']}
+            />
+          )}
+          {isLength && (
+            <Slider
+              initialSlide={initialSlide}
+              dots={dot}
+              infinite={infinit}
+              speed={spee}
+              slidesToShow={slidesToSho}
+              slidesToScroll={slidesToScrol}
+              className={style.images_container2}
+              afterChange={(currentSlide) => {
+                handleImageChange(isImages[currentSlide], currentSlide);
+              }}
+            >
+              {product.masterData.staged.masterVariant.images?.map((image) => (
+                <img
+                  key={image.url}
+                  className={style.images2}
+                  src={image.url}
+                  alt={product.masterData.current.name['en-US']}
+                />
+              ))}
+            </Slider>
+          )}
+        </Modal>
+      )}
+      {modal && <div className={style.background} />}
     </Layout>
   );
 };

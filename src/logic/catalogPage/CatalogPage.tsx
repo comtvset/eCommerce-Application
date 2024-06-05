@@ -77,7 +77,7 @@ export const Catalog: React.FC = () => {
           const updatedColorsArray = [...colorsArray, value];
           setColorsArray(updatedColorsArray);
           try {
-            const result = await fetchColorProducts(updatedColorsArray);
+            const result = await fetchColorProducts(updatedColorsArray, sizesArray, pricesArray);
             setProductState(result);
           } catch (error: unknown) {
             setErrorState('Error fetching color products');
@@ -87,7 +87,7 @@ export const Catalog: React.FC = () => {
           const updatedSizesArray = [...sizesArray, value];
           setSizesArray(updatedSizesArray);
           try {
-            const result = await fetchSizeProducts(updatedSizesArray);
+            const result = await fetchSizeProducts(updatedSizesArray, colorsArray, pricesArray);
             setProductState(result);
           } catch (error: unknown) {
             setErrorState('Error fetching size products');
@@ -95,10 +95,10 @@ export const Catalog: React.FC = () => {
         }
         if (category === 'price') {
           const getPrice = async (priceRange: string) => {
-            const updatedPricesArray = [...pricesArray, value];
+            const updatedPricesArray = [value];
             setPricesArray(updatedPricesArray);
             try {
-              const result = await fetchPriceProducts(priceRange);
+              const result = await fetchPriceProducts(priceRange, colorsArray, sizesArray);
               setProductState(result);
             } catch (error: unknown) {
               setErrorState('Error fetching price products');
@@ -123,8 +123,8 @@ export const Catalog: React.FC = () => {
           setColorsArray(updatedColorsArray);
           try {
             const result =
-              updatedColorsArray.length > 0
-                ? await fetchColorProducts(updatedColorsArray)
+              updatedColorsArray.length >= 0
+                ? await fetchColorProducts(updatedColorsArray, sizesArray, pricesArray)
                 : defaultColor;
             setProductState(result);
           } catch (error: unknown) {
@@ -136,8 +136,8 @@ export const Catalog: React.FC = () => {
           setSizesArray(updatedSizesArray);
           try {
             const result =
-              updatedSizesArray.length > 0
-                ? await fetchSizeProducts(updatedSizesArray)
+              updatedSizesArray.length >= 0
+                ? await fetchSizeProducts(updatedSizesArray, colorsArray, pricesArray)
                 : defaultColor;
             setProductState(result);
           } catch (error: unknown) {
@@ -157,6 +157,13 @@ export const Catalog: React.FC = () => {
     });
   };
 
+  const handleReset = (products: ProductProjection[]) => {
+    setProductState(products);
+    setColorsArray([]);
+    setSizesArray([]);
+    setPricesArray([]);
+  };
+
   return (
     <div className={style.layout}>
       {errorState && <div className={style.error}>{errorState}</div>}
@@ -166,6 +173,7 @@ export const Catalog: React.FC = () => {
         sizes={filters.sizes}
         prices={filters.prices}
         handleChange={handleChange}
+        onReset={handleReset}
       />
       <Card products={productState} />
     </div>
