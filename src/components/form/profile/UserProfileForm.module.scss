@@ -70,6 +70,24 @@
   }
 }
 
+.verifyButton {
+  align-self: self-start;
+  margin: 15px 0;
+  height: 40px;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: var(--register-button);
+}
+
+.updteButton {
+  align-self: self-start;
+  margin: 15px 0;
+  height: 40px;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: var(--hover-text-color);
+}
+
 @media (width < 650px) {
   .tab_container {
     margin: 10px 10px;
