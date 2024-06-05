@@ -168,7 +168,7 @@ export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ version 
             error={errors.oldPassword}
           />
 
-          <button type="button" onClick={handleOldPassword}>
+          <button type="button" className={styles.verifyButton} onClick={handleOldPassword}>
             Verify
           </button>
           <InputWithLabel
@@ -206,6 +206,7 @@ export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ version 
       {isOldPasswordCorrect && (
         <button
           type="button"
+          className={styles.updteButton}
           onClick={handlePasswordChange}
           disabled={!isSamePasswords || !isFormValid}
         >
