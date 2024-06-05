@@ -5,6 +5,7 @@ import { Filter } from 'src/components/filter/Filter.tsx';
 import { filterTools } from 'src/services/tools/filterTools.ts';
 import {
   fetchAllProducts,
+  fetchCategory,
   fetchColorProducts,
   fetchPriceProducts,
   fetchSearchProducts,
@@ -15,6 +16,7 @@ import {
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { SearchComponent } from 'src/components/search/Search.tsx';
 import { SortComponent } from 'src/components/sort/Sort.tsx';
+import { CategoryComponent } from 'src/components/category/Category.tsx';
 
 const initializeFilters = async () => {
   const [colors, sizes, prices] = await filterTools();
@@ -39,6 +41,7 @@ export const Catalog: React.FC = () => {
   const [sizesArray, setSizesArray] = useState<string[]>([]);
   const [pricesArray, setPricesArray] = useState<string[]>([]);
   const [errorState, setErrorState] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All category');
 
   const [filters, setFilters] = useState<Filters>({
     colors: [],
@@ -243,6 +246,23 @@ export const Catalog: React.FC = () => {
     }
   };
 
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(category);
+    // console.log(`Category clicked: ${category}`);
+    const fetchAndSetCategory = async () => {
+      try {
+        const currentCategory = await fetchCategory(category);
+        setProductState(currentCategory);
+      } catch (error: unknown) {
+        setErrorState('Error searching products');
+      }
+    };
+
+    fetchAndSetCategory().catch(() => {
+      setErrorState('Error handling change');
+    });
+  };
+
   return (
     <>
       {errorState && <div className={style.error}>{errorState}</div>}
@@ -250,6 +270,10 @@ export const Catalog: React.FC = () => {
       <SearchComponent onSearch={handleSearch} />
       <div className={style.layout}>
         <div className={style.test}>
+          <CategoryComponent
+            onCategoryClick={handleCategoryClick}
+            selectedCategory={selectedCategory}
+          />
           <SortComponent onSort={handleSort} />
           <Filter
             colors={filters.colors}
