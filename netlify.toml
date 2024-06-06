@@ -1,12 +1,7 @@
 [[redirects]]
-from = "/product/:id"
+from = "/*/:id"
 to = "/index.html"
-status = 301
-
-[[redirects]]
-from = "/profile/:id"
-to = "/index.html"
-status = 301
+status = 200
 
 [[redirects]]
 from = "/*"
