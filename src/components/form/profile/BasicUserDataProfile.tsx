@@ -31,7 +31,6 @@ export const BasicUserDataProfile: React.FC<BasicUserDataProfileProps> = ({
   const [formData, setFormData] = useState<ICustomerModel>(customerModel);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isEmail, setEmail] = useState(false);
-  const [customerVersion, setCustomerVersion] = useState(-1);
 
   const popupMessage = { status: '', message: '' };
   const [modalData, setModalData] = useState(popupMessage);
