@@ -21,15 +21,14 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
     projectKey: PROJECT_KEY,
   });
 
-  const [isDisabledAddress, setEditAddress] = useState(true);
-  const [countryShipping, setCountryShipping] = useState<Country>(Country.Underfined);
-  const [countryBilling, setCountryBilling] = useState<Country>(Country.Underfined);
+  const [countryNewAddress, setcountryNewAddress] = useState<Country>(Country.Underfined);
+  const [countryBilling] = useState<Country>(Country.Underfined);
   const [id] = useState(localStorage.getItem('fullID') ?? '');
   const [formData, setFormData] = useState<ICustomerModel>({
     ...customerModel,
     ...userProfileFormData,
   });
-  const [isFormValid, setIsFormValid] = useState(false);
+  const [, setIsFormValid] = useState(false);
 
   const popupMessage = { status: '', message: '' };
   const [modalData, setModalData] = useState(popupMessage);
@@ -95,7 +94,7 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
   };
 
   const validateOneField = (name: string, value: string) => {
-    const error = validateField(name, value, countryShipping, countryBilling);
+    const error = validateField(name, value, countryNewAddress, countryBilling);
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: error || '',
@@ -115,10 +114,12 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
+
     setNewAddress((prevNewAddress) => ({
       ...prevNewAddress,
       [name]: value,
     }));
+    validateOneField(name, value);
   };
 
   const fetchLatestVersion = async (): Promise<number | null> => {
@@ -252,12 +253,12 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
   }, [errors]);
 
   useEffect(() => {
-    const error = validatePostalCode(countryShipping, formData.postalCode);
+    const error = validatePostalCode(countryNewAddress, newAddress.postalCode);
     setErrors((prevErrors) => ({
       ...prevErrors,
       postalCode: error,
     }));
-  }, [countryShipping, formData.postalCode]);
+  }, [countryNewAddress, newAddress.postalCode]);
 
   useEffect(() => {
     const error = validatePostalCode(countryBilling, formData.billingPostalCode);
