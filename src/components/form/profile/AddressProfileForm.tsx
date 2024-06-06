@@ -21,7 +21,7 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
     projectKey: PROJECT_KEY,
   });
 
-  const [countryNewAddress, setcountryNewAddress] = useState<Country>(Country.Underfined);
+  const [countryNewAddress] = useState<Country>(Country.Underfined);
   const [countryBilling] = useState<Country>(Country.Underfined);
   const [id] = useState(localStorage.getItem('fullID') ?? '');
   const [formData, setFormData] = useState<ICustomerModel>({
@@ -99,15 +99,6 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
       ...prevErrors,
       [name]: error || '',
     }));
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-    validateOneField(name, value);
   };
 
   const handleNewAddressChange = (
