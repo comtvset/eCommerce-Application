@@ -1,4 +1,14 @@
 [[redirects]]
+from = "/product/:id"
+to = "/product.html"
+status = 200
+
+[[redirects]]
+from = "/profile/:id"
+to = "/profile.html"
+status = 200
+
+[[redirects]]
 from = "/*"
 to = "/index.html"
 status = 200
