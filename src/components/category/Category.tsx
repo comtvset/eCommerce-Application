@@ -8,10 +8,11 @@ interface CategoryComponentProps {
 
 const categories = [
   { name: 'Decor', isSubcategory: false },
-  { name: 'Picture', isSubcategory: true },
-  { name: 'Christmas', isSubcategory: true },
-  { name: 'Furniture', isSubcategory: false },
+  { name: 'Wall Decor', isSubcategory: true },
+  { name: 'X-mas', isSubcategory: true },
+  { name: 'Toys', isSubcategory: false },
   { name: 'Food', isSubcategory: false },
+  { name: 'Jar', isSubcategory: true },
   { name: 'All category', isSubcategory: false },
 ];
 
@@ -35,7 +36,7 @@ export const CategoryComponent: React.FC<CategoryComponentProps> = ({
             if (event.key === 'Enter') onCategoryClick(category.name);
           }}
         >
-          {selectedCategory === category.name && '●'}
+          {selectedCategory === category.name && '● '}
           {category.name}
         </div>
       ))}

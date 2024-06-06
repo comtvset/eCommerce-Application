@@ -77,6 +77,7 @@ export const Catalog: React.FC = () => {
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setSelectedCategory('All category');
     const { name: category, value } = event.target;
 
     const handleAsyncChange = async () => {
@@ -173,6 +174,7 @@ export const Catalog: React.FC = () => {
   };
 
   const handleSearch = (query: string) => {
+    setSelectedCategory('All category');
     const fetchAndSetProducts = async () => {
       try {
         const searchProducts = await fetchSearchProducts(query);
@@ -188,6 +190,7 @@ export const Catalog: React.FC = () => {
   };
 
   const handleSort = (criteria: string) => {
+    setSelectedCategory('All category');
     if (criteria === 'price high') {
       const fetchAndSetProducts = async () => {
         try {
@@ -248,7 +251,6 @@ export const Catalog: React.FC = () => {
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
-    // console.log(`Category clicked: ${category}`);
     const fetchAndSetCategory = async () => {
       try {
         const currentCategory = await fetchCategory(category);
