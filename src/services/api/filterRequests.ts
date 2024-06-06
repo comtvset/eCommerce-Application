@@ -11,14 +11,20 @@ export const fetchCategory = async (category: string) => {
   if (category === 'Decor') {
     filter = 'categories.id: subtree("59dbad07-067b-46ef-b62e-c6d5eddc2128")';
   }
-  if (category === 'Picture') {
+  if (category === 'Wall Decor') {
     filter = 'categories.id: subtree("043c187b-e2e2-42f4-b7e9-e11e441cbee8")';
   }
-  if (category === 'Christmas') {
+  if (category === 'X-mas') {
     filter = 'categories.id: subtree("c7f2242d-4ade-4049-b23c-3aeb238580cc")';
+  }
+  if (category === 'Toys') {
+    filter = 'categories.id: subtree("28b63001-0763-48c2-96e5-fbda8effc91b")';
   }
   if (category === 'Food') {
     filter = 'categories.id: subtree("ed2eba2a-1ebf-4295-ac7f-1080f469fa7d")';
+  }
+  if (category === 'Jar') {
+    filter = 'categories.id: subtree("d32d17fe-3bda-460e-8494-9e50c9ca5a10")';
   }
 
   const response = await apiRoot
@@ -32,11 +38,6 @@ export const fetchCategory = async (category: string) => {
     .execute();
   return response.body.results;
 };
-
-// 'filter.query': [`categories.id: subtree("59dbad07-067b-46ef-b62e-c6d5eddc2128")`], //Decor
-// 'filter.query': [`categories.id: subtree("043c187b-e2e2-42f4-b7e9-e11e441cbee8")`], //picture
-// 'filter.query': [`categories.id: subtree("c7f2242d-4ade-4049-b23c-3aeb238580cc")`], //christmas
-// 'filter.query': [`categories.id: subtree("ed2eba2a-1ebf-4295-ac7f-1080f469fa7d")`], //Food
 
 export const fetchSearchProducts = async (query: string) => {
   const response = await apiRoot

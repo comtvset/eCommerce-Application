@@ -29,3 +29,13 @@
 .subcategory:hover {
   color: orange;
 }
+
+@media (max-width: 500px) {
+  .category_container {
+    font-size: 1.2rem;
+  }
+
+  .subcategory {
+    margin-left: 15px;
+  }
+}
