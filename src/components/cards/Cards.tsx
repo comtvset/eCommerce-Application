@@ -38,7 +38,7 @@ export const Card: React.FC<CardProps> = ({ products }) => {
             className={style.card}
             key={product.id}
             id={product.id}
-            to={`/catalog/${product.id}`}
+            to={`/product/${product.id}`}
           >
             <div className={style.image_container}>
               <img
