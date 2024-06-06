@@ -60,7 +60,7 @@ export const UserProfileForm: React.FC = () => {
       case 'basicInfo':
         return <BasicUserDataProfile version={customerVersion} userProfileFormData={formData} />;
       case 'address':
-        return <AddressProfileForm version={customerVersion} userProfileFormData={formData} />;
+        return <AddressProfileForm userProfileFormData={formData} />;
       case 'password':
         return <ChangePasswordForm version={customerVersion} />;
       default:

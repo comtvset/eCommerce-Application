@@ -5,7 +5,7 @@ interface CheckboxProps {
   label: string;
   checked: boolean;
   id: string;
-  onChange: (checked: boolean) => void;
+  onChange?: (checked: boolean) => void;
   disabledMode?: boolean;
 }
 
@@ -17,7 +17,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   disabledMode = false,
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.checked);
+    onChange?.(event.target.checked);
   };
 
   return (

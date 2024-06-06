@@ -1,35 +1,34 @@
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { Address, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import React, { useEffect, useState } from 'react';
 import { getLoginClient } from 'src/services/api/BuildClient.ts';
 import { PROJECT_KEY } from 'src/services/api/BuildClientRegistration.ts';
 import styles from 'src/components/form/profile/UserProfileForm.module.scss';
 import { AddressForm } from 'src/components/address/Address.tsx';
-import { BillingAddressForm } from 'src/components/address/BillingAddress.tsx';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
 import { validateField } from 'src/components/validation/Validation.ts';
 import { validatePostalCode } from 'src/components/validation/PostalCodeValidation.ts';
-import { Country } from 'src/components/country/country.ts';
+import { Country, countryLookup } from 'src/components/country/country.ts';
 import { ICustomerModel, customerModel } from 'src/model/Customer.ts';
 import useModalEffect from 'src/components/form/profile/UseModalEffect.ts';
+import { ServerError } from 'src/utils/error/RequestErrors.ts';
 
 interface AddressProfileProps {
-  version: number;
   userProfileFormData: ICustomerModel;
 }
 
-export const AddressProfileForm: React.FC<AddressProfileProps> = ({
-  version,
-  userProfileFormData,
-}) => {
-  const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
+export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileFormData }) => {
+  const apiRoot = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
     projectKey: PROJECT_KEY,
   });
-  const [api, setAPI] = useState(apiRoot2);
+
   const [isDisabledAddress, setEditAddress] = useState(true);
   const [countryShipping, setCountryShipping] = useState<Country>(Country.Underfined);
   const [countryBilling, setCountryBilling] = useState<Country>(Country.Underfined);
   const [id] = useState(localStorage.getItem('fullID') ?? '');
-  const [formData, setFormData] = useState<ICustomerModel>(customerModel);
+  const [formData, setFormData] = useState<ICustomerModel>({
+    ...customerModel,
+    ...userProfileFormData,
+  });
   const [isFormValid, setIsFormValid] = useState(false);
 
   const popupMessage = { status: '', message: '' };
@@ -37,44 +36,165 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({
   useModalEffect(modalData, setModalData);
 
   const [errors, setErrors] = useState<ICustomerModel>(customerModel);
+  const [addresses, setAddresses] = useState<Address[]>([]);
 
-  useEffect(() => {
-    setFormData({
-      ...userProfileFormData,
-    });
-  }, [id, userProfileFormData]);
+  const emptyAddress = {
+    streetName: '',
+    city: '',
+    postalCode: '',
+    country: Country.Underfined,
+  };
+  const [newAddress, setNewAddress] = useState<Address>(emptyAddress);
 
-  const handleDefaultAddress = (checked: boolean) => {
-    setFormData({
-      ...formData,
-      isShippingDefaultAddress: checked,
-    });
+  const proceedExceptions = (error: unknown, message: string) => {
+    if (error instanceof ServerError) {
+      setModalData({ status: 'Error', message: error.message });
+    } else if (error instanceof Error) {
+      setModalData({ status: 'Error', message: error.message });
+    } else {
+      setModalData({ status: 'Error', message });
+    }
   };
 
-  const handleBillingAddress = (checked: boolean) => {
-    setFormData({
-      ...formData,
-      isBillingDefaultAddress: checked,
+  useEffect(() => {
+    const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
+      projectKey: PROJECT_KEY,
     });
+    const fetchAddresses = async (): Promise<void> => {
+      try {
+        const response = await apiRoot2.customers().withId({ ID: id }).get().execute();
+        setAddresses(response.body.addresses);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          version: response.body.version,
+        }));
+      } catch (error) {
+        proceedExceptions(error, 'Could not retrieve customer addresses');
+      }
+    };
+    if (id) {
+      fetchAddresses().catch((error: unknown) => {
+        proceedExceptions(error, 'Could not retrieve customer addresses');
+      });
+    }
+  }, [id]);
+
+  const handleDefaultAddress = (checked: boolean, type: 'shipping' | 'billing') => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [type === 'shipping' ? 'isShippingDefaultAddress' : 'isBillingDefaultAddress']: checked,
+    }));
   };
 
   const validateOneField = (name: string, value: string) => {
     const error = validateField(name, value, countryShipping, countryBilling);
-    const errorValidate = error === '' ? '' : error;
-    setErrors({
-      ...errors,
-      [name]: errorValidate,
-    });
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error || '',
+    }));
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
-    });
-
+    }));
     validateOneField(name, value);
+  };
+
+  const handleNewAddressChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = event.target;
+    setNewAddress((prevNewAddress) => ({
+      ...prevNewAddress,
+      [name]: value,
+    }));
+  };
+
+  const fetchLatestVersion = async (): Promise<number | null> => {
+    try {
+      const response = await apiRoot.customers().withId({ ID: id }).get().execute();
+      return response.body.version;
+    } catch (error) {
+      proceedExceptions(error, 'Fetching latest version');
+      return null;
+    }
+  };
+
+  const handleAddAddress = async () => {
+    const latestVersion = await fetchLatestVersion();
+    if (latestVersion !== null) {
+      try {
+        const response = await apiRoot
+          .customers()
+          .withId({ ID: id })
+          .post({
+            body: {
+              version: latestVersion,
+              actions: [
+                {
+                  action: 'addAddress',
+                  address: {
+                    ...newAddress,
+                    country: Country[newAddress.country as keyof typeof Country],
+                  },
+                },
+              ],
+            },
+          })
+          .execute();
+
+        setAddresses(response.body.addresses);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          version: response.body.version,
+        }));
+        setNewAddress(emptyAddress);
+        setModalData({ status: 'Success', message: 'Address added successfully' });
+      } catch (error) {
+        setModalData({ status: 'Error', message: 'Could not add a new address' });
+        proceedExceptions(error, 'Adding new address');
+      }
+    }
+  };
+
+  const handleEditAddress = (addressId: string) => {
+    // Logic to edit address
+  };
+
+  const handleDeleteAddress = async (addressId: string) => {
+    const latestVersion = await fetchLatestVersion();
+    if (latestVersion !== null) {
+      try {
+        const response = await apiRoot
+          .customers()
+          .withId({ ID: id })
+          .post({
+            body: {
+              version: latestVersion,
+              actions: [
+                {
+                  action: 'removeAddress',
+                  addressId,
+                },
+              ],
+            },
+          })
+          .execute();
+
+        setAddresses(response.body.addresses);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          version: response.body.version,
+        }));
+        setModalData({ status: 'Success', message: 'Address deleted successfully' });
+      } catch (error) {
+        setModalData({ status: 'Error', message: 'Error deleting address' });
+        proceedExceptions(error, 'Deleting address');
+      }
+    }
   };
 
   useEffect(() => {
@@ -82,7 +202,7 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({
       (error) => error === '' || typeof error === 'boolean',
     );
     setIsFormValid(allFieldsValid);
-  }, [errors, formData]);
+  }, [errors]);
 
   useEffect(() => {
     const error = validatePostalCode(countryShipping, formData.postalCode);
@@ -105,7 +225,7 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({
       setCountryShipping(Country[formData.country as keyof typeof Country]);
       setCountryBilling(Country[formData.billingCountry as keyof typeof Country]);
       if (isFormValid && id) {
-        // TODO send saving reqest to server
+        // TODO send saving request to server
       }
     }
     setEditAddress(!isDisabledAddress);
@@ -113,28 +233,104 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({
 
   return (
     <>
-      <div className={styles.addresses}>
-        <AddressForm
-          formData={formData}
-          handleBoolean={handleDefaultAddress}
-          handleChange={handleChange}
-          errors={errors}
-          title="Shipping address"
-          showIsTheSameAddress={false}
-          disabledMode={isDisabledAddress}
-        />
-        <BillingAddressForm
-          formData={formData}
-          handleBoolean={handleBillingAddress}
-          handleChange={handleChange}
-          errors={errors}
-          title="Billing address"
-          disabledMode={isDisabledAddress}
-        />
+      <div className={styles.addresses_container}>
+        <div className={styles.addresses}>
+          <h1>Add New Address</h1>
+          <AddressForm
+            formData={newAddress}
+            handleChange={handleNewAddressChange}
+            errors={errors}
+            title="New Address"
+            showIsTheSameAddress={false}
+            disabledMode={false}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              handleAddAddress().catch((error: unknown) => {
+                proceedExceptions(error, 'Adding new address');
+              });
+            }}
+          >
+            Add Address
+          </button>
+        </div>
+        <div className={styles.addresses}>
+          <h2>Your Addresses</h2>
+          {addresses.map((address) => (
+            <div key={address.id} className={styles.addressCard}>
+              <div className={styles.editdelete_container}>
+                <div>
+                  <div>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={formData.isShippingDefaultAddress}
+                        onChange={(e) => {
+                          handleDefaultAddress(e.target.checked, 'shipping');
+                        }}
+                      />{' '}
+                      Default Shipping
+                    </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={formData.isBillingDefaultAddress}
+                        onChange={(e) => {
+                          handleDefaultAddress(e.target.checked, 'billing');
+                        }}
+                      />
+                      Default Billing
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleEditAddress(address.id ?? '');
+                    }}
+                  >
+                    📝
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleDeleteAddress(address.id ?? '').catch((error: unknown) => {
+                        proceedExceptions(error, 'Deleting address');
+                      });
+                    }}
+                  >
+                    ❌
+                  </button>
+                </div>
+              </div>
+              <div className={styles.address_row}>
+                <div>
+                  <span>street name:</span>
+                  <p>{address.streetName}</p>
+                </div>
+                <div>
+                  <span> city:</span>
+                  <p>{address.city}</p>
+                </div>
+                <div>
+                  <span>postal code:</span>
+                  <p>{address.postalCode}</p>
+                </div>
+                <div>
+                  <span> country:</span>
+                  <p>{countryLookup[address.country]}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button type="button" onClick={handleAddressTab}>
+          {isDisabledAddress ? 'Edit' : 'Save'}
+        </button>
       </div>
-      <button type="button" onClick={handleAddressTab}>
-        {isDisabledAddress ? 'Edit' : 'Save'}
-      </button>
+
       {modalData.message && <ModalWindow data={modalData} />}
     </>
   );

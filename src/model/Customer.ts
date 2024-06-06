@@ -15,7 +15,8 @@ export interface ICustomerModel {
   billingCity: string | undefined;
   billingCountry: string | undefined;
   billingPostalCode: string | undefined;
-  [key: string]: string | boolean | undefined;
+  version?: number;
+  [key: string]: string | boolean | number | undefined;
 }
 
 export const customerModel: ICustomerModel = {
