@@ -31,10 +31,35 @@ export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ version 
   useModalEffect(modalData, setModalData);
 
   const [id] = useState(localStorage.getItem('fullID') ?? '');
-  const [customerVersion, setCustomerVersion] = useState(version);
+  const [, setCustomerVersion] = useState(version);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isOldPasswordCorrect, setIsOldPasswordCorrect] = useState(false);
   const [isSamePasswords, setIsSamePasswords] = useState(false);
+
+  const proceedExceptions = (error: unknown, message: string) => {
+    if (error instanceof ServerError) {
+      setModalData({ status: 'Error', message: error.message });
+    } else if (error instanceof Error) {
+      setModalData({ status: 'Error', message: error.message });
+    } else {
+      setModalData({ status: 'Error', message });
+    }
+  };
+
+  const fetchLatestVersion = async (): Promise<number> => {
+    let response;
+    let result = -1;
+
+    try {
+      response = await api.customers().withId({ ID: id }).get().execute();
+    } catch (error) {
+      proceedExceptions(error, 'Fetching latest version');
+    }
+    if (response !== undefined) {
+      result = response.body.version;
+    }
+    return result;
+  };
 
   const validatePasswordsForm = (name: string, value: string) => {
     const error = validatePassword(value);
@@ -62,7 +87,7 @@ export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ version 
     setIsFormValid(allFieldsValid);
   }, [errors, formData]);
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = async () => {
     if (id && isSamePasswords && formData.oldPassword) {
       if (localStorage.getItem('changePassword')) {
         setModalData({
@@ -70,7 +95,9 @@ export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ version 
           message: 'Please logout and login again after password was changed.',
         });
       } else {
-        updatePassword(api, formData, customerVersion)
+        const latestVersion = await fetchLatestVersion();
+
+        updatePassword(api, formData, latestVersion)
           .then((response) => {
             setCustomerVersion(response.body.version);
             setPassword(formData.newPassword);
@@ -195,7 +222,11 @@ export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ version 
         <button
           type="button"
           className={styles.updteButton}
-          onClick={handlePasswordChange}
+          onClick={() => {
+            handlePasswordChange().catch((error: unknown) => {
+              proceedExceptions(error, 'Edit address failed');
+            });
+          }}
           disabled={!isSamePasswords || !isFormValid}
         >
           {isDisabledPassword ? 'Edit' : 'Update'}
