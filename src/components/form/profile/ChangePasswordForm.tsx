@@ -31,7 +31,7 @@ export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ version 
   useModalEffect(modalData, setModalData);
 
   const [id] = useState(localStorage.getItem('fullID') ?? '');
-  const [customerVersion, setCustomerVersion] = useState(version);
+  const [, setCustomerVersion] = useState(version);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isOldPasswordCorrect, setIsOldPasswordCorrect] = useState(false);
   const [isSamePasswords, setIsSamePasswords] = useState(false);
