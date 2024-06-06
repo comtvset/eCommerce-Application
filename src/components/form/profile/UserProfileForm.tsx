@@ -58,7 +58,7 @@ export const UserProfileForm: React.FC = () => {
   const handleSwitchTab = () => {
     switch (activeTab) {
       case 'basicInfo':
-        return <BasicUserDataProfile version={customerVersion} userProfileFormData={formData} />;
+        return <BasicUserDataProfile userProfileFormData={formData} />;
       case 'address':
         return <AddressProfileForm userProfileFormData={formData} />;
       case 'password':

@@ -15,12 +15,10 @@ import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import useModalEffect from './UseModalEffect.ts';
 
 interface BasicUserDataProfileProps {
-  version: number;
   userProfileFormData: ICustomerModel;
 }
 
 export const BasicUserDataProfile: React.FC<BasicUserDataProfileProps> = ({
-  version,
   userProfileFormData,
 }) => {
   const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
@@ -33,13 +31,33 @@ export const BasicUserDataProfile: React.FC<BasicUserDataProfileProps> = ({
   const [formData, setFormData] = useState<ICustomerModel>(customerModel);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isEmail, setEmail] = useState(false);
-  const [customerVersion, setCustomerVersion] = useState(version);
+  const [customerVersion, setCustomerVersion] = useState(-1);
 
   const popupMessage = { status: '', message: '' };
   const [modalData, setModalData] = useState(popupMessage);
   useModalEffect(modalData, setModalData);
 
   const [errors, setErrors] = useState<ICustomerModel>(customerModel);
+
+  const proceedExceptions = (error: unknown, message: string) => {
+    if (error instanceof ServerError) {
+      setModalData({ status: 'Error', message: error.message });
+    } else if (error instanceof Error) {
+      setModalData({ status: 'Error', message: error.message });
+    } else {
+      setModalData({ status: 'Error', message });
+    }
+  };
+
+  const fetchLatestVersion = async (): Promise<number | null> => {
+    try {
+      const response = await api.customers().withId({ ID: id }).get().execute();
+      return response.body.version;
+    } catch (error) {
+      proceedExceptions(error, 'Fetching latest version');
+      return null;
+    }
+  };
 
   useEffect(() => {
     setFormData({
@@ -73,69 +91,74 @@ export const BasicUserDataProfile: React.FC<BasicUserDataProfileProps> = ({
     setIsFormValid(allFieldsValid);
   }, [errors, formData.firstName, formData.lastName, formData.dateOfBirth, formData.email]);
 
-  const handleUserInfoTab = () => {
-    const bodyRequest = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      dateOfBirth: formData.dateOfBirth,
-      email: formData.email,
-    };
-    if (isDisabledUserInfo) {
-      setEmail(true);
-      setEditUserInfo(false);
-    } else {
-      setEditUserInfo(true);
-      setEmail(false);
+  const handleUserInfoTab = async () => {
+    try {
+      const bodyRequest = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        dateOfBirth: formData.dateOfBirth,
+        email: formData.email,
+      };
+      if (isDisabledUserInfo) {
+        setEmail(true);
+        setEditUserInfo(false);
+      } else {
+        setEditUserInfo(true);
+        setEmail(false);
 
-      if (isFormValid) {
-        if (id) {
-          updateCustomerField(
-            api,
-            id,
-            customerVersion,
-            formData.firstName ?? '',
-            formData.lastName ?? '',
-            formData.dateOfBirth ?? '',
-            formData.email,
-          )
-            .then((response) => {
-              const customerData = mapCustomerToModel(response.body);
+        if (isFormValid) {
+          if (id) {
+            const latestVersion = await fetchLatestVersion();
 
-              updateEmail(formData.email);
+            updateCustomerField(
+              api,
+              id,
+              latestVersion ?? -1,
+              formData.firstName ?? '',
+              formData.lastName ?? '',
+              formData.dateOfBirth ?? '',
+              formData.email,
+            )
+              .then((response) => {
+                const customerData = mapCustomerToModel(response.body);
 
-              setAPI(
-                createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
-                  projectKey: PROJECT_KEY,
-                }),
-              );
+                updateEmail(formData.email);
 
-              setFormData(customerData);
-              setCustomerVersion(response.body.version);
-              setModalData({
-                status: 'Success',
-                message: 'You have successfully updated your details',
+                setAPI(
+                  createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
+                    projectKey: PROJECT_KEY,
+                  }),
+                );
+
+                setFormData(customerData);
+                setModalData({
+                  status: 'Success',
+                  message: 'You have successfully updated your details',
+                });
+              })
+              .catch((error: unknown) => {
+                if (error instanceof ServerError) {
+                  setModalData({ status: 'Error', message: error.message });
+                } else if (error instanceof Error) {
+                  setModalData({ status: 'Error', message: error.message });
+                } else {
+                  setModalData({ status: 'Error', message: 'Unexpected error occurred.' });
+                }
+                setFormData({
+                  ...formData,
+                  firstName: bodyRequest.firstName,
+                  lastName: bodyRequest.firstName,
+                  dateOfBirth: bodyRequest.dateOfBirth,
+                  email: bodyRequest.email,
+                });
               });
-            })
-            .catch((error: unknown) => {
-              if (error instanceof ServerError) {
-                setModalData({ status: 'Error', message: error.message });
-              } else if (error instanceof Error) {
-                setModalData({ status: 'Error', message: error.message });
-              } else {
-                setModalData({ status: 'Error', message: 'Unexpected error occurred.' });
-              }
-              setFormData({
-                ...formData,
-                firstName: bodyRequest.firstName,
-                lastName: bodyRequest.firstName,
-                dateOfBirth: bodyRequest.dateOfBirth,
-                email: bodyRequest.email,
-              });
-            });
-        } else {
-          setModalData({ status: 'Error', message: 'Please, make relogin again.' });
+          } else {
+            setModalData({ status: 'Error', message: 'Please, make relogin again.' });
+          }
         }
       }
+    } catch (error) {
+      // TODO
     }
   };
 
@@ -156,7 +179,14 @@ export const BasicUserDataProfile: React.FC<BasicUserDataProfileProps> = ({
           disabledMode={isDisabledUserInfo}
         />
       </div>
-      <button type="button" onClick={handleUserInfoTab}>
+      <button
+        type="button"
+        onClick={() => {
+          handleUserInfoTab().catch((error: unknown) => {
+            proceedExceptions(error, 'Edit address failed');
+          });
+        }}
+      >
         {isDisabledUserInfo ? 'Edit' : 'Save'}
       </button>
       {modalData.message && <ModalWindow data={modalData} />}
