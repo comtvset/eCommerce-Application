@@ -22,7 +22,6 @@ export const Header: React.FC = () => {
   const navigation = useNavigate();
   const [activeLink, setActiveLink] = useState<string>(location);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const idUser = localStorage.getItem('id') ?? '';
 
   useEffect(() => {
     setActiveLink(location);
