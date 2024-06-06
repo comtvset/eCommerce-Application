@@ -37,6 +37,8 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
 
   const [errors, setErrors] = useState<ICustomerModel>(customerModel);
   const [addresses, setAddresses] = useState<Address[]>([]);
+  const [isEditAddress, setIsEditAddress] = useState(false);
+  const [editAddressID, setEditAddressID] = useState('');
 
   interface IEmptyAddress {
     streetName: string;
@@ -168,8 +170,45 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
     }
   };
 
-  const handleEditAddress = (addressId: string) => {
-    // Logic to edit address
+  const handleEditAddress = async () => {
+    const latestVersion = await fetchLatestVersion();
+    if (latestVersion !== null) {
+      try {
+        const response = await apiRoot
+          .customers()
+          .withId({ ID: id })
+          .post({
+            body: {
+              version: latestVersion,
+              actions: [
+                {
+                  action: 'changeAddress',
+                  addressId: editAddressID,
+                  address: {
+                    streetName: newAddress.streetName,
+                    city: newAddress.city,
+                    postalCode: newAddress.postalCode,
+                    country: Country[newAddress.country as keyof typeof Country],
+                  },
+                },
+              ],
+            },
+          })
+          .execute();
+
+        setAddresses(response.body.addresses);
+        setIsEditAddress(false);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          version: response.body.version,
+        }));
+        setNewAddress(emptyAddress);
+        setModalData({ status: 'Success', message: 'Address edited successfully' });
+      } catch (error) {
+        setModalData({ status: 'Error', message: 'Could not save edited address' });
+        proceedExceptions(error, 'Editing address');
+      }
+    }
   };
 
   const handleDeleteAddress = async (addressId: string) => {
@@ -228,41 +267,61 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
     }));
   }, [countryBilling, formData.billingPostalCode]);
 
-  const handleAddressTab = () => {
-    if (isDisabledAddress) {
-      setCountryShipping(Country[formData.country as keyof typeof Country]);
-      setCountryBilling(Country[formData.billingCountry as keyof typeof Country]);
-      if (isFormValid && id) {
-        // TODO send saving request to server
-      }
-    }
-    setEditAddress(!isDisabledAddress);
-  };
-
   return (
     <>
       <div className={styles.addresses_container}>
         <div className={styles.addresses}>
           <h1>Add New Address</h1>
-          <AddressForm
-            formData={newAddress}
-            handleChange={handleNewAddressChange}
-            errors={errors}
-            title="New Address"
-            showIsTheSameAddress={false}
-            disabledMode={false}
-          />
-          <button
-            type="button"
-            className={styles.updteButton}
-            onClick={() => {
-              handleAddAddress().catch((error: unknown) => {
-                proceedExceptions(error, 'Adding new address');
-              });
-            }}
-          >
-            Add Address
-          </button>
+          <div>
+            <AddressForm
+              formData={newAddress}
+              handleChange={handleNewAddressChange}
+              errors={errors}
+              title="New Address"
+              showIsTheSameAddress={false}
+              disabledMode={false}
+            />
+            <div className={styles.buttons_editaddress}>
+              {isEditAddress && (
+                <button
+                  className={styles.updteButton}
+                  type="button"
+                  onClick={() => {
+                    handleEditAddress().catch((error: unknown) => {
+                      proceedExceptions(error, 'Edit address failed');
+                    });
+                  }}
+                >
+                  Save Address
+                </button>
+              )}
+              {isEditAddress && (
+                <button
+                  className={styles.updteButton}
+                  type="button"
+                  onClick={() => {
+                    setIsEditAddress(false);
+                    setNewAddress(emptyAddress);
+                  }}
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
+          </div>
+          {!isEditAddress && (
+            <button
+              type="button"
+              className={styles.updteButton}
+              onClick={() => {
+                handleAddAddress().catch((error: unknown) => {
+                  proceedExceptions(error, 'Adding new address');
+                });
+              }}
+            >
+              Add Address
+            </button>
+          )}
         </div>
         <div className={styles.addresses}>
           <h2>Your Addresses</h2>
@@ -297,14 +356,22 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
                     </div>
                   </div>
                   <div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleEditAddress(address.id ?? '');
-                      }}
-                    >
-                      📝
-                    </button>
+                    {!isEditAddress && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNewAddress(() => ({
+                            ...address,
+                            country: countryLookup[address.country],
+                          }));
+                          setEditAddressID(address.id ?? '');
+                          setIsEditAddress(true);
+                        }}
+                      >
+                        📝
+                      </button>
+                    )}
+
                     <button
                       type="button"
                       onClick={() => {
@@ -338,9 +405,6 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
               </div>
             ))}
         </div>
-        <button type="button" onClick={handleAddressTab}>
-          {isDisabledAddress ? 'Edit' : 'Save'}
-        </button>
       </div>
 
       {modalData.message && <ModalWindow data={modalData} />}
