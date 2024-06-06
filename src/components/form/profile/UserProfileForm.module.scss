@@ -89,18 +89,16 @@
 }
 
 .addressRow {
-  display:flex;
+  display: flex;
   flex-direction: row;
 }
 
 .newaddress_card {
-  display:flex;
+  display: flex;
   flex-direction: column;
 }
 
 .address_list {
-
-
 }
 
 .address_row {
@@ -109,7 +107,7 @@
   gap: 20px;
   font-size: 1rem;
   text-transform: uppercase;
-  > div>span {
+  > div > span {
     font-weight: 600;
   }
 }
@@ -119,6 +117,11 @@
   justify-content: space-between;
   align-items: stretch;
   margin-bottom: 20px;
+  .address_checkboxes {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+  }
 }
 
 .addresses_container {
@@ -143,6 +146,4 @@
   .tabs {
     border-bottom: none;
   }
-
-  
 }

@@ -3,22 +3,21 @@ import style from 'src/components/address/Address.module.scss';
 import Selector from 'src/components/selector/Selector.tsx';
 import { InputWithLabel } from 'src/components/input/InputWithLabel.tsx';
 import { Checkbox } from 'src/components/checkbox/Checkbox.tsx';
-import { Address } from '@commercetools/platform-sdk';
 
 interface AddressProps {
   formData?: {
     isShippingDefaultAddress?: boolean;
     isEqualAddress?: boolean;
-    street?: string | undefined;
+    streetName?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
     postalCode?: string | undefined;
   };
   handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  handleBoolean?: (value: boolean) => void ;
+  handleBoolean?: (value: boolean) => void;
   handleSameAddress?: (value: boolean) => void;
   errors: {
-    street: string | undefined;
+    streetName: string | undefined;
     city: string | undefined;
     country: string | undefined;
     postalCode: string | undefined;
@@ -26,7 +25,6 @@ interface AddressProps {
   title: string;
   showIsTheSameAddress?: boolean;
   disabledMode?: boolean;
-  AddressData?: Address;
 }
 
 export const AddressForm: React.FC<AddressProps> = ({
@@ -52,14 +50,14 @@ export const AddressForm: React.FC<AddressProps> = ({
           id="shippingCheckbox"
           label="Set as default address"
           checked={formData?.isShippingDefaultAddress ?? false}
-          onChange={handleBoolean  }
+          onChange={handleBoolean}
           disabledMode={disabledMode}
         />
         {showIsTheSameAddress && (
           <Checkbox
             id="isEqualAddress"
             label="Shipping and Billing address are the same"
-            checked={formData?.isEqualAddress  ?? false}
+            checked={formData?.isEqualAddress ?? false}
             onChange={handleCheckboxChange}
             disabledMode={disabledMode}
           />
@@ -67,14 +65,14 @@ export const AddressForm: React.FC<AddressProps> = ({
       </div>
       <div className={style.formbody}>
         <InputWithLabel
-          id="street"
+          id="streetName"
           type="text"
-          name="street"
+          name="streetName"
           label="Street"
-          value={formData?.street}
+          value={formData?.streetName}
           onChange={handleChange}
           required
-          error={errors.street}
+          error={errors.streetName}
           disabledMode={disabledMode}
         />
         <InputWithLabel

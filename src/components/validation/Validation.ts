@@ -112,7 +112,7 @@ export const validateField = (
       return validateName(validateValue);
     case 'dateOfBirth':
       return validateBirthday(validateValue);
-    case 'street':
+    case 'streetName':
     case 'billingStreet':
       return validateNonEmpty(validateValue);
     case 'postalCode':

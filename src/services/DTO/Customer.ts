@@ -15,7 +15,7 @@ export const mapCustomerToModel = (customer: Customer): ICustomerModel => {
     dateOfBirth: customer.dateOfBirth,
     isShippingDefaultAddress,
     isEqualAddress: false,
-    street: customer.addresses[0].streetName,
+    streetName: customer.addresses[0].streetName,
     city: customer.addresses[0]?.city,
     postalCode: customer.addresses[0]?.postalCode,
     country,

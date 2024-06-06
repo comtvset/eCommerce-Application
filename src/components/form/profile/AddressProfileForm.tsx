@@ -38,7 +38,13 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
   const [errors, setErrors] = useState<ICustomerModel>(customerModel);
   const [addresses, setAddresses] = useState<Address[]>([]);
 
-  const emptyAddress = {
+  interface IEmptyAddress {
+    streetName: string;
+    city: string;
+    postalCode: string;
+    country: Country;
+  }
+  const emptyAddress: IEmptyAddress = {
     streetName: '',
     city: '',
     postalCode: '',
@@ -137,7 +143,9 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
                 {
                   action: 'addAddress',
                   address: {
-                    ...newAddress,
+                    streetName: newAddress.streetName,
+                    city: newAddress.city,
+                    postalCode: newAddress.postalCode,
                     country: Country[newAddress.country as keyof typeof Country],
                   },
                 },
@@ -246,6 +254,7 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
           />
           <button
             type="button"
+            className={styles.updteButton}
             onClick={() => {
               handleAddAddress().catch((error: unknown) => {
                 proceedExceptions(error, 'Adding new address');
@@ -257,74 +266,77 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
         </div>
         <div className={styles.addresses}>
           <h2>Your Addresses</h2>
-          {addresses.map((address) => (
-            <div key={address.id} className={styles.addressCard}>
-              <div className={styles.editdelete_container}>
-                <div>
+          {addresses
+            .slice()
+            .reverse()
+            .map((address) => (
+              <div key={address.id} className={styles.addressCard}>
+                <div className={styles.editdelete_container}>
                   <div>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={formData.isShippingDefaultAddress}
-                        onChange={(e) => {
-                          handleDefaultAddress(e.target.checked, 'shipping');
-                        }}
-                      />{' '}
-                      Default Shipping
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={formData.isBillingDefaultAddress}
-                        onChange={(e) => {
-                          handleDefaultAddress(e.target.checked, 'billing');
-                        }}
-                      />
-                      Default Billing
-                    </label>
+                    <div className={styles.address_checkboxes}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={formData.isShippingDefaultAddress}
+                          onChange={(e) => {
+                            handleDefaultAddress(e.target.checked, 'shipping');
+                          }}
+                        />
+                        Default Shipping
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={formData.isBillingDefaultAddress}
+                          onChange={(e) => {
+                            handleDefaultAddress(e.target.checked, 'billing');
+                          }}
+                        />
+                        Default Billing
+                      </label>
+                    </div>
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleEditAddress(address.id ?? '');
+                      }}
+                    >
+                      📝
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleDeleteAddress(address.id ?? '').catch((error: unknown) => {
+                          proceedExceptions(error, 'Deleting address');
+                        });
+                      }}
+                    >
+                      ❌
+                    </button>
                   </div>
                 </div>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleEditAddress(address.id ?? '');
-                    }}
-                  >
-                    📝
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleDeleteAddress(address.id ?? '').catch((error: unknown) => {
-                        proceedExceptions(error, 'Deleting address');
-                      });
-                    }}
-                  >
-                    ❌
-                  </button>
+                <div className={styles.address_row}>
+                  <div>
+                    <span>street name:</span>
+                    <p>{address.streetName}</p>
+                  </div>
+                  <div>
+                    <span> city:</span>
+                    <p>{address.city}</p>
+                  </div>
+                  <div>
+                    <span>postal code:</span>
+                    <p>{address.postalCode}</p>
+                  </div>
+                  <div>
+                    <span> country:</span>
+                    <p>{countryLookup[address.country]}</p>
+                  </div>
                 </div>
               </div>
-              <div className={styles.address_row}>
-                <div>
-                  <span>street name:</span>
-                  <p>{address.streetName}</p>
-                </div>
-                <div>
-                  <span> city:</span>
-                  <p>{address.city}</p>
-                </div>
-                <div>
-                  <span>postal code:</span>
-                  <p>{address.postalCode}</p>
-                </div>
-                <div>
-                  <span> country:</span>
-                  <p>{countryLookup[address.country]}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
         <button type="button" onClick={handleAddressTab}>
           {isDisabledAddress ? 'Edit' : 'Save'}
