@@ -88,6 +88,62 @@
   background-color: var(--hover-text-color);
 }
 
+.addressRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.newaddress_card {
+  display: flex;
+  flex-direction: column;
+}
+
+.address_list {
+}
+
+.address_row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  > div > span {
+    font-weight: 600;
+  }
+}
+
+.editdelete_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  margin-bottom: 20px;
+  .address_checkboxes {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+  }
+}
+
+.buttons_editaddress {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.addresses_container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+.addresses {
+  flex-direction: column;
+  padding: 10px 0px;
+  margin-right: 20px;
+  > div {
+    width: 100%;
+  }
+}
+
 @media (width < 650px) {
   .tab_container {
     margin: 10px 10px;
@@ -95,13 +151,5 @@
 
   .tabs {
     border-bottom: none;
-  }
-  .addresses {
-    flex-direction: column;
-    padding: 10px 0px;
-    margin-right: 20px;
-    > div {
-      width: 100%;
-    }
   }
 }

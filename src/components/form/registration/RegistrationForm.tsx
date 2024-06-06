@@ -83,7 +83,7 @@ export const RegistrationForm: React.FC = () => {
       ...prevFormData,
       isEqualAddress: checked,
       ...(checked && {
-        billingStreet: prevFormData.street,
+        billingStreet: prevFormData.streetName,
         billingCity: prevFormData.city,
         billingCountry: prevFormData.country,
         billingPostalCode: prevFormData.postalCode,
@@ -177,7 +177,7 @@ export const RegistrationForm: React.FC = () => {
       const addresses: BaseAddress[] = [
         {
           id: generateUUID(),
-          streetName: formData.street,
+          streetName: formData.streetName,
           city: formData.city,
           country: Country[formData.country as keyof typeof Country],
           postalCode: formData.postalCode,

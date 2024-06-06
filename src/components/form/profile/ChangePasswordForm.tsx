@@ -11,6 +11,7 @@ import { PROJECT_KEY } from 'src/services/api/BuildClientRegistration.ts';
 import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { getPassword, setPassword } from 'src/services/userData/saveEmailPassword.ts';
 import { updatePassword } from 'src/services/api/ResetPassword.ts';
+import useModalEffect from 'src/components/form/profile/UseModalEffect.ts';
 
 interface ChangePasswordFormProps {
   version: number;
@@ -27,6 +28,8 @@ export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ version 
   const [formData, setFormData] = useState<IPasswordForm>(passwordForm);
   const popupMessage = { status: '', message: '' };
   const [modalData, setModalData] = useState(popupMessage);
+  useModalEffect(modalData, setModalData);
+
   const [id] = useState(localStorage.getItem('fullID') ?? '');
   const [customerVersion, setCustomerVersion] = useState(version);
   const [isFormValid, setIsFormValid] = useState(false);
@@ -58,21 +61,6 @@ export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ version 
     );
     setIsFormValid(allFieldsValid);
   }, [errors, formData]);
-
-  useEffect(() => {
-    if (modalData.status) {
-      const timer = setTimeout(() => {
-        setModalData({ status: '', message: '' });
-      }, 2000);
-
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-    return () => {
-      ('');
-    };
-  }, [modalData]);
 
   const handlePasswordChange = () => {
     if (id && isSamePasswords && formData.oldPassword) {

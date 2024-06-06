@@ -6,7 +6,7 @@ export interface ICustomerModel {
   dateOfBirth: string | undefined;
   isShippingDefaultAddress: boolean;
   isEqualAddress: boolean;
-  street: string | undefined;
+  streetName: string | undefined;
   city: string | undefined;
   postalCode: string | undefined;
   country: string | undefined;
@@ -15,7 +15,8 @@ export interface ICustomerModel {
   billingCity: string | undefined;
   billingCountry: string | undefined;
   billingPostalCode: string | undefined;
-  [key: string]: string | boolean | undefined;
+  version?: number;
+  [key: string]: string | boolean | number | undefined;
 }
 
 export const customerModel: ICustomerModel = {
@@ -26,7 +27,7 @@ export const customerModel: ICustomerModel = {
   dateOfBirth: '',
   isShippingDefaultAddress: false,
   isEqualAddress: false,
-  street: '',
+  streetName: '',
   city: '',
   postalCode: '',
   country: '',
