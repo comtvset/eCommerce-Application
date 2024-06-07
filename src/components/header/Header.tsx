@@ -56,7 +56,6 @@ export const Header: React.FC = () => {
     location !== '/register' &&
     location !== '/catalog' &&
     location !== '/profile' &&
-    location !== '/about_us' &&
     location !== '/about_us';
   const isHeaderInactive = location === '/';
   const isToken = localStorage.getItem('userTokens');
