@@ -6,10 +6,12 @@ interface InputProps {
   type: string;
   name: string;
   label: string;
-  value: string;
+  value: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   error?: string;
+  className?: string;
+  disabledMode?: boolean;
 }
 
 export const InputWithLabel: React.FC<InputProps> = ({
@@ -21,9 +23,11 @@ export const InputWithLabel: React.FC<InputProps> = ({
   onChange,
   required = false,
   error,
+  className,
+  disabledMode = false,
 }) => {
   return (
-    <div>
+    <div className={className}>
       <label htmlFor={id}>{label}</label>
       <input
         id={id}
@@ -33,6 +37,7 @@ export const InputWithLabel: React.FC<InputProps> = ({
         onChange={onChange}
         required={required}
         aria-invalid={!!error}
+        disabled={disabledMode}
       />
       {error && (
         <div className={style.error_tooltip} role="alert">

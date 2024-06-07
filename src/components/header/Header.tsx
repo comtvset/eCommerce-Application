@@ -34,6 +34,9 @@ export const Header: React.FC = () => {
     if (user && window.location.pathname === '/login') {
       navigation('/');
     }
+    if (!user && window.location.pathname === '/profile') {
+      navigation('/login');
+    }
   }, [navigation]);
 
   const clearLocalStorage = () => {
@@ -45,8 +48,14 @@ export const Header: React.FC = () => {
     setIsLoggedIn(false);
     Form();
   };
-
-  const is404Page = location !== '/' && location !== '/login' && location !== '/register';
+  const isProductPage = location.startsWith('/product/');
+  const is404Page =
+    !isProductPage &&
+    location !== '/' &&
+    location !== '/login' &&
+    location !== '/register' &&
+    location !== '/catalog' &&
+    location !== '/profile';
   const isHeaderInactive = location === '/';
   const isToken = localStorage.getItem('userTokens');
   return (
@@ -58,6 +67,11 @@ export const Header: React.FC = () => {
           className={`${styles.logo} ${isHeaderInactive ? styles.inactive : ''}`}
         />
         <nav className={styles.navigation}>
+          <Link
+            to="/catalog"
+            title="CATALOG"
+            className={`${styles.link} ${activeLink === '/catalog' ? styles.active : ''}`}
+          />
           {!isLoggedIn ? (
             <div className={`${styles.login_container} ${isToken ? styles.hidden : ''}`}>
               {links.map((link) => (
@@ -70,7 +84,14 @@ export const Header: React.FC = () => {
               ))}
             </div>
           ) : (
-            <Link onClick={handelLogout} to="/" title="LOGOUT" className={styles.logout} />
+            <div className={styles.logout_container}>
+              <Link
+                to="/profile"
+                title="PROFILE"
+                className={`${styles.logout} ${activeLink === '/profile' ? styles.active : ''}`}
+              />
+              <Link onClick={handelLogout} to="/" title="LOGOUT" className={styles.logout} />
+            </div>
           )}
         </nav>
       </header>

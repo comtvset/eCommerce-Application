@@ -42,6 +42,7 @@ module.exports = {
       },
     ],
     eqeqeq: 'error',
+    'operator-linebreak': ['error', 'after', { overrides: { '?': 'before', ':': 'before' } }],
     'no-console': 'warn',
     'no-undef': 'off',
     'no-unused-vars': 'off',
@@ -74,6 +75,7 @@ module.exports = {
     '@typescript-eslint/no-shadow': ['error'],
 
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.ts', '.tsx', '.jsx'] }],
+    'react/jsx-one-expression-per-line': [1, { allow: 'single-child' }],
     'react/display-name': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/require-default-props': [1, { ignoreFunctionalComponents: true }],

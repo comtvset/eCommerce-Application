@@ -22,12 +22,18 @@
   height: 20px;
   border: 1px solid var(--primary-text-color);
   border-radius: 4px;
+  background-color: white;
 }
 
-/* Custom styles for the checkbox when checked */
+.custom_checkbox input[type='checkbox']:checked:disabled::before,
+.custom_checkbox input[type='checkbox']:disabled::before {
+  background-color: var(--background-color);
+}
+
 .custom_checkbox input[type='checkbox']:checked::before {
   background-color: var(--background-color);
   border-color: var(--primary-text-color);
   outline: none;
   content: '\2713';
+  background-color: white;
 }

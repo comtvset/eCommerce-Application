@@ -4,25 +4,57 @@
 import { Country } from '../country/country.ts';
 import { validatePostalCode } from './PostalCodeValidation.ts';
 
-const validateEmail = (email: string): string => {
-  const trimmedValue = email.trim();
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@.]{2,}$/;
+export const validateEmail = (value: string) => {
+  const errorMessages: string[] = [];
 
-  if (!trimmedValue) {
-    return 'Email is required';
+  if (value.startsWith('@')) {
+    errorMessages.push('Cannot start with @');
   }
-  if (!emailRegex.test(trimmedValue)) {
-    return 'Example of correct format: username@domain.topLevelDomain';
+  if (!/^[^.]/.test(value)) {
+    errorMessages.push('Cannot start with a dot');
   }
-  return '';
+  if (!/^\S*$/.test(value)) {
+    errorMessages.push('Cannot contain spaces');
+  }
+  if (!/^[a-zA-Z0-9@.]+$/.test(value)) {
+    errorMessages.push('Can only contain English letters or digits');
+  }
+  if (!value.includes('@')) {
+    errorMessages.push('Must contain @');
+  }
+  if (!/^\S+@\S+\.\S+$/.test(value)) {
+    errorMessages.push('Must contain a domain name like example.com');
+  }
+  const dotMatches = value.match(/\./g);
+  if (!(dotMatches !== null && dotMatches.length === 1)) {
+    errorMessages.push('Must contain only one dot');
+  }
+  if (!/^[^@\s]+@[^.@\s]+\.[^@\s]+$/.test(value)) {
+    errorMessages.push('Must be in the correct format like user@example.com');
+  }
+  return errorMessages.join('\n');
 };
 
-const validatePassword = (password: string): string => {
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-  if (!passwordRegex.test(password)) {
-    return 'Minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, and 1 number.';
+export const validatePassword = (password: string): string => {
+  const errorMessages: string[] = [];
+
+  if (password.length < 8) {
+    errorMessages.push('Minimum 8 characters required');
   }
-  return '';
+  if (!/[a-z]/.test(password)) {
+    errorMessages.push('At least 1 lowercase letter required');
+  }
+  if (!/[A-Z]/.test(password)) {
+    errorMessages.push('At least 1 uppercase letter required');
+  }
+  if (!/\d/.test(password)) {
+    errorMessages.push('At least 1 digit required');
+  }
+  if (/\s/.test(password)) {
+    errorMessages.push('Spaces are not allowed');
+  }
+
+  return errorMessages.join('\n');
 };
 
 const validateName = (name: string): string => {
@@ -66,12 +98,7 @@ export const validateField = (
   countryShipping: Country,
   countryBilling: Country,
 ): string => {
-  let validateValue: Country | string;
-  if (name === 'postalCode') {
-    validateValue = countryShipping;
-  } else if (name === 'billingPostalCode') {
-    validateValue = countryBilling;
-  } else validateValue = inputValue;
+  const validateValue: Country | string = inputValue;
 
   switch (name) {
     case 'email':
@@ -85,7 +112,7 @@ export const validateField = (
       return validateName(validateValue);
     case 'dateOfBirth':
       return validateBirthday(validateValue);
-    case 'street':
+    case 'streetName':
     case 'billingStreet':
       return validateNonEmpty(validateValue);
     case 'postalCode':

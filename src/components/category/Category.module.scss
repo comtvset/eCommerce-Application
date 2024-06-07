@@ -1,0 +1,41 @@
+.category_container {
+  display: flex;
+  margin-top: 10px;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 1.6rem;
+}
+
+.category {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.category_parent {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.subcategory {
+  margin-left: 30px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.category:hover,
+.subcategory:hover {
+  color: orange;
+}
+
+@media (max-width: 500px) {
+  .category_container {
+    font-size: 1.2rem;
+  }
+
+  .subcategory {
+    margin-left: 15px;
+  }
+}

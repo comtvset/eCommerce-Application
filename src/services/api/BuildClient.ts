@@ -3,6 +3,7 @@ import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
 // prettier-ignore
 import type { AuthMiddlewareOptions, HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { MyTokenCache } from './MyTokenCache.ts';
 import { getCredentials } from '../userData/saveEmailPassword.ts';
 
@@ -59,6 +60,10 @@ export const getLoginClient = () => {
 
   return { client, tokenCache: newTokenCache };
 };
+
+export const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
+  projectKey: PROJECT_KEY,
+});
 
 export const ctpClient = new ClientBuilder()
   .withProjectKey(PROJECT_KEY)

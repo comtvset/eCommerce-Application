@@ -1,0 +1,35 @@
+@import 'src/styles/variables';
+@import 'src/styles/mixins';
+
+.modal {
+  width: 80%;
+  height: 80vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  z-index: 10;
+}
+
+.modal_content {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  @include media-600 {
+    width: 80%;
+    align-self: center;
+  }
+}
+
+.close_container {
+  width: 36px;
+  height: 36px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.modal_close {
+  display: block;
+  width: 36px;
+}

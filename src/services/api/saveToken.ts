@@ -9,4 +9,5 @@ export const saveToken = (tokenCache: MyTokenCache) => {
   };
 
   localStorage.setItem('userTokens', JSON.stringify(tokens));
+  localStorage.setItem('token', tokens.curToken);
 };

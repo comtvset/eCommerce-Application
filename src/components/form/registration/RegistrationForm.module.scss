@@ -1,4 +1,4 @@
-@import '../../styles/mixins';
+@import 'src/styles/mixins';
 @import 'src/styles/variables';
 
 .registration {
@@ -8,6 +8,11 @@
   height: 100vw;
   background-color: var(--background-color);
   font-size: 1.3rem;
+  flex-wrap: nowrap;
+  align-content: center;
+  input {
+    width: 400px;
+  }
 }
 
 .submitButton {
@@ -83,4 +88,19 @@
 
 .myButton:active {
   background-color: #f0ca00;
+}
+
+.myInput_header {
+  position: relative;
+  top: 15px;
+  font-size: 1.4rem;
+  color: var(--primary-text-color);
+}
+
+@media (width < 650px) {
+  .registration {
+    input {
+      width: 300px;
+    }
+  }
 }
