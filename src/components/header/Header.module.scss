@@ -25,37 +25,33 @@
   margin: 0 auto;
   justify-content: space-between;
 
-  @include media-600 {
+  @include media-800 {
     flex-direction: column;
   }
 }
 
 .navigation {
-  width: 27%;
+  width: 35%;
   align-items: end;
 
   @include media-1200 {
-    width: 32%;
+    width: 42%;
   }
 
   @include media-1000 {
-    width: 40%;
+    width: 52%;
   }
 
   @include media-800 {
-    width: 55%;
+    width: 69%;
   }
 
   @include media-600 {
-    width: 63%;
+    width: 83%;
   }
 
   @include media-500 {
-    width: 80%;
-  }
-
-  @include media-400 {
-    width: 90%;
+    width: 100%;
   }
 }
 
@@ -86,7 +82,7 @@
     cursor: auto;
     color: $secondaryTextColor;
   }
-  @include media-600 {
+  @include media-800 {
     margin-left: 5px;
   }
 }
