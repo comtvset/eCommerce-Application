@@ -1,5 +1,7 @@
 import { RegistrationForm } from 'src/components/form/registration/RegistrationForm.tsx';
 
-export const RegistrationPage = () => {
+const RegistrationPage = () => {
   return <RegistrationForm />;
 };
+
+export default RegistrationPage;
