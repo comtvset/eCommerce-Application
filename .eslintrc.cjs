@@ -36,6 +36,13 @@ module.exports = {
   ],
   rules: {
     eqeqeq: 'error',
+    '@typescript-eslint/no-floating-promises': [
+      'error',
+      {
+        ignoreIIFE: true,
+      },
+    ],
+
     'operator-linebreak': ['error', 'after', { overrides: { '?': 'before', ':': 'before' } }],
     'no-console': 'warn',
     'no-undef': 'off',
