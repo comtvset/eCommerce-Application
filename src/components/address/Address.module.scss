@@ -1,0 +1,42 @@
+.checkboxes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 15px;
+  gap: 15px;
+  align-items: flex-start;
+  width: 160px;
+}
+
+.checkbox_billing {
+  margin: 15px;
+  gap: 15px;
+}
+
+.formbody {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    > div {
+      font-size: 1.4rem;
+      color: red;
+      margin-top: 5px;
+      text-transform: none;
+    }
+    > label {
+      margin-top: 10px;
+    }
+  }
+}
+
+.error_tooltip {
+  white-space: pre-wrap;
+}

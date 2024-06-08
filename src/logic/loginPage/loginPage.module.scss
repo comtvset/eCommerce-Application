@@ -1,0 +1,74 @@
+@import '../../styles/mixins';
+@import 'src/styles/variables';
+
+.container_login {
+  display: flex;
+  background-image: url('../../public/login-bg.jpeg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.login {
+  @include form(0.6);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 50px auto;
+  width: 200px;
+  > span {
+    width: 300px;
+  }
+}
+
+.error {
+  color: red;
+  font-size: 1.4rem;
+  white-space: pre-wrap;
+}
+
+.login_text {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.login_link {
+  display: inline-block;
+  padding: 10px 58px;
+  background-color: $primaryBackgroundButton;
+  border-radius: 0.5rem;
+  color: $secondaryTextColor;
+  font-size: 1.6rem;
+  font-weight: 700;
+  justify-self: center;
+  align-self: center;
+
+  &:hover {
+    background-color: $primaryBackgroundButtonHover;
+    transition: background-color 0.3s ease;
+    color: $secondaryTextColor;
+  }
+
+  &:active {
+    background-color: $primaryBackgroundButtonActive;
+  }
+}
+
+@media (width < 768px) {
+  .login {
+    width: 300px;
+  }
+  .form {
+    > span {
+      width: 200px;
+    }
+  }
+}

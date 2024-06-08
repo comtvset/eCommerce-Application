@@ -106,3 +106,10 @@ dist
 # TernJS port file
 .tern-port
 .DS_Store
+
+# do not track package-lock.json file
+package-lock.json
+
+# Vite
+
+.vite
