@@ -35,12 +35,6 @@ module.exports = {
     'react-hooks',
   ],
   rules: {
-    '@typescript-eslint/no-floating-promises': [
-      'error',
-      {
-        ignoreIIFE: true,
-      },
-    ],
     eqeqeq: 'error',
     'operator-linebreak': ['error', 'after', { overrides: { '?': 'before', ':': 'before' } }],
     'no-console': 'warn',
