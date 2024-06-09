@@ -35,13 +35,14 @@ module.exports = {
     'react-hooks',
   ],
   rules: {
+    eqeqeq: 'error',
     '@typescript-eslint/no-floating-promises': [
       'error',
       {
         ignoreIIFE: true,
       },
     ],
-    eqeqeq: 'error',
+
     'operator-linebreak': ['error', 'after', { overrides: { '?': 'before', ':': 'before' } }],
     'no-console': 'warn',
     'no-undef': 'off',
