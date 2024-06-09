@@ -1,5 +1,12 @@
+import React from 'react';
 import { RegistrationForm } from 'src/components/form/registration/RegistrationForm.tsx';
 
-export const RegistrationPage = () => {
-  return <RegistrationForm />;
+const RegistrationPage: React.FC = () => {
+  return (
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <RegistrationForm />
+    </React.Suspense>
+  );
 };
+
+export default RegistrationPage;
