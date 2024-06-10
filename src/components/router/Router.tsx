@@ -13,6 +13,7 @@ export const Router: React.FC = () => {
   );
   const AboutPage = React.lazy(() => import('src/logic/aboutPage/AboutPage.tsx'));
   const UserProfilePage = React.lazy(() => import('src/logic/userProfilePage/UserProfilePage.tsx'));
+  const BasketPage = React.lazy(() => import('src/logic/basketPage/basketPage.tsx'));
 
   return (
     <BrowserRouter>
@@ -25,6 +26,7 @@ export const Router: React.FC = () => {
           <Route path="/register" element={<RegistrationPage />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/about_us" element={<AboutPage />} />
+          <Route path="/basket" element={<BasketPage />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/profile" element={<UserProfilePage />} />
         </Routes>
