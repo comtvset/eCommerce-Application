@@ -1,8 +1,7 @@
 import fetch from 'node-fetch';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
-
 // prettier-ignore
-import type { AuthMiddlewareOptions, HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import type { AuthMiddlewareOptions, HttpMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { MyTokenCache } from './MyTokenCache.ts';
 import { getCredentials } from '../userData/saveEmailPassword.ts';
@@ -16,6 +15,12 @@ const SCOPESString: string = (import.meta.env.VITE_CTP_SCOPES as string) || '';
 const SCOPES: string[] = SCOPESString.split(' ');
 
 const scopes = SCOPES;
+
+interface AuthTokens {
+  token: string;
+  expirationTime: number;
+  refreshToken: string;
+}
 
 const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: AUTH_URL,
@@ -35,6 +40,18 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 
 export const getLoginClient = () => {
   const newTokenCache: MyTokenCache = new MyTokenCache();
+
+  const isUser = Boolean(localStorage.getItem('userTokens'));
+
+  const authTokens = localStorage.getItem('authTokens');
+  let refToken = '';
+  if (authTokens) {
+    const tokens: AuthTokens = JSON.parse(authTokens) as AuthTokens;
+    // if you have better solution don't use 'as', please fix it
+
+    refToken = tokens.refreshToken;
+  }
+
   const PasswordAuthMiddlewareOptions = {
     host: AUTH_URL,
     projectKey: PROJECT_KEY,
@@ -51,23 +68,50 @@ export const getLoginClient = () => {
     fetch,
   };
 
-  const client = new ClientBuilder()
+  const refreshAuthMiddlewareOptions: RefreshAuthMiddlewareOptions = {
+    host: AUTH_URL,
+    projectKey: PROJECT_KEY,
+    credentials: {
+      clientId: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
+    },
+    refreshToken: refToken,
+    fetch,
+  };
+
+  const clientNew = new ClientBuilder()
     .withProjectKey(PROJECT_KEY)
     .withPasswordFlow(PasswordAuthMiddlewareOptions)
     .withHttpMiddleware(httpMiddlewareOptions)
-    // .withLoggerMiddleware() // OFF LOGGER
     .build();
+
+  const clientRef = new ClientBuilder()
+    .withProjectKey(PROJECT_KEY)
+    .withRefreshTokenFlow(refreshAuthMiddlewareOptions)
+    .withHttpMiddleware(httpMiddlewareOptions)
+    .build();
+
+  const client = isUser ? clientRef : clientNew;
 
   return { client, tokenCache: newTokenCache };
 };
-
-export const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
-  projectKey: PROJECT_KEY,
-});
 
 export const ctpClient = new ClientBuilder()
   .withProjectKey(PROJECT_KEY)
   .withAnonymousSessionFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
-  // .withLoggerMiddleware() // OFF LOGGER
   .build();
+
+export const createApiRoot = () => {
+  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+    projectKey: PROJECT_KEY,
+  });
+  return apiRoot;
+};
+
+export const createLoginApiRoot = () => {
+  const loginApiRoot = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
+    projectKey: PROJECT_KEY,
+  });
+  return loginApiRoot;
+};

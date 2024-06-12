@@ -7,11 +7,27 @@ export class MyTokenCache implements TokenCache {
     refreshToken: '',
   };
 
-  set(newCache: TokenStore) {
-    this.myCache = newCache;
+  constructor() {
+    this.myCache = MyTokenCache.loadTokens();
   }
 
-  get() {
+  static loadTokens(): TokenStore {
+    const tokens = localStorage.getItem('authTokens');
+    return tokens
+      ? (JSON.parse(tokens) as TokenStore)
+      : { token: '', expirationTime: 0, refreshToken: '' };
+  }
+
+  static saveTokens(tokens: TokenStore) {
+    localStorage.setItem('authTokens', JSON.stringify(tokens));
+  }
+
+  set(newCache: TokenStore) {
+    this.myCache = newCache;
+    MyTokenCache.saveTokens(newCache);
+  }
+
+  get(): TokenStore {
     return this.myCache;
   }
 }
