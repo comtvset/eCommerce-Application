@@ -2,13 +2,14 @@ import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { CartUpdate } from '@commercetools/platform-sdk';
 
 export const createAnonymousBasket = async () => {
-  if (!localStorage.getItem('cartId')) {
+  let idCard = localStorage.getItem('cartId');
+  if (!idCard) {
     const body = { country: 'US', currency: 'EUR' };
     const result = await apiRoot.carts().post({ body }).execute();
+    idCard = result.body.id;
     localStorage.setItem('cartId', result.body.id);
-    return true;
   }
-  return false;
+  return idCard;
 };
 
 export const getProducts = async (idCart: string, id: string) => {

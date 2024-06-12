@@ -5,15 +5,14 @@ import {
 } from 'src/services/api/ApiBasket.ts';
 
 export const ensureBasketAndCheckProduct = async (idProduct: string) => {
-  await createAnonymousBasket();
-  const idCard = localStorage.getItem('cartId');
-  if (idCard) {
-    await getProducts(idCard, idProduct);
+  const idCart = await createAnonymousBasket();
+  if (idCart) {
+    await getProducts(idCart, idProduct);
   }
 };
 
 export const addProduct = async (idProduct: string) => {
-  const idCart = localStorage.getItem('cartId');
+  const idCart = await createAnonymousBasket();
   if (idCart && idProduct) {
     await addProductToBasket(idCart, idProduct);
   }
