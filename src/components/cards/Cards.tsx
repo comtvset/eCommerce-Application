@@ -5,6 +5,7 @@ import style from 'src/components/cards/Cards.module.scss';
 import style1 from 'src/components/card/Card.module.scss';
 import { Link } from 'src/components/link/Link.tsx';
 import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
+import { ensureBasketAndCheckProduct } from 'src/utils/BasketUtils.ts';
 
 interface CardProps {
   products: ProductProjection[];
@@ -39,6 +40,11 @@ export const Card: React.FC<CardProps> = ({ products }) => {
             key={product.id}
             id={product.id}
             to={`/product/${product.id}`}
+            onClick={() => {
+              (async () => {
+                await ensureBasketAndCheckProduct(product.id);
+              })();
+            }}
           >
             <div className={style.image_container}>
               <img
