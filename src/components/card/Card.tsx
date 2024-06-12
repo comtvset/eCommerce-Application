@@ -10,6 +10,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { ProductCatalogData } from '@commercetools/platform-sdk';
 import { createApiRoot } from 'src/services/api/BuildClient.ts';
+import { Button } from 'src/components/button/Button.tsx';
+import { addProduct } from 'src/utils/BasketUtils.ts';
 
 interface Image {
   url: string;
@@ -28,6 +30,7 @@ export const CardOne: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [modal, setModal] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const { id } = useParams<{ id: string }>();
 
   const handleImageChange = (newImage: Image, index: number) => {
@@ -56,6 +59,11 @@ export const CardOne: React.FC = () => {
   const isCurrencyNoDiscount = isFirstPrice ? isFirstPrice[0].value.currencyCode : '';
   const currencyCode = getCurrencySymbol(isCurrencyCode) ?? '';
   const currencyNoDiscount = getCurrencySymbol(isCurrencyNoDiscount) ?? '';
+  const isDisabled = localStorage.getItem('isInBasket');
+
+  useEffect(() => {
+    setIsButtonDisabled(isDisabled === 'true');
+  }, [isDisabled]);
 
   useEffect(() => {
     if (typeof id !== 'undefined') {
@@ -190,6 +198,25 @@ export const CardOne: React.FC = () => {
                 />
               )}
             </div>
+            <Button
+              className={`${style.button__add} ${isDisabled === 'true' ? style.disabled : ''}`}
+              title="ADD TO BASKET"
+              disabled={isDisabled === 'true' || isButtonDisabled}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                if (isDisabled === 'true') {
+                  e.preventDefault();
+                  return;
+                }
+                setIsButtonDisabled(true);
+                (async () => {
+                  if (id) {
+                    await addProduct(id);
+                    localStorage.setItem('isInBasket', 'true');
+                    setIsButtonDisabled(true);
+                  }
+                })();
+              }}
+            />
           </div>
         </div>
       )}

@@ -175,3 +175,28 @@
 .images_container2 > ul > li > button::before {
   color: #ffffff;
 }
+
+.button__add {
+  padding: 5px 10px;
+  background-color: $primaryBackgroundButton;
+  border-radius: 0.5rem;
+  color: $secondaryTextColor;
+  font-size: 1.6rem;
+  font-weight: 700;
+  &:hover {
+    background-color: $primaryBackgroundButtonHover;
+    cursor: pointer;
+  }
+  &:active {
+    background-color: $primaryBackgroundButtonActive;
+  }
+  &:disabled {
+    cursor: auto;
+    background-color: gray;
+  }
+}
+
+.button__add.disabled {
+  cursor: auto;
+  background-color: gray;
+}
