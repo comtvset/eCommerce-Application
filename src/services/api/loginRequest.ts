@@ -1,11 +1,9 @@
-import { createApiRoot, createLoginApiRoot, getLoginClient } from './BuildClient.ts';
-import { saveToken } from './saveToken.ts';
+import { createApiRoot, createLoginApiRoot } from './BuildClient.ts';
 
 export const loginRequest = async (myEmail: string, myPassword: string) => {
   const apiRoot = createApiRoot();
 
   const loginApiRoot = createLoginApiRoot();
-  const { tokenCache } = getLoginClient();
 
   const loginUser = () => {
     return apiRoot
@@ -29,9 +27,6 @@ export const loginRequest = async (myEmail: string, myPassword: string) => {
     })
     .then(() => {
       return loginApiRoot.carts().get().execute();
-    })
-    .then(() => {
-      saveToken(tokenCache);
     });
 
   return result;

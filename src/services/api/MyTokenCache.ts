@@ -20,6 +20,8 @@ export class MyTokenCache implements TokenCache {
 
   static saveTokens(tokens: TokenStore) {
     localStorage.setItem('authTokens', JSON.stringify(tokens));
+    localStorage.setItem('userTokens', JSON.stringify(tokens));
+    localStorage.setItem('token', tokens.token);
   }
 
   set(newCache: TokenStore) {
