@@ -225,11 +225,11 @@ export const CardOne: React.FC = () => {
                 }}
               />
               <Button
-                className={`${style.button__remove} ${isDisabled === 'false' ? style.disabled : ''}`}
+                className={`${style.button__remove} ${isDisabled !== 'true' ? style.disabled : ''}`}
                 title="REMOVE FROM CART"
-                disabled={isDisabled === 'false' || isButtonDisabled}
+                disabled={isDisabled !== 'true' || isButtonDisabled}
                 onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  if (isDisabled === 'false') {
+                  if (isDisabled !== 'true') {
                     e.preventDefault();
                     return;
                   }
