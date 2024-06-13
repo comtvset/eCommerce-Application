@@ -5,12 +5,12 @@ export const AboutUS: React.FC = () => {
   return (
     <div className={style.wrapper}>
       <header className={style.header}>
-        <div className={style.rsslogo}>RSS</div>
-        <h1>About Us - Dream Team</h1>
-
-        <div className={style.teamlogo}>
-          <img src="src/public/DreamTeamLogo.jpg" alt="DreamTeam Logo" />
+        <div className={style.rsslogo}>
+          <a href="https://rs.school/" target="_blank" rel="noreferrer">
+            <img src="src/public/rs_school_js.svg" alt="rss logo" />
+          </a>
         </div>
+        <h1>About Us - Dream Team</h1>
       </header>
       <p className={style.about_team}>
         We are a team of three Junior Frontend Developers from RSS School, working on our final
