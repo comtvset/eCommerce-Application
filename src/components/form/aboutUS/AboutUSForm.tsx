@@ -11,10 +11,6 @@ export const AboutUS: React.FC = () => {
           </a>
         </div>
         <h1>About Us - Dream Team</h1>
-
-        <div className={style.teamlogo}>
-          <img src="src/public/DreamTeamLogo.jpg" alt="DreamTeam Logo" />
-        </div>
       </header>
       <p className={style.about_team}>
         We are a team of three Junior Frontend Developers from RSS School, working on our final
