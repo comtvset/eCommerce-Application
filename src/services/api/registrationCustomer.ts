@@ -1,12 +1,10 @@
-import { CustomerDraft, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { CustomerDraft } from '@commercetools/platform-sdk';
 import { ServerError } from 'src/utils/error/RequestErrors.ts';
-import { ctpClient } from './BuildClient.ts';
+import { createApiRoot } from './BuildClient.ts';
 
 export const createCustomer = (newCustomer: CustomerDraft) => {
-  const PROJECT_KEY: string = import.meta.env.VITE_CTP_PROJECT_KEY as string;
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-    projectKey: PROJECT_KEY,
-  });
+  const apiRoot = createApiRoot();
+
   return apiRoot
     .customers()
     .post({

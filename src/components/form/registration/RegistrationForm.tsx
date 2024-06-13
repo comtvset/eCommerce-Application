@@ -7,17 +7,15 @@ import { Country } from 'src/components/country/country.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { Link } from 'src/components/link/Link.tsx';
 import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
-import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-
+import { createApiRoot } from 'src/services/api/BuildClient.ts';
 import { loginRequest } from 'src/services/api/loginRequest.ts';
 import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
 import { createCustomer } from 'src/services/api/registrationCustomer.ts';
 import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
 import { BillingAddressForm } from 'src/components/address/BillingAddress.tsx';
-
 import { customerModel, ICustomerModel } from 'src/model/Customer.ts';
 import { CurrentUserContext } from 'src/App.tsx';
 import { RegistrationMainFields } from './RegistrationMainFields.tsx';
@@ -32,6 +30,8 @@ const requiredFields: (keyof ICustomerModel)[] = [
   'lastName',
   'dateOfBirth',
 ];
+
+const apiRoot = createApiRoot();
 
 export const RegistrationForm: React.FC = () => {
   const context = useContext(CurrentUserContext);

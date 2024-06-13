@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import style from 'src/components/card/Card.module.scss';
 import { Layout } from 'src/components/layout/Layout.tsx';
-import { apiRoot } from 'src/services/api/ctpClient.ts';
 import { Modal } from 'src/components/modalWindow/modalImage.tsx';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
@@ -10,6 +9,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { ProductCatalogData } from '@commercetools/platform-sdk';
+import { createApiRoot } from 'src/services/api/BuildClient.ts';
 import { Button } from 'src/components/button/Button.tsx';
 import { addProduct } from 'src/utils/BasketUtils.ts';
 
@@ -21,6 +21,8 @@ interface IProductData {
   id: string;
   masterData: ProductCatalogData;
 }
+
+const apiRoot = createApiRoot();
 
 export const CardOne: React.FC = () => {
   const [product, setProduct] = useState<IProductData>();

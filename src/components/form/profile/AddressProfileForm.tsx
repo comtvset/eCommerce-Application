@@ -1,7 +1,6 @@
-import { Address, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { Address } from '@commercetools/platform-sdk';
 import React, { useEffect, useState } from 'react';
-import { getLoginClient } from 'src/services/api/BuildClient.ts';
-import { PROJECT_KEY } from 'src/services/api/BuildClientRegistration.ts';
+import { createLoginApiRoot } from 'src/services/api/BuildClient.ts';
 import styles from 'src/components/form/profile/UserProfileForm.module.scss';
 import { AddressForm } from 'src/components/address/Address.tsx';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
@@ -17,9 +16,7 @@ interface AddressProfileProps {
 }
 
 export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileFormData }) => {
-  const apiRoot = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
-    projectKey: PROJECT_KEY,
-  });
+  const loginApiRoot = createLoginApiRoot();
 
   const [countryNewAddress] = useState<Country>(Country.Underfined);
   const [countryBilling] = useState<Country>(Country.Underfined);
@@ -64,12 +61,11 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
   };
 
   useEffect(() => {
-    const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
-      projectKey: PROJECT_KEY,
-    });
+    const loginApiRoot2 = createLoginApiRoot();
+
     const fetchAddresses = async (): Promise<void> => {
       try {
-        const response = await apiRoot2.customers().withId({ ID: id }).get().execute();
+        const response = await loginApiRoot2.customers().withId({ ID: id }).get().execute();
         setAddresses(response.body.addresses);
         setFormData((prevFormData) => ({
           ...prevFormData,
@@ -115,7 +111,7 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
 
   const fetchLatestVersion = async (): Promise<number | null> => {
     try {
-      const response = await apiRoot.customers().withId({ ID: id }).get().execute();
+      const response = await loginApiRoot.customers().withId({ ID: id }).get().execute();
       return response.body.version;
     } catch (error) {
       proceedExceptions(error, 'Fetching latest version');
@@ -127,7 +123,7 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
     const latestVersion = await fetchLatestVersion();
     if (latestVersion !== null) {
       try {
-        const response = await apiRoot
+        const response = await loginApiRoot
           .customers()
           .withId({ ID: id })
           .post({
@@ -166,7 +162,7 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
     const latestVersion = await fetchLatestVersion();
     if (latestVersion !== null) {
       try {
-        const response = await apiRoot
+        const response = await loginApiRoot
           .customers()
           .withId({ ID: id })
           .post({
@@ -207,7 +203,7 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
     const latestVersion = await fetchLatestVersion();
     if (latestVersion !== null) {
       try {
-        const response = await apiRoot
+        const response = await loginApiRoot
           .customers()
           .withId({ ID: id })
           .post({

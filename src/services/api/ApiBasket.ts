@@ -1,5 +1,7 @@
-import { apiRoot } from 'src/services/api/ctpClient.ts';
+import { createApiRoot } from 'src/services/api/BuildClient.ts';
 import { CartUpdate } from '@commercetools/platform-sdk';
+
+const apiRoot = createApiRoot();
 
 export const createAnonymousBasket = async () => {
   let idCard = localStorage.getItem('cartId');

@@ -1,6 +1,17 @@
-import { apiRoot } from './ctpClient.ts';
+import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
+import { createApiRoot, createLoginApiRoot } from './BuildClient.ts';
+
+let apiRoot: ByProjectKeyRequestBuilder;
+
+function updateApiRoot() {
+  const isUser = Boolean(localStorage.getItem('userTokens'));
+  apiRoot = isUser ? createLoginApiRoot() : createApiRoot();
+}
+
+updateApiRoot();
 
 export const fetchAllProducts = async () => {
+  updateApiRoot();
   const response = await apiRoot.productProjections().search().get().execute();
   return response.body.results;
 };
