@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: flex-start;
   width: 300px;
-  margin: 0 30px;
+  margin: 0 30px 30px;
 }
 
 .photo {
@@ -28,7 +28,4 @@
 .constacts > ul > li > a:hover {
   color: var(--hover-text-color);
   cursor: pointer;
-}
-
-.contribution {
 }

@@ -52,7 +52,7 @@ export const AboutUS: React.FC = () => {
           photo="src/public/DreamTeam/MargoLIn.png"
           name="Margarita Masko"
           title="Junior FE Developer"
-          biography="An experienced and dynamic professional with over 10 years in railway freight transport logistics and management"
+          biography="I am a budding frontend developer. This field has captured my heart. After completing courses in UX/UI design, I decided to bring my own website design to life — and that marked the beginning of my journey in development. I am constantly working on improving my skills. Additionally, I am actively studying English to expand my professional horizons and enhance my communication skills."
           linkedIn="https://www.linkedin.com/in/margarita-masko-032011248/"
           github="https://github.com/margo06"
           features="Routing, Header, Detailed Product page 🔎, Basket page"
