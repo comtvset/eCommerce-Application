@@ -5,7 +5,11 @@ export const AboutUS: React.FC = () => {
   return (
     <div className={style.wrapper}>
       <header className={style.header}>
-        <div className={style.rsslogo}>RSS</div>
+        <div className={style.rsslogo}>
+          <a href="https://rs.school/" target="_blank" rel="noreferrer">
+            <img src="src/public/rs_school_js.svg" alt="rss logo" />
+          </a>
+        </div>
         <h1>About Us - Dream Team</h1>
 
         <div className={style.teamlogo}>

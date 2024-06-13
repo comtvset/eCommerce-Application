@@ -21,7 +21,13 @@
   justify-content: space-between;
   font-size: 3rem;
 
-  .rsslogo,
+  .rsslogo {
+    > a > img {
+      width: 150px;
+      height: 100px;
+    }
+  }
+
   .teamlogo {
     > img {
       width: 100px;
@@ -67,7 +73,7 @@
   }
 }
 
-@media (width <=600px) {
+@media (width <=1080px) {
   .header {
     flex-direction: column;
     justify-content: center;
