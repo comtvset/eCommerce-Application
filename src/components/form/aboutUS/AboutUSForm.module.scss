@@ -1,0 +1,83 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  > p,
+  ul {
+    width: 75%;
+    font-size: 2rem;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  width: 90%;
+  justify-content: space-between;
+  font-size: 3rem;
+
+  .rsslogo,
+  .teamlogo {
+    > img {
+      width: 100px;
+      height: 100px;
+    }
+  }
+}
+
+.profile_cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+
+  width: 100%;
+
+  > .technology {
+    width: auto;
+    padding: 0 10px;
+
+    > ul > li {
+      font-size: 1.7rem;
+    }
+  }
+}
+
+.burndawnchart,
+.project_statistics {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 75%;
+}
+
+@media (width <=768px) {
+  .profile_cards {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (width <=600px) {
+  .header {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (width >=1440px) {
+  .profile_cards {
+    justify-content: center;
+    align-items: flex-start;
+  }
+}
