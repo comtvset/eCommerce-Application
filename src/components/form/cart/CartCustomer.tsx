@@ -26,6 +26,9 @@ export const CartCustomer: React.FC = () => {
   const [modalData, setModalData] = useState(popupMessage);
   useModalEffect(modalData, setModalData);
 
+  const emptyPageMessage =
+    "Your cart is currently empty, but that's an easy fix! Head over to our store and fill it up with the items you'd like. We're waiting for you!";
+
   const proceedExceptions = (error: unknown, message: string) => {
     if (error instanceof ServerError) {
       setModalData({ status: 'Error', message: error.message });
@@ -146,25 +149,13 @@ export const CartCustomer: React.FC = () => {
   };
 
   if (!localStorage.getItem('cartId')) {
-    return (
-      <Paragraph
-        tag="p"
-        className={style.cart__empty}
-        title="Your cart is currently empty, but that's an easy fix! Head over to our store and fill it up with the items you'd like. We're waiting for you!"
-      />
-    );
+    return <Paragraph tag="p" className={style.cart__empty} title={emptyPageMessage} />;
   }
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  if (cartItems.length === 0) {
-    return (
-      <Paragraph
-        tag="p"
-        className={style.cart__empty}
-        title="Your cart is currently empty, but that's an easy fix! Head over to our store and fill it up with the items you'd like. We're waiting for you!"
-      />
-    );
+  if (!cartItems.length) {
+    return <Paragraph tag="p" className={style.cart__empty} title={emptyPageMessage} />;
   }
 
   return (
