@@ -42,7 +42,7 @@
   }
 
   .deleteButton:hover,
-  .clearCartButton:hover  {
+  .clearCartButton:hover {
     background-color: #f0ac00;
   }
 }
@@ -79,7 +79,6 @@ h1 {
   margin-right: auto;
   align-items: center;
 }
-
 
 @media (width <= 450px) {
   button {

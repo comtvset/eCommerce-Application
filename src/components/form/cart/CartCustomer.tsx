@@ -11,6 +11,7 @@ import {
   LocalizedString,
 } from '@commercetools/platform-sdk';
 import useModalEffect from 'src/components/form/profile/UseModalEffect.ts';
+import Modal from 'src/components/modalWindow/confirmationModal.tsx';
 
 export const CartCustomer: React.FC = () => {
   const [cartItems, setCartItems] = useState<LineItem[]>([]);
@@ -19,6 +20,7 @@ export const CartCustomer: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [api] = useState(localStorage.getItem('fullID') ? createLoginApiRoot() : createApiRoot());
   const [id] = useState(localStorage.getItem('cartId') ?? '');
+  const [showModal, setShowModal] = useState(false);
 
   const popupMessage = { status: '', message: '' };
   const [modalData, setModalData] = useState(popupMessage);
@@ -132,6 +134,7 @@ export const CartCustomer: React.FC = () => {
         setCartItems([]);
         setTotalPrice(updatedCart.body.totalPrice);
         setCartVersion(updatedCart.body.version);
+        setShowModal(false); // Hide the modal after clearing the cart
       } catch (error) {
         proceedExceptions(error, 'Could not clear the cart');
       }
@@ -170,14 +173,26 @@ export const CartCustomer: React.FC = () => {
       <button
         type="button"
         onClick={() => {
-          handleClearCart().catch((error: unknown) => {
-            proceedExceptions(error, 'Edit address failed');
-          });
+          setShowModal(true);
         }}
         className={style.clearCartButton}
       >
         Clear Shopping Cart
       </button>
+      <Modal
+        show={showModal}
+        onClose={() => {
+          setShowModal(false);
+        }}
+        onConfirm={() => {
+          handleClearCart().catch((error: unknown) => {
+            proceedExceptions(error, 'Modify item quantity failed');
+          });
+        }}
+        title="Clear Shopping Cart"
+        message="Are you sure you want to clear the shopping cart?"
+      />
+
       <table className={style.cartTable}>
         <thead>
           <tr>
