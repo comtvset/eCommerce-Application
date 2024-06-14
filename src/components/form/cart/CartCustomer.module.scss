@@ -41,7 +41,8 @@
     cursor: pointer;
   }
 
-  .deleteButton:hover {
+  .deleteButton:hover,
+  .clearCartButton:hover  {
     background-color: #f0ac00;
   }
 }
@@ -56,10 +57,15 @@ h1 {
   font-size: 3rem;
 }
 
-@media (width <= 450px) {
-  button {
-    font-size: 1.5rem;
-  }
+.clearCartButton {
+  background-color: #f5861f;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border-radius: 4px;
 }
 
 .cart__empty {
@@ -72,4 +78,11 @@ h1 {
   margin-left: auto;
   margin-right: auto;
   align-items: center;
+}
+
+
+@media (width <= 450px) {
+  button {
+    font-size: 1.5rem;
+  }
 }

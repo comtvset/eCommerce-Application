@@ -113,6 +113,31 @@ export const CartCustomer: React.FC = () => {
     }
   };
 
+  const handleClearCart = async () => {
+    if (id) {
+      try {
+        const updatedCart: ClientResponse<Cart> = await api
+          .carts()
+          .withId({ ID: id })
+          .post({
+            body: {
+              version: cartVersion,
+              actions: cartItems.map((item) => ({
+                action: 'removeLineItem',
+                lineItemId: item.id,
+              })),
+            },
+          })
+          .execute();
+        setCartItems([]);
+        setTotalPrice(updatedCart.body.totalPrice);
+        setCartVersion(updatedCart.body.version);
+      } catch (error) {
+        proceedExceptions(error, 'Could not clear the cart');
+      }
+    }
+  };
+
   const getLocalizedName = (name: LocalizedString, locale: string) => {
     return name[locale] || name.en;
   };
@@ -142,6 +167,17 @@ export const CartCustomer: React.FC = () => {
   return (
     <div className={style.cartContainer}>
       <h1>Shopping Cart</h1>
+      <button
+        type="button"
+        onClick={() => {
+          handleClearCart().catch((error: unknown) => {
+            proceedExceptions(error, 'Edit address failed');
+          });
+        }}
+        className={style.clearCartButton}
+      >
+        Clear Shopping Cart
+      </button>
       <table className={style.cartTable}>
         <thead>
           <tr>
