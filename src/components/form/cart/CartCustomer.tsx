@@ -55,8 +55,33 @@ export const CartCustomer: React.FC = () => {
     }
   }, [api, id]);
 
-  const handleDelete = async () => {
-    // TODO DT-216
+  const handleDelete = async (lineItemId: string) => {
+    try {
+      const updatedCart = await api
+        .carts()
+        .withId({ ID: id })
+        .post({
+          body: {
+            version: cartVersion,
+            actions: [
+              {
+                action: 'removeLineItem',
+                lineItemId,
+              },
+            ],
+          },
+        })
+        .execute()
+        .catch((error: unknown) => {
+          proceedExceptions(error, 'Could not retrieve customer items from carts');
+        });
+      if (updatedCart) {
+        setCartItems(updatedCart.body.lineItems);
+        setTotalPrice(updatedCart.body.totalPrice);
+      }
+    } catch (error) {
+      proceedExceptions(error, 'Could not delete item from cart');
+    }
   };
 
   const handleQuantityChange = async (lineItemId: string, newQuantity: number) => {
@@ -148,8 +173,8 @@ export const CartCustomer: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    handleDelete().catch((error: unknown) => {
-                      proceedExceptions(error, 'Delete item failed');
+                    handleDelete(item.id).catch((error: unknown) => {
+                      proceedExceptions(error, 'Edit address failed');
                     });
                   }}
                   className={style.deleteButton}
