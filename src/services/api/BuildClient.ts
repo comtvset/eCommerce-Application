@@ -2,7 +2,10 @@ import fetch from 'node-fetch';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 // prettier-ignore
 import type { AuthMiddlewareOptions, HttpMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import {
+  ByProjectKeyRequestBuilder,
+  createApiBuilderFromCtpClient,
+} from '@commercetools/platform-sdk';
 import { MyTokenCache } from './MyTokenCache.ts';
 import { getCredentials } from '../userData/saveEmailPassword.ts';
 
@@ -102,7 +105,7 @@ export const ctpClient = new ClientBuilder()
   .withHttpMiddleware(httpMiddlewareOptions)
   .build();
 
-export const createApiRoot = () => {
+export const createApiRoot = (): ByProjectKeyRequestBuilder => {
   const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
     projectKey: PROJECT_KEY,
   });

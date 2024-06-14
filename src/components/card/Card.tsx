@@ -8,7 +8,7 @@ import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { ProductCatalogData } from '@commercetools/platform-sdk';
+import { ByProjectKeyRequestBuilder, ProductCatalogData } from '@commercetools/platform-sdk';
 import { createApiRoot } from 'src/services/api/BuildClient.ts';
 import { Button } from 'src/components/button/Button.tsx';
 import { addProduct, deleteProductOnProductPage } from 'src/utils/BasketUtils.ts';
@@ -22,7 +22,7 @@ interface IProductData {
   masterData: ProductCatalogData;
 }
 
-const apiRoot = createApiRoot();
+const apiRoot: ByProjectKeyRequestBuilder = createApiRoot();
 
 export const CardOne: React.FC = () => {
   const [product, setProduct] = useState<IProductData>();
