@@ -5,8 +5,14 @@ import style from 'components/layout/Layout.module.scss';
 
 export const Main: React.FC = () => {
   return (
-    <Layout className={style.layout}>
-      <section className={styles.main} />
-    </Layout>
+    <>
+      <Layout className={style.layout}>
+        <section className={styles.main} />
+      </Layout>
+      <div className={styles.promopictures}>
+        <img src="src/public/promofood.png" alt="food promo" className={styles.food_background} />
+        <img src="src/public/promopicture.png" alt="pic promo" className={styles.pic_background} />
+      </div>
+    </>
   );
 };
