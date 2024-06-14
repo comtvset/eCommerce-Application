@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Main } from 'src/logic/mainPage/MainPage.tsx';
 import { Login } from 'src/logic/loginPage/LoginPage.tsx';
 import { Error } from 'src/logic/errorPage/ErrorPage.tsx';
-import { Catalog } from 'src/logic/catalogPage/CatalogPage.tsx';
 import { Product } from 'src/logic/productPage/Product.tsx';
 import { Header } from 'src/components/header/Header.tsx';
 
@@ -14,6 +13,7 @@ export const Router: React.FC = () => {
   const AboutPage = React.lazy(() => import('src/logic/aboutPage/AboutPage.tsx'));
   const UserProfilePage = React.lazy(() => import('src/logic/userProfilePage/UserProfilePage.tsx'));
   const BasketPage = React.lazy(() => import('src/logic/basketPage/basketPage.tsx'));
+  const Catalog = React.lazy(() => import('src/logic/catalogPage/CatalogPage.tsx'));
 
   return (
     <BrowserRouter>
