@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import style from 'src/components/form/cart/CartCustomer.module.scss';
 import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { createApiRoot, createLoginApiRoot } from 'src/services/api/BuildClient.ts';
+import { Paragraph } from 'src/components/text/Text.tsx';
 import {
   Cart,
   CentPrecisionMoney,
@@ -15,6 +16,7 @@ export const CartCustomer: React.FC = () => {
   const [cartItems, setCartItems] = useState<LineItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<CentPrecisionMoney>();
   const [cartVersion, setCartVersion] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [api] = useState(localStorage.getItem('fullID') ? createLoginApiRoot() : createApiRoot());
   const [id] = useState(localStorage.getItem('cartId') ?? '');
 
@@ -44,6 +46,7 @@ export const CartCustomer: React.FC = () => {
           setCartItems(cartCustomer.body.lineItems);
           setTotalPrice(cartCustomer.body.totalPrice);
           setCartVersion(cartCustomer.body.version);
+          setIsLoading(false);
         } catch (error) {
           proceedExceptions(error, 'Could not retrieve customer items from carts');
         }
@@ -113,6 +116,28 @@ export const CartCustomer: React.FC = () => {
   const getLocalizedName = (name: LocalizedString, locale: string) => {
     return name[locale] || name.en;
   };
+
+  if (!localStorage.getItem('cartId')) {
+    return (
+      <Paragraph
+        tag="p"
+        className={style.cart__empty}
+        title="Your cart is currently empty, but that's an easy fix! Head over to our store and fill it up with the items you'd like. We're waiting for you!"
+      />
+    );
+  }
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (cartItems.length === 0) {
+    return (
+      <Paragraph
+        tag="p"
+        className={style.cart__empty}
+        title="Your cart is currently empty, but that's an easy fix! Head over to our store and fill it up with the items you'd like. We're waiting for you!"
+      />
+    );
+  }
 
   return (
     <div className={style.cartContainer}>

@@ -54,7 +54,7 @@ export const CardOne: React.FC = () => {
       setShowMessage(true);
       setTimeout(() => {
         setShowMessage(false);
-      }, 3000);
+      }, 1000);
     });
   };
 
