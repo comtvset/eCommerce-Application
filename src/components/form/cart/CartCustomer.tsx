@@ -14,6 +14,7 @@ import useModalEffect from 'src/components/form/profile/UseModalEffect.ts';
 export const CartCustomer: React.FC = () => {
   const [cartItems, setCartItems] = useState<LineItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<CentPrecisionMoney>();
+  const [cartVersion, setCartVersion] = useState<number>(0);
   const [api] = useState(localStorage.getItem('fullID') ? createLoginApiRoot() : createApiRoot());
   const [id] = useState(localStorage.getItem('cartId') ?? '');
 
@@ -42,6 +43,7 @@ export const CartCustomer: React.FC = () => {
             .execute();
           setCartItems(cartCustomer.body.lineItems);
           setTotalPrice(cartCustomer.body.totalPrice);
+          setCartVersion(cartCustomer.body.version);
         } catch (error) {
           proceedExceptions(error, 'Could not retrieve customer items from carts');
         }
@@ -55,9 +57,6 @@ export const CartCustomer: React.FC = () => {
 
   const handleDelete = async (lineItemId: string) => {
     try {
-      const cartVersion: number = (await api.carts().withId({ ID: id }).get().execute()).body
-        .version;
-
       const updatedCart = await api
         .carts()
         .withId({ ID: id })
@@ -85,6 +84,34 @@ export const CartCustomer: React.FC = () => {
     }
   };
 
+  const handleQuantityChange = async (lineItemId: string, newQuantity: number) => {
+    if (id) {
+      try {
+        const updatedCart: ClientResponse<Cart> = await api
+          .carts()
+          .withId({ ID: id })
+          .post({
+            body: {
+              version: cartVersion,
+              actions: [
+                {
+                  action: 'changeLineItemQuantity',
+                  lineItemId,
+                  quantity: newQuantity,
+                },
+              ],
+            },
+          })
+          .execute();
+        setCartItems(updatedCart.body.lineItems);
+        setTotalPrice(updatedCart.body.totalPrice);
+        setCartVersion(updatedCart.body.version);
+      } catch (error) {
+        proceedExceptions(error, 'Could not update item quantity');
+      }
+    }
+  };
+
   const getLocalizedName = (name: LocalizedString, locale: string) => {
     return name[locale] || name.en;
   };
@@ -98,6 +125,7 @@ export const CartCustomer: React.FC = () => {
             <th>Name</th>
             <th>Image</th>
             <th>Price</th>
+            <th>Quantity</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -121,6 +149,25 @@ export const CartCustomer: React.FC = () => {
                   ? item.price.discounted.value.centAmount / 100
                   : item.price.value.centAmount / 100}
                 {` ${item.price.value.currencyCode}`}
+              </td>
+              <td>
+                <label htmlFor="countItem">
+                  {' '}
+                  <input
+                    id="countItem"
+                    type="number"
+                    min="1"
+                    value={item.quantity}
+                    onChange={(e) => {
+                      handleQuantityChange(item.id, parseInt(e.target.value, 10)).catch(
+                        (error: unknown) => {
+                          proceedExceptions(error, 'Modify item quantity failed');
+                        },
+                      );
+                    }}
+                    className={style.quantityInput}
+                  />
+                </label>
               </td>
               <td>
                 <button
