@@ -6,6 +6,7 @@ import style1 from 'src/components/card/Card.module.scss';
 import { Link } from 'src/components/link/Link.tsx';
 import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
 import { ensureBasketAndCheckProduct } from 'src/utils/BasketUtils.ts';
+import ImageWithLoader from 'src/components/spinnerImage/ImageWithLoader.tsx';
 
 interface CardProps {
   products: ProductProjection[];
@@ -47,9 +48,9 @@ export const Card: React.FC<CardProps> = ({ products }) => {
             }}
           >
             <div className={style.image_container}>
-              <img
+              <ImageWithLoader
                 className={style.image}
-                src={product.masterVariant.images?.[0].url}
+                src={product.masterVariant.images ? product.masterVariant.images[0].url : ''}
                 alt={product.name['en-US']}
               />
             </div>
