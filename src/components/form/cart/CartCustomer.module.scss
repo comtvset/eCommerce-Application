@@ -122,17 +122,6 @@ h1 {
   opacity: 1;
 }
 
-.cart__empty {
-  display: flex;
-  width: 70%;
-  height: 100vh;
-  font-size: 2.4rem;
-  text-align: center;
-  color: $secondaryTextColor;
-  margin-left: auto;
-  margin-right: auto;
-  align-items: center;
-}
 
 @media (width <= 450px) {
   button {
