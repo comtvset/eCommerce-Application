@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import style from 'src/components/form/cart/CartCustomer.module.scss';
 import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { createApiRoot, createLoginApiRoot } from 'src/services/api/BuildClient.ts';
-import { Paragraph } from 'src/components/text/Text.tsx';
 import {
   Cart,
   CentPrecisionMoney,
@@ -11,6 +10,7 @@ import {
   LocalizedString,
 } from '@commercetools/platform-sdk';
 import useModalEffect from 'src/components/form/profile/UseModalEffect.ts';
+import { Message } from 'src/components/cartMessage/CartMessage.tsx';
 
 export const CartCustomer: React.FC = () => {
   const [cartItems, setCartItems] = useState<LineItem[]>([]);
@@ -118,25 +118,13 @@ export const CartCustomer: React.FC = () => {
   };
 
   if (!localStorage.getItem('cartId')) {
-    return (
-      <Paragraph
-        tag="p"
-        className={style.cart__empty}
-        title="Your cart is currently empty, but that's an easy fix! Head over to our store and fill it up with the items you'd like. We're waiting for you!"
-      />
-    );
+    return <Message />;
   }
   if (isLoading) {
     return <div>Loading...</div>;
   }
   if (cartItems.length === 0) {
-    return (
-      <Paragraph
-        tag="p"
-        className={style.cart__empty}
-        title="Your cart is currently empty, but that's an easy fix! Head over to our store and fill it up with the items you'd like. We're waiting for you!"
-      />
-    );
+    return <Message />;
   }
 
   return (

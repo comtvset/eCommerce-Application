@@ -4,14 +4,14 @@ import { CartUpdate } from '@commercetools/platform-sdk';
 const apiRoot = createApiRoot();
 
 export const createAnonymousBasket = async () => {
-  let idCard = localStorage.getItem('cartId');
-  if (!idCard) {
+  let idCart = localStorage.getItem('cartId');
+  if (!idCart) {
     const body = { country: 'US', currency: 'EUR' };
     const result = await apiRoot.carts().post({ body }).execute();
-    idCard = result.body.id;
+    idCart = result.body.id;
     localStorage.setItem('cartId', result.body.id);
   }
-  return idCard;
+  return idCart;
 };
 
 export const getProducts = async (idCart: string, id: string) => {
