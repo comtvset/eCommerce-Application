@@ -57,28 +57,12 @@
 }
 
 .navigation {
-  width: 35%;
+  width: auto;
   align-items: end;
-
-  @include media-1200 {
-    width: 42%;
-  }
-
-  @include media-1000 {
-    width: 52%;
-  }
-
-  @include media-800 {
-    width: 69%;
-  }
-
-  @include media-600 {
-    width: 83%;
-  }
-
   @include media-500 {
-    width: 100%;
+    flex-direction: column;
   }
+
 }
 
 .login_container {
