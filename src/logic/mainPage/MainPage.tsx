@@ -8,7 +8,7 @@ export const Main: React.FC = () => {
       </div>
       <div className={styles.promopictures}>
         <img src="src/public/promofood.png" alt="food promo" className={styles.food_background} />
-        <img src="src/public/promopicture.png" alt="pic promo" className={styles.pic_background} />
+        <img src="src/public/toypromo.png" alt="pic promo" className={styles.pic_background} />
       </div>
     </>
   );

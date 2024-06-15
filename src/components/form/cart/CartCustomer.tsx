@@ -18,6 +18,8 @@ export const CartCustomer: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState<CentPrecisionMoney>();
   const [cartVersion, setCartVersion] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [promoCode, setPromoCode] = useState('');
+
   const [api] = useState(localStorage.getItem('fullID') ? createLoginApiRoot() : createApiRoot());
   const [id] = useState(localStorage.getItem('cartId') ?? '');
   const [showModal, setShowModal] = useState(false);
@@ -144,6 +146,34 @@ export const CartCustomer: React.FC = () => {
     }
   };
 
+  const handleApplyPromoCode = async () => {
+    if (id && promoCode) {
+      try {
+        const updatedCart: ClientResponse<Cart> = await api
+          .carts()
+          .withId({ ID: id })
+          .post({
+            body: {
+              version: cartVersion,
+              actions: [
+                {
+                  action: 'addDiscountCode',
+                  code: promoCode,
+                },
+              ],
+            },
+          })
+          .execute();
+        setCartItems(updatedCart.body.lineItems);
+        setTotalPrice(updatedCart.body.totalPrice);
+        setCartVersion(updatedCart.body.version);
+        setPromoCode('');
+      } catch (error) {
+        proceedExceptions(error, 'Could not apply promo code');
+      }
+    }
+  };
+
   const getLocalizedName = (name: LocalizedString, locale: string) => {
     return name[locale] || name.en;
   };
@@ -253,6 +283,28 @@ export const CartCustomer: React.FC = () => {
           >
             Clear Shopping Cart
           </button>
+          <div className={style.promoCodeContainer}>
+            <input
+              type="text"
+              value={promoCode}
+              onChange={(e) => {
+                setPromoCode(e.target.value);
+              }}
+              placeholder="Enter promo code"
+              className={style.promoCodeInput}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                handleApplyPromoCode().catch((error: unknown) => {
+                  proceedExceptions(error, 'Could not apply promo code');
+                });
+              }}
+              className={style.applyPromoButton}
+            >
+              Apply
+            </button>
+          </div>
           <div className={style.totalPrice}>
             <h3>
               Total:

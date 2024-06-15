@@ -87,7 +87,8 @@ h1 {
   font-size: 3rem;
 }
 
-.clearCartButton {
+.clearCartButton,
+.applyPromoButton {
   background-color: #f5861f;
   color: white;
   padding: 10px 20px;
@@ -96,6 +97,8 @@ h1 {
   margin-bottom: 20px;
   font-size: 16px;
   border-radius: 4px;
+  margin: 10px 0;
+  width: 20vw;
 
   @include media-850 {
     font-size: 1.3rem;
@@ -103,6 +106,20 @@ h1 {
   @include media-500 {
     font-size: 1rem;
   }
+}
+
+.applyPromoButton {
+  background-color: #f0ac00;
+}
+
+.promoCodeInput {
+  opacity: 0.4;
+  transition: opacity 0.3s ease-in-out;
+  width: 20vw;
+}
+
+.promoCodeInput:focus {
+  opacity: 1;
 }
 
 .cart__empty {
