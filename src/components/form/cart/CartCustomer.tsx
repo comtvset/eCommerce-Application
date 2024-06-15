@@ -253,6 +253,13 @@ export const CartCustomer: React.FC = () => {
           >
             Clear Shopping Cart
           </button>
+          <div className={style.totalPrice}>
+            <h3>
+              Total:
+              {totalPrice && totalPrice.centAmount / 100}
+              {` ${totalPrice?.currencyCode ?? ''}`}
+            </h3>
+          </div>
         </div>
       </div>
     </div>
