@@ -11,6 +11,8 @@ import {
 } from '@commercetools/platform-sdk';
 import useModalEffect from 'src/components/form/profile/UseModalEffect.ts';
 import { Message } from 'src/components/cartMessage/CartMessage.tsx';
+import Modal from 'src/components/modalWindow/confirmationModal.tsx';
+
 
 export const CartCustomer: React.FC = () => {
   const [cartItems, setCartItems] = useState<LineItem[]>([]);
@@ -19,6 +21,7 @@ export const CartCustomer: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [api] = useState(localStorage.getItem('fullID') ? createLoginApiRoot() : createApiRoot());
   const [id] = useState(localStorage.getItem('cartId') ?? '');
+  const [showModal, setShowModal] = useState(false);
 
   const popupMessage = { status: '', message: '' };
   const [modalData, setModalData] = useState(popupMessage);
@@ -113,6 +116,32 @@ export const CartCustomer: React.FC = () => {
     }
   };
 
+  const handleClearCart = async () => {
+    if (id) {
+      try {
+        const updatedCart: ClientResponse<Cart> = await api
+          .carts()
+          .withId({ ID: id })
+          .post({
+            body: {
+              version: cartVersion,
+              actions: cartItems.map((item) => ({
+                action: 'removeLineItem',
+                lineItemId: item.id,
+              })),
+            },
+          })
+          .execute();
+        setCartItems([]);
+        setTotalPrice(updatedCart.body.totalPrice);
+        setCartVersion(updatedCart.body.version);
+        setShowModal(false); // Hide the modal after clearing the cart
+      } catch (error) {
+        proceedExceptions(error, 'Could not clear the cart');
+      }
+    }
+  };
+
   const getLocalizedName = (name: LocalizedString, locale: string) => {
     return name[locale] || name.en;
   };
@@ -130,6 +159,29 @@ export const CartCustomer: React.FC = () => {
   return (
     <div className={style.cartContainer}>
       <h1>Shopping Cart</h1>
+      <button
+        type="button"
+        onClick={() => {
+          setShowModal(true);
+        }}
+        className={style.clearCartButton}
+      >
+        Clear Shopping Cart
+      </button>
+      <Modal
+        show={showModal}
+        onClose={() => {
+          setShowModal(false);
+        }}
+        onConfirm={() => {
+          handleClearCart().catch((error: unknown) => {
+            proceedExceptions(error, 'Modify item quantity failed');
+          });
+        }}
+        title="Clear Shopping Cart"
+        message="Are you sure you want to clear the shopping cart?"
+      />
+
       <table className={style.cartTable}>
         <thead>
           <tr>

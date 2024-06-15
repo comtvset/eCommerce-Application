@@ -41,7 +41,8 @@
     cursor: pointer;
   }
 
-  .deleteButton:hover {
+  .deleteButton:hover,
+  .clearCartButton:hover {
     background-color: #f0ac00;
   }
 }
@@ -55,6 +56,18 @@
 h1 {
   font-size: 3rem;
 }
+
+.clearCartButton {
+  background-color: #f5861f;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
 
 @media (width <= 450px) {
   button {
