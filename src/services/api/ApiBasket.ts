@@ -16,7 +16,6 @@ export const createAnonymousBasket = async () => {
 
 export const getProducts = async (idCart: string, id: string) => {
   const result = await apiRoot.carts().withId({ ID: idCart }).get().execute();
-  const basketVersion = result.body.version;
   let isInBasket = false;
   result.body.lineItems.forEach((lineItem) => {
     if (lineItem.productId === id) {
@@ -24,11 +23,22 @@ export const getProducts = async (idCart: string, id: string) => {
     }
   });
   localStorage.setItem('isInBasket', isInBasket.toString());
-  return basketVersion;
+  return result;
 };
 
-export const addProductToBasket = async (idCart: string, productId: string) => {
-  const version = await getProducts(idCart, productId);
+export const getProductsInCart = async (idCart: string) => {
+  const result = await apiRoot.carts().withId({ ID: idCart }).get().execute();
+  return result;
+};
+
+export const getVersionCart = async (idCart: string) => {
+  const result = await apiRoot.carts().withId({ ID: idCart }).get().execute();
+  const cartVersion = result.body.version;
+  return cartVersion;
+};
+
+export const addProductToCart = async (idCart: string, productId: string) => {
+  const version = await getVersionCart(idCart);
   const body: CartUpdate = {
     version,
     actions: [
