@@ -1,30 +1,57 @@
 @import 'src/styles/variables';
+@import 'src/styles/mixins';
+
 .cartContainer {
   padding: 20px;
   background-color: var(--background-color);
 }
 
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 20px;
+  flex-grow: 1;
+
+  @include media-600 {
+    flex-direction: column;
+  }
+}
+
+.right_column {
+  width: 30vw;
+}
+
 .cartTable {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
   margin-bottom: 20px;
+  border-spacing: 0 10px;
 
   th,
   td {
     padding: 10px;
-    border: 1px solid #f0ac00;
+    padding-bottom: 10px;
   }
 
   th {
-    background-color: #d6b258;
+    background-color: wheat;
     font-size: 2rem;
     border-collapse: collapse;
     word-break: break-all;
+    @include media-500 {
+      font-size: 1rem;
+    }
+  }
+
+  tbody > tr {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
 
   .productImage {
     width: 50px;
     height: auto;
+    border-radius: 5px;
   }
 
   input {
@@ -39,6 +66,9 @@
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+    @include media-500 {
+      font-size: 1rem;
+    }
   }
 
   .deleteButton:hover,
@@ -57,7 +87,8 @@ h1 {
   font-size: 3rem;
 }
 
-.clearCartButton {
+.clearCartButton,
+.applyPromoButton {
   background-color: #f5861f;
   color: white;
   padding: 10px 20px;
@@ -66,6 +97,29 @@ h1 {
   margin-bottom: 20px;
   font-size: 16px;
   border-radius: 4px;
+  margin: 10px 0;
+  width: 20vw;
+
+  @include media-850 {
+    font-size: 1.3rem;
+  }
+  @include media-500 {
+    font-size: 1rem;
+  }
+}
+
+.applyPromoButton {
+  background-color: #f0ac00;
+}
+
+.promoCodeInput {
+  opacity: 0.4;
+  transition: opacity 0.3s ease-in-out;
+  width: 20vw;
+}
+
+.promoCodeInput:focus {
+  opacity: 1;
 }
 
 .cart__empty {

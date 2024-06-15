@@ -31,6 +31,12 @@
   }
 }
 
+@mixin media-850 {
+  @media (max-width: $screen-width-850) {
+    @content;
+  }
+}
+
 @mixin media-800 {
   @media (max-width: $screen-width-800) {
     @content;

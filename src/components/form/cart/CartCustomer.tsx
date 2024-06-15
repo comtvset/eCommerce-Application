@@ -18,6 +18,8 @@ export const CartCustomer: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState<CentPrecisionMoney>();
   const [cartVersion, setCartVersion] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [promoCode, setPromoCode] = useState('');
+
   const [api] = useState(localStorage.getItem('fullID') ? createLoginApiRoot() : createApiRoot());
   const [id] = useState(localStorage.getItem('cartId') ?? '');
   const [showModal, setShowModal] = useState(false);
@@ -144,6 +146,34 @@ export const CartCustomer: React.FC = () => {
     }
   };
 
+  const handleApplyPromoCode = async () => {
+    if (id && promoCode) {
+      try {
+        const updatedCart: ClientResponse<Cart> = await api
+          .carts()
+          .withId({ ID: id })
+          .post({
+            body: {
+              version: cartVersion,
+              actions: [
+                {
+                  action: 'addDiscountCode',
+                  code: promoCode,
+                },
+              ],
+            },
+          })
+          .execute();
+        setCartItems(updatedCart.body.lineItems);
+        setTotalPrice(updatedCart.body.totalPrice);
+        setCartVersion(updatedCart.body.version);
+        setPromoCode('');
+      } catch (error) {
+        proceedExceptions(error, 'Could not apply promo code');
+      }
+    }
+  };
+
   const getLocalizedName = (name: LocalizedString, locale: string) => {
     return name[locale] || name.en;
   };
@@ -161,15 +191,7 @@ export const CartCustomer: React.FC = () => {
   return (
     <div className={style.cartContainer}>
       <h1>Shopping Cart</h1>
-      <button
-        type="button"
-        onClick={() => {
-          setShowModal(true);
-        }}
-        className={style.clearCartButton}
-      >
-        Clear Shopping Cart
-      </button>
+
       <Modal
         show={showModal}
         onClose={() => {
@@ -183,80 +205,114 @@ export const CartCustomer: React.FC = () => {
         title="Clear Shopping Cart"
         message="Are you sure you want to clear the shopping cart?"
       />
-
-      <table className={style.cartTable}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cartItems.map((item) => (
-            <tr key={item.id}>
-              <td>{getLocalizedName(item.name, 'en-US')}</td>
-              <td>
-                {item.variant.images && item.variant.images.length > 0 ? (
-                  <img
-                    src={item.variant.images[0].url}
-                    alt={getLocalizedName(item.name, 'en-US')}
-                    className={style.productImage}
-                  />
-                ) : (
-                  <span>No image available</span>
-                )}
-              </td>
-              <td>
-                {item.price.discounted
-                  ? item.price.discounted.value.centAmount / 100
-                  : item.price.value.centAmount / 100}
-                {` ${item.price.value.currencyCode}`}
-              </td>
-              <td>
-                <label htmlFor="countItem">
-                  {' '}
-                  <input
-                    id="countItem"
-                    type="number"
-                    min="1"
-                    value={item.quantity}
-                    onChange={(e) => {
-                      handleQuantityChange(item.id, parseInt(e.target.value, 10)).catch(
-                        (error: unknown) => {
-                          proceedExceptions(error, 'Modify item quantity failed');
-                        },
-                      );
-                    }}
-                    className={style.quantityInput}
-                  />
-                </label>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleDelete(item.id).catch((error: unknown) => {
-                      proceedExceptions(error, 'Edit address failed');
-                    });
-                  }}
-                  className={style.deleteButton}
-                >
-                  Delete
-                </button>
-              </td>
+      <div className={style.wrapper}>
+        <table className={style.cartTable}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Image</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className={style.totalPrice}>
-        <h3>
-          Total:
-          {totalPrice && totalPrice.centAmount / 100}
-          {` ${totalPrice?.currencyCode ?? ''}`}
-        </h3>
+          </thead>
+          <tbody>
+            {cartItems.map((item) => (
+              <tr key={item.id}>
+                <td>{getLocalizedName(item.name, 'en-US')}</td>
+                <td>
+                  {item.variant.images && item.variant.images.length > 0 ? (
+                    <img
+                      src={item.variant.images[0].url}
+                      alt={getLocalizedName(item.name, 'en-US')}
+                      className={style.productImage}
+                    />
+                  ) : (
+                    <span>No image available</span>
+                  )}
+                </td>
+                <td>
+                  {item.price.discounted
+                    ? item.price.discounted.value.centAmount / 100
+                    : item.price.value.centAmount / 100}
+                  {` ${item.price.value.currencyCode}`}
+                </td>
+                <td>
+                  <label htmlFor="countItem">
+                    {' '}
+                    <input
+                      id="countItem"
+                      type="number"
+                      min="1"
+                      value={item.quantity}
+                      onChange={(e) => {
+                        handleQuantityChange(item.id, parseInt(e.target.value, 10)).catch(
+                          (error: unknown) => {
+                            proceedExceptions(error, 'Modify item quantity failed');
+                          },
+                        );
+                      }}
+                      className={style.quantityInput}
+                    />
+                  </label>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleDelete(item.id).catch((error: unknown) => {
+                        proceedExceptions(error, 'Edit address failed');
+                      });
+                    }}
+                    className={style.deleteButton}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className={style.right_column}>
+          <button
+            type="button"
+            onClick={() => {
+              setShowModal(true);
+            }}
+            className={style.clearCartButton}
+          >
+            Clear Shopping Cart
+          </button>
+          <div className={style.promoCodeContainer}>
+            <input
+              type="text"
+              value={promoCode}
+              onChange={(e) => {
+                setPromoCode(e.target.value);
+              }}
+              placeholder="Enter promo code"
+              className={style.promoCodeInput}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                handleApplyPromoCode().catch((error: unknown) => {
+                  proceedExceptions(error, 'Could not apply promo code');
+                });
+              }}
+              className={style.applyPromoButton}
+            >
+              Apply
+            </button>
+          </div>
+          <div className={style.totalPrice}>
+            <h3>
+              Total:
+              {totalPrice && totalPrice.centAmount / 100}
+              {` ${totalPrice?.currencyCode ?? ''}`}
+            </h3>
+          </div>
+        </div>
       </div>
     </div>
   );
