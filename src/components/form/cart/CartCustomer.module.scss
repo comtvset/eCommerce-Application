@@ -37,6 +37,9 @@
   td {
     padding: 10px;
     padding-bottom: 10px;
+    @include media-400 {
+      padding: 5px;
+    }
   }
 
   th {
@@ -137,10 +140,18 @@ h1 {
   align-items: center;
 }
 
+.tablePriceContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
 .crossedOutPrice {
   text-decoration: line-through;
   color: red;
   margin-right: 10px;
+  @include media-400 {
+    font-size: 1.3rem;
+  }
 }
 
 .totalPriceContainer {
@@ -157,6 +168,51 @@ h1 {
   font-size: 1.5rem;
   font-weight: bold;
   color: green;
+  @include media-400 {
+    font-size: 1.3rem;
+  }
+}
+
+.quantityControl {
+  display: flex;
+  align-items: center;
+}
+
+.quantityButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin: 0 5px;
+  border-radius: 15px;
+  color: #f0ac00;
+  box-shadow: 1px 2px 15px rgba(0, 0, 0, 0.2);
+  border: none;
+  cursor: pointer;
+
+  @include media-600 {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.buttonIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.quantityValue {
+  font-size: 2rem;
+  padding: 0 10px;
+  @include media-600 {
+    padding: 0 5px;
+  }
+  @include media-400 {
+    padding: 0;
+  }
 }
 
 @media (max-width: 500px) {
@@ -192,12 +248,5 @@ h1 {
   button,
   input {
     max-width: 200px;
-  }
-}
-
-@media (width < 500px) {
-  .clearCartButton,
-  .promoCodeInput,
-  .applyPromoButton {
   }
 }

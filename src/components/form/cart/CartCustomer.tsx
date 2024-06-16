@@ -273,7 +273,7 @@ export const CartCustomer: React.FC = () => {
                 </td>
                 <td>
                   {item.discountedPricePerQuantity.length > 0 ? (
-                    <div>
+                    <div className={style.tablePriceContainer}>
                       <span className={style.crossedOutPrice}>
                         {item.price.discounted
                           ? item.price.discounted.value.centAmount / 100
@@ -295,23 +295,39 @@ export const CartCustomer: React.FC = () => {
                 </td>
                 <td>
                   <label htmlFor="countItem">
-                    {' '}
-                    <input
-                      id="countItem"
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) => {
-                        handleQuantityChange(item.id, parseInt(e.target.value, 10)).catch(
-                          (error: unknown) => {
-                            proceedExceptions(error, 'Modify item quantity failed');
-                          },
-                        );
-                      }}
-                      className={style.quantityInput}
-                    />
+                    <div className={style.quantityControl}>
+                      <button
+                        type="button"
+                        className={style.quantityButton}
+                        onClick={() => {
+                          handleQuantityChange(item.id, item.quantity - 1).catch(
+                            (error: unknown) => {
+                              proceedExceptions(error, 'Could not apply promo code');
+                            },
+                          );
+                        }}
+                        disabled={item.quantity <= 1}
+                      >
+                        -
+                      </button>
+                      <span className={style.quantityValue}>{item.quantity}</span>
+                      <button
+                        type="button"
+                        className={style.quantityButton}
+                        onClick={() => {
+                          handleQuantityChange(item.id, item.quantity + 1).catch(
+                            (error: unknown) => {
+                              proceedExceptions(error, 'Could not apply promo code');
+                            },
+                          );
+                        }}
+                      >
+                        +
+                      </button>
+                    </div>
                   </label>
                 </td>
+
                 <td>
                   <button
                     type="button"
