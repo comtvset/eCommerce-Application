@@ -6,6 +6,8 @@
   align-items: flex-start;
   width: 300px;
   margin: 0 30px 30px;
+  font-size: 1.5rem;
+
 }
 
 .photo {
@@ -22,12 +24,8 @@
 
 .bio {
   width: 280px;
-  height: 100px;
-  transition: transform 0.5s ease;
-}
+  height: 180px;
 
-.bio:hover {
-  transform: scale(1.5);
 }
 
 .constacts {
