@@ -4,14 +4,14 @@ import { CartUpdate } from '@commercetools/platform-sdk';
 const apiRoot = createApiRoot();
 
 export const createAnonymousBasket = async () => {
-  let idCard = localStorage.getItem('cartId');
-  if (!idCard) {
+  let idCart = localStorage.getItem('cartId');
+  if (!idCart) {
     const body = { country: 'US', currency: 'EUR' };
     const result = await apiRoot.carts().post({ body }).execute();
-    idCard = result.body.id;
+    idCart = result.body.id;
     localStorage.setItem('cartId', result.body.id);
   }
-  return idCard;
+  return idCart;
 };
 
 export const getProducts = async (idCart: string, id: string) => {
@@ -30,7 +30,6 @@ export const getProductsInCart = async (idCart: string) => {
   const result = await apiRoot.carts().withId({ ID: idCart }).get().execute();
   return result;
 };
-
 export const getVersionCart = async (idCart: string) => {
   const result = await apiRoot.carts().withId({ ID: idCart }).get().execute();
   const cartVersion = result.body.version;
@@ -50,4 +49,23 @@ export const addProductToCart = async (idCart: string, productId: string) => {
     ],
   };
   await apiRoot.carts().withId({ ID: idCart }).post({ body }).execute();
+};
+
+export const deleteProductFromCart = async (idCart: string, productId: string) => {
+  const version = await getVersionCart(idCart);
+  const { lineItems } = (await getProducts(idCart, productId)).body;
+  const lineItem = lineItems.find((item) => item.productId === productId);
+  const lineItemId = lineItem ? lineItem.id : undefined;
+  const body: CartUpdate = {
+    version,
+    actions: [
+      {
+        action: 'removeLineItem',
+        lineItemId,
+        quantity: 1,
+      },
+    ],
+  };
+  const result = await apiRoot.carts().withId({ ID: idCart }).post({ body }).execute();
+  return result;
 };

@@ -175,17 +175,22 @@
 .images_container2 > ul > li > button::before {
   color: #ffffff;
 }
-
+.button__remove,
 .button__add {
-  padding: 5px 10px;
-  background-color: $primaryBackgroundButton;
-  border-radius: 0.5rem;
-  color: $secondaryTextColor;
   font-size: 1.6rem;
   font-weight: 700;
+  border-radius: 0.5rem;
+  padding: 5px 10px;
+  color: $secondaryTextColor;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.button__add {
+  background-color: $primaryBackgroundButton;
   &:hover {
     background-color: $primaryBackgroundButtonHover;
-    cursor: pointer;
   }
   &:active {
     background-color: $primaryBackgroundButtonActive;
@@ -196,7 +201,48 @@
   }
 }
 
-.button__add.disabled {
+.button__remove {
+  background-color: $secondaryBackgroundButton;
+  &:hover {
+    background-color: $secondaryBackgroundButtonHover;
+  }
+  &:active {
+    background-color: $secondaryBackgroundButtonActive;
+  }
+  &:disabled {
+    cursor: auto;
+    background-color: gray;
+  }
+}
+
+.button__add.disabled,
+.button__remove.disabled {
   cursor: auto;
   background-color: gray;
+}
+
+.buttons {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  @include media-800 {
+    width: 40%;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  @include media-600 {
+    width: 55%;
+  }
+  @include media-400 {
+    width: 70%;
+  }
+}
+
+.message__remove {
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  color: $secondaryTextColor;
+  background-color: $primaryBackgroundButton;
 }

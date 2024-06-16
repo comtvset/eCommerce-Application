@@ -9,6 +9,8 @@ import { ensureBasketAndCheckProduct } from 'src/utils/BasketUtils.ts';
 import { Button } from 'src/components/button/Button.tsx';
 import { fetchAllProducts } from 'src/services/api/filterRequests.ts';
 import { createAnonymousBasket, getProductsInCart } from 'src/services/api/ApiBasket.ts';
+import ImageWithLoader from 'src/components/spinnerImage/ImageWithLoader.tsx';
+
 
 interface CardProps {
   products: ProductProjection[];
@@ -76,9 +78,9 @@ export const Card: React.FC<CardProps> = ({ products }) => {
             }}
           >
             <div className={style.image_container}>
-              <img
+              <ImageWithLoader
                 className={style.image}
-                src={product.masterVariant.images?.[0].url}
+                src={product.masterVariant.images ? product.masterVariant.images[0].url : ''}
                 alt={product.name['en-US']}
               />
             </div>

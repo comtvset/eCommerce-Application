@@ -8,10 +8,10 @@ import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { ProductCatalogData } from '@commercetools/platform-sdk';
+import { ByProjectKeyRequestBuilder, ProductCatalogData } from '@commercetools/platform-sdk';
 import { createApiRoot } from 'src/services/api/BuildClient.ts';
 import { Button } from 'src/components/button/Button.tsx';
-import { addProduct } from 'src/utils/BasketUtils.ts';
+import { addProduct, deleteProductOnProductPage } from 'src/utils/BasketUtils.ts';
 
 interface Image {
   url: string;
@@ -22,7 +22,7 @@ interface IProductData {
   masterData: ProductCatalogData;
 }
 
-const apiRoot = createApiRoot();
+const apiRoot: ByProjectKeyRequestBuilder = createApiRoot();
 
 export const CardOne: React.FC = () => {
   const [product, setProduct] = useState<IProductData>();
@@ -31,6 +31,8 @@ export const CardOne: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [modal, setModal] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [responseStatus, setResponseStatus] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
   const { id } = useParams<{ id: string }>();
 
   const handleImageChange = (newImage: Image, index: number) => {
@@ -44,6 +46,16 @@ export const CardOne: React.FC = () => {
 
   const closeModalWindow = () => {
     setModal(false);
+  };
+
+  const handleDeleteProduct = async (idProduct: string) => {
+    await deleteProductOnProductPage(idProduct, (message) => {
+      setResponseStatus(message);
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 1000);
+    });
   };
 
   const isImages = product?.masterData.staged.masterVariant.images ?? [];
@@ -60,10 +72,6 @@ export const CardOne: React.FC = () => {
   const currencyCode = getCurrencySymbol(isCurrencyCode) ?? '';
   const currencyNoDiscount = getCurrencySymbol(isCurrencyNoDiscount) ?? '';
   const isDisabled = localStorage.getItem('isInBasket');
-
-  useEffect(() => {
-    setIsButtonDisabled(isDisabled === 'true');
-  }, [isDisabled]);
 
   useEffect(() => {
     if (typeof id !== 'undefined') {
@@ -198,25 +206,47 @@ export const CardOne: React.FC = () => {
                 />
               )}
             </div>
-            <Button
-              className={`${style.button__add} ${isDisabled === 'true' ? style.disabled : ''}`}
-              title="ADD TO BASKET"
-              disabled={isDisabled === 'true' || isButtonDisabled}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                if (isDisabled === 'true') {
-                  e.preventDefault();
-                  return;
-                }
-                setIsButtonDisabled(true);
-                (async () => {
-                  if (id) {
-                    await addProduct(id);
-                    localStorage.setItem('isInBasket', 'true');
-                    setIsButtonDisabled(true);
+            <div className={style.buttons}>
+              <Button
+                className={`${style.button__add} ${isDisabled === 'true' ? style.disabled : ''}`}
+                title="ADD TO CART"
+                disabled={isDisabled === 'true' || isButtonDisabled}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  if (isDisabled === 'true') {
+                    e.preventDefault();
+                    return;
                   }
-                })();
-              }}
-            />
+                  (async () => {
+                    if (id) {
+                      setIsButtonDisabled(true);
+                      await addProduct(id);
+                      localStorage.setItem('isInBasket', 'true');
+                      setIsButtonDisabled(false);
+                    }
+                  })();
+                }}
+              />
+              <Button
+                className={`${style.button__remove} ${isDisabled !== 'true' ? style.disabled : ''}`}
+                title="REMOVE FROM CART"
+                disabled={isDisabled !== 'true' || isButtonDisabled}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  if (isDisabled !== 'true') {
+                    e.preventDefault();
+                    return;
+                  }
+                  (async () => {
+                    if (id) {
+                      setIsButtonDisabled(true);
+                      await handleDeleteProduct(id);
+                      localStorage.setItem('isInBasket', 'false');
+                      setIsButtonDisabled(false);
+                    }
+                  })();
+                }}
+              />
+              {showMessage && <div className={style.message__remove}>{responseStatus}</div>}
+            </div>
           </div>
         </div>
       )}
