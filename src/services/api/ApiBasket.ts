@@ -26,6 +26,10 @@ export const getProducts = async (idCart: string, id: string) => {
   return result;
 };
 
+export const getProductsInCart = async (idCart: string) => {
+  const result = await apiRoot.carts().withId({ ID: idCart }).get().execute();
+  return result;
+};
 export const getVersionCart = async (idCart: string) => {
   const result = await apiRoot.carts().withId({ ID: idCart }).get().execute();
   const cartVersion = result.body.version;
