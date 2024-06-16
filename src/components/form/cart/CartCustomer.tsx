@@ -8,6 +8,7 @@ import { Message } from 'src/components/cartMessage/CartMessage.tsx';
 import Modal from 'src/components/modalWindow/confirmationModal.tsx';
 import Spinner from 'src/components/lazyLoad/Spinner.tsx';
 
+
 export const CartCustomer: React.FC = () => {
   const [cartItems, setCartItems] = useState<LineItem[]>([]);
   const [originalTotalPrice, setOriginalTotalPrice] = useState<number>(0);

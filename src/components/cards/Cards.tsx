@@ -8,7 +8,11 @@ import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
 import { ensureBasketAndCheckProduct } from 'src/utils/BasketUtils.ts';
 import { Button } from 'src/components/button/Button.tsx';
 import { fetchAllProducts } from 'src/services/api/filterRequests.ts';
-import { createAnonymousBasket, getProductsInCart } from 'src/services/api/ApiBasket.ts';
+import {
+  addProductToCart,
+  createAnonymousBasket,
+  getProductsInCart,
+} from 'src/services/api/ApiBasket.ts';
 import ImageWithLoader from 'src/components/spinnerImage/ImageWithLoader.tsx';
 
 interface CardProps {
@@ -17,10 +21,10 @@ interface CardProps {
 
 export const Card: React.FC<CardProps> = ({ products }) => {
   const [isDisabled, setIsDisabled] = useState<Record<string, boolean>>({});
+  const [isLoading, setIsLoading] = useState<Record<string, boolean>>({});
 
   const ensureBasketAndCheckProducts = async () => {
-    await createAnonymousBasket();
-    const cartId = localStorage.getItem('cartId') ?? '';
+    const cartId = await createAnonymousBasket();
     const allProducts = await fetchAllProducts();
     const productsInCartResponse = await getProductsInCart(cartId);
     const productsInCart = productsInCartResponse.body.lineItems;
@@ -34,6 +38,20 @@ export const Card: React.FC<CardProps> = ({ products }) => {
       buttonsState[product.id] = isProductInCart;
     });
     setIsDisabled(buttonsState);
+  };
+
+  const addProduct = async (idProduct: string) => {
+    setIsLoading((prevState) => ({ ...prevState, [idProduct]: true }));
+    try {
+      const cartId = await createAnonymousBasket();
+      if (cartId && idProduct) {
+        await addProductToCart(cartId, idProduct);
+        setIsDisabled((prevState) => ({ ...prevState, [idProduct]: true }));
+      }
+    } finally {
+      setIsLoading((prevState) => ({ ...prevState, [idProduct]: false }));
+      await ensureBasketAndCheckProducts();
+    }
   };
 
   useEffect(() => {
@@ -101,7 +119,16 @@ export const Card: React.FC<CardProps> = ({ products }) => {
               className={style.button__add}
               title="ADD TO BASKET"
               disabled={isDisabled[product.id]}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                e.preventDefault();
+                if (!isDisabled[product.id] && !isLoading[product.id]) {
+                  (async () => {
+                    await addProduct(product.id);
+                  })();
+                }
+              }}
             />
+            {isLoading[product.id] && <div className={style.load}>Adding product to cart...</div>}
           </Link>
         );
       })}
