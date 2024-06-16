@@ -8,9 +8,12 @@ import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
 import { ensureBasketAndCheckProduct } from 'src/utils/BasketUtils.ts';
 import { Button } from 'src/components/button/Button.tsx';
 import { fetchAllProducts } from 'src/services/api/filterRequests.ts';
-import { createAnonymousBasket, getProductsInCart } from 'src/services/api/ApiBasket.ts';
+import {
+  addProductToCart,
+  createAnonymousBasket,
+  getProductsInCart,
+} from 'src/services/api/ApiBasket.ts';
 import ImageWithLoader from 'src/components/spinnerImage/ImageWithLoader.tsx';
-
 
 interface CardProps {
   products: ProductProjection[];
@@ -18,9 +21,9 @@ interface CardProps {
 
 export const Card: React.FC<CardProps> = ({ products }) => {
   const [isDisabled, setIsDisabled] = useState<Record<string, boolean>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const ensureBasketAndCheckProducts = async () => {
-    await createAnonymousBasket();
     const cartId = localStorage.getItem('cartId') ?? '';
     const allProducts = await fetchAllProducts();
     const productsInCartResponse = await getProductsInCart(cartId);
@@ -35,6 +38,19 @@ export const Card: React.FC<CardProps> = ({ products }) => {
       buttonsState[product.id] = isProductInCart;
     });
     setIsDisabled(buttonsState);
+  };
+
+  const addProduct = async (idProduct: string) => {
+    setIsLoading(true);
+    try {
+      await createAnonymousBasket();
+      const cartId = localStorage.getItem('cartId') ?? '';
+      await addProductToCart(cartId, idProduct);
+      setIsLoading(false);
+      setIsDisabled((prevState) => ({ ...prevState, [idProduct]: true }));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -102,7 +118,14 @@ export const Card: React.FC<CardProps> = ({ products }) => {
               className={style.button__add}
               title="ADD TO BASKET"
               disabled={isDisabled[product.id]}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                e.preventDefault();
+                (async () => {
+                  await addProduct(product.id);
+                })();
+              }}
             />
+            {isLoading && <div className={style.load}>Adding product to cart...</div>}
           </Link>
         );
       })}
