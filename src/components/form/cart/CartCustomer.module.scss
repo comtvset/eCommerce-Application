@@ -4,6 +4,10 @@
 .cartContainer {
   padding: 20px;
   background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .wrapper {
@@ -11,15 +15,15 @@
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 20px;
-  flex-grow: 1;
 
-  @include media-600 {
+  @include media-800 {
     flex-direction: column;
   }
 }
 
 .right_column {
-  width: 30vw;
+  display: flex;
+  flex-direction: column;
 }
 
 .cartTable {
@@ -27,11 +31,15 @@
   border-collapse: separate;
   margin-bottom: 20px;
   border-spacing: 0 10px;
+  font-size: 1.3rem;
 
   th,
   td {
     padding: 10px;
     padding-bottom: 10px;
+    @include media-400 {
+      padding: 5px;
+    }
   }
 
   th {
@@ -54,6 +62,11 @@
     border-radius: 5px;
   }
 
+  .productDescription {
+    font-size: 2rem;
+    margin: 10px;
+  }
+
   input {
     max-width: 50px;
     padding: 4px;
@@ -61,7 +74,7 @@
   }
 
   .deleteButton {
-    background-color: #f5861f;
+    background-color: #f0ac00;
     color: white;
     border: none;
     padding: 5px 10px;
@@ -72,6 +85,9 @@
   }
 
   .deleteButton:hover,
+  .applyPromoButton:hover {
+    background-color: #f5861f;
+  }
   .clearCartButton:hover {
     background-color: #f0ac00;
   }
@@ -89,7 +105,6 @@ h1 {
 
 .clearCartButton,
 .applyPromoButton {
-  background-color: #f5861f;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -98,7 +113,6 @@ h1 {
   font-size: 16px;
   border-radius: 4px;
   margin: 10px 0;
-  width: 20vw;
 
   @include media-850 {
     font-size: 1.3rem;
@@ -107,24 +121,160 @@ h1 {
     font-size: 1rem;
   }
 }
+.clearCartButton,
+.applyPromoButton:hover {
+  background-color: #f5861f;
+}
 
-.applyPromoButton {
+.applyPromoButton,
+.clearCartButton:hover {
   background-color: #f0ac00;
 }
 
 .promoCodeInput {
   opacity: 0.4;
   transition: opacity 0.3s ease-in-out;
-  width: 20vw;
 }
 
 .promoCodeInput:focus {
   opacity: 1;
 }
 
+.tablePriceContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
 
-@media (width <= 450px) {
-  button {
+.tablePriceContainer {
+  display: flex;
+  align-items: center;
+}
+
+.crossedOutPrice {
+  position: relative;
+  display: inline-block;
+  color: red;
+  margin-right: 15px;
+  font-size: 1.7rem;
+
+  @include media-400 {
+    font-size: 1.7rem;
+  }
+}
+
+.crossedOutPrice::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 0.1px;
+  background-color: red;
+  top: 50%;
+  left: 0;
+  transform-origin: center;
+}
+
+.crossedOutPrice::after {
+  transform: rotate(-15deg);
+}
+
+.discountedPrice {
+  color: green; /* Example styling for discounted price */
+}
+
+.totalPriceContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.originalPrice {
+  font-size: 1.2rem;
+}
+
+.discountedPrice {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: green;
+  @include media-400 {
+    font-size: 1.3rem;
+  }
+}
+
+.quantityControl {
+  display: flex;
+  align-items: center;
+}
+
+.quantityButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin: 0 5px;
+  border-radius: 15px;
+  color: #f0ac00;
+  box-shadow: 1px 2px 15px rgba(0, 0, 0, 0.2);
+  border: none;
+  cursor: pointer;
+
+  @include media-600 {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.buttonIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.quantityValue {
+  font-size: 2rem;
+  padding: 0 10px;
+  @include media-600 {
+    padding: 0 5px;
+  }
+  @include media-400 {
+    padding: 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .deleteButtonSmall {
+    display: inline;
+  }
+
+  .deleteButtonLarge {
+    display: none;
+  }
+}
+
+@media (min-width: 501px) {
+  .deleteButtonSmall {
+    display: none;
+  }
+
+  .deleteButtonLarge {
+    display: inline;
+  }
+}
+
+@media (width < 800px) {
+  .clearCartButton,
+  .promoCodeInput,
+  .applyPromoButton {
     font-size: 1.5rem;
+  }
+
+  .cartContainer {
+    max-width: 600px;
+  }
+  button,
+  input {
+    max-width: 200px;
   }
 }
