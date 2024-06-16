@@ -340,28 +340,26 @@ export const CartCustomer: React.FC = () => {
           >
             Clear Shopping Cart
           </button>
-          <div className={style.promoCodeContainer}>
-            <input
-              type="text"
-              value={promoCode}
-              onChange={(e) => {
-                setPromoCode(e.target.value);
-              }}
-              placeholder="Enter promo code"
-              className={style.promoCodeInput}
-            />
-            <button
-              type="button"
-              onClick={() => {
-                handleApplyPromoCode().catch((error: unknown) => {
-                  proceedExceptions(error, 'Could not apply promo code');
-                });
-              }}
-              className={style.applyPromoButton}
-            >
-              Apply
-            </button>
-          </div>
+          <input
+            type="text"
+            value={promoCode}
+            onChange={(e) => {
+              setPromoCode(e.target.value);
+            }}
+            placeholder="Enter promo code"
+            className={style.promoCodeInput}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              handleApplyPromoCode().catch((error: unknown) => {
+                proceedExceptions(error, 'Could not apply promo code');
+              });
+            }}
+            className={style.applyPromoButton}
+          >
+            Apply
+          </button>
           <div className={style.totalPriceContainer}>
             {originalTotalPrice - discountedTotalPrice !== 0 && (
               <div className={style.originalPrice}>

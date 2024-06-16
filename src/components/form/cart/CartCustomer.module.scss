@@ -4,6 +4,10 @@
 .cartContainer {
   padding: 20px;
   background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .wrapper {
@@ -11,7 +15,6 @@
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 20px;
-  flex-grow: 1;
 
   @include media-800 {
     flex-direction: column;
@@ -19,7 +22,6 @@
 }
 
 .right_column {
-  width: 30vw;
   display: flex;
   flex-direction: column;
 }
@@ -101,7 +103,6 @@ h1 {
   font-size: 16px;
   border-radius: 4px;
   margin: 10px 0;
-  width: 20vw;
 
   @include media-850 {
     font-size: 1.3rem;
@@ -118,7 +119,6 @@ h1 {
 .promoCodeInput {
   opacity: 0.4;
   transition: opacity 0.3s ease-in-out;
-  width: 20vw;
 }
 
 .promoCodeInput:focus {
@@ -184,7 +184,14 @@ h1 {
   .promoCodeInput,
   .applyPromoButton {
     font-size: 1.5rem;
-    width: 30vw;
+  }
+
+  .cartContainer {
+    max-width: 600px;
+  }
+  button,
+  input {
+    max-width: 200px;
   }
 }
 
@@ -192,6 +199,5 @@ h1 {
   .clearCartButton,
   .promoCodeInput,
   .applyPromoButton {
-    width: 40vw;
   }
 }
