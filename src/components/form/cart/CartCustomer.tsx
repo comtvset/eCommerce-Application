@@ -3,19 +3,14 @@ import style from 'src/components/form/cart/CartCustomer.module.scss';
 import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { createApiRoot, createLoginApiRoot } from 'src/services/api/BuildClient.ts';
 import { Paragraph } from 'src/components/text/Text.tsx';
-import {
-  Cart,
-  CentPrecisionMoney,
-  ClientResponse,
-  LineItem,
-  LocalizedString,
-} from '@commercetools/platform-sdk';
+import { Cart, ClientResponse, LineItem, LocalizedString } from '@commercetools/platform-sdk';
 import useModalEffect from 'src/components/form/profile/UseModalEffect.ts';
 import Modal from 'src/components/modalWindow/confirmationModal.tsx';
 
 export const CartCustomer: React.FC = () => {
   const [cartItems, setCartItems] = useState<LineItem[]>([]);
-  const [totalPrice, setTotalPrice] = useState<CentPrecisionMoney>();
+  const [originalTotalPrice, setOriginalTotalPrice] = useState<number>(0);
+  const [discountedTotalPrice, setDiscountedTotalPrice] = useState<number>(0);
   const [cartVersion, setCartVersion] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const [promoCode, setPromoCode] = useState('');
@@ -41,6 +36,20 @@ export const CartCustomer: React.FC = () => {
     }
   };
 
+  const calculateTotalDiscountedAmount = (lineItems: LineItem[], discountedTotal: number) => {
+    let totalDiscountedAmount = 0;
+
+    lineItems.forEach((item) => {
+      item.discountedPricePerQuantity.forEach((quantityDiscount) => {
+        quantityDiscount.discountedPrice.includedDiscounts.forEach((discount) => {
+          totalDiscountedAmount += discount.discountedAmount.centAmount * quantityDiscount.quantity;
+        });
+      });
+    });
+
+    return (totalDiscountedAmount + discountedTotal) / 100;
+  };
+
   useEffect(() => {
     if (id) {
       const getCartItems = async () => {
@@ -50,9 +59,16 @@ export const CartCustomer: React.FC = () => {
             .withId({ ID: id })
             .get()
             .execute();
-          setCartItems(cartCustomer.body.lineItems);
-          setTotalPrice(cartCustomer.body.totalPrice);
-          setCartVersion(cartCustomer.body.version);
+          const cart = cartCustomer.body;
+
+          const originalPrice = calculateTotalDiscountedAmount(
+            cart.lineItems,
+            cart.totalPrice.centAmount,
+          );
+          setCartItems(cart.lineItems);
+          setOriginalTotalPrice(originalPrice);
+          setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
+          setCartVersion(cart.version);
           setIsLoading(false);
         } catch (error) {
           proceedExceptions(error, 'Could not retrieve customer items from carts');
@@ -83,9 +99,15 @@ export const CartCustomer: React.FC = () => {
             },
           })
           .execute();
-        setCartItems(updatedCart.body.lineItems);
-        setTotalPrice(updatedCart.body.totalPrice);
-        setCartVersion(updatedCart.body.version);
+        const cart = updatedCart.body;
+        const originalPrice = calculateTotalDiscountedAmount(
+          cart.lineItems,
+          cart.totalPrice.centAmount,
+        );
+        setCartItems(cart.lineItems);
+        setOriginalTotalPrice(originalPrice);
+        setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
+        setCartVersion(cart.version);
       } catch (error) {
         proceedExceptions(error, 'Could not delete item from cart');
       }
@@ -111,9 +133,15 @@ export const CartCustomer: React.FC = () => {
             },
           })
           .execute();
-        setCartItems(updatedCart.body.lineItems);
-        setTotalPrice(updatedCart.body.totalPrice);
-        setCartVersion(updatedCart.body.version);
+        const cart = updatedCart.body;
+        const originalPrice = calculateTotalDiscountedAmount(
+          cart.lineItems,
+          cart.totalPrice.centAmount,
+        );
+        setCartItems(cart.lineItems);
+        setOriginalTotalPrice(originalPrice);
+        setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
+        setCartVersion(cart.version);
       } catch (error) {
         proceedExceptions(error, 'Could not update item quantity');
       }
@@ -136,9 +164,15 @@ export const CartCustomer: React.FC = () => {
             },
           })
           .execute();
+        const cart = updatedCart.body;
+        const originalPrice = calculateTotalDiscountedAmount(
+          cart.lineItems,
+          cart.totalPrice.centAmount,
+        );
         setCartItems([]);
-        setTotalPrice(updatedCart.body.totalPrice);
-        setCartVersion(updatedCart.body.version);
+        setOriginalTotalPrice(originalPrice);
+        setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
+        setCartVersion(cart.version);
         setShowModal(false); // Hide the modal after clearing the cart
       } catch (error) {
         proceedExceptions(error, 'Could not clear the cart');
@@ -164,9 +198,15 @@ export const CartCustomer: React.FC = () => {
             },
           })
           .execute();
-        setCartItems(updatedCart.body.lineItems);
-        setTotalPrice(updatedCart.body.totalPrice);
-        setCartVersion(updatedCart.body.version);
+        const cart = updatedCart.body;
+        const originalPrice = calculateTotalDiscountedAmount(
+          cart.lineItems,
+          cart.totalPrice.centAmount,
+        );
+        setCartItems(cart.lineItems);
+        setOriginalTotalPrice(originalPrice);
+        setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
+        setCartVersion(cart.version);
         setPromoCode('');
       } catch (error) {
         proceedExceptions(error, 'Could not apply promo code');
@@ -232,10 +272,26 @@ export const CartCustomer: React.FC = () => {
                   )}
                 </td>
                 <td>
-                  {item.price.discounted
-                    ? item.price.discounted.value.centAmount / 100
-                    : item.price.value.centAmount / 100}
-                  {` ${item.price.value.currencyCode}`}
+                  {item.discountedPricePerQuantity.length > 0 ? (
+                    <div>
+                      <span className={style.crossedOutPrice}>
+                        {item.price.discounted
+                          ? item.price.discounted.value.centAmount / 100
+                          : item.price.value.centAmount / 100}
+                      </span>
+                      <span className={style.discountedPrice}>
+                        {item.discountedPricePerQuantity[0].discountedPrice.value.centAmount / 100}
+                        {` ${item.price.value.currencyCode}`}
+                      </span>
+                    </div>
+                  ) : (
+                    <div>
+                      {item.price.discounted
+                        ? item.price.discounted.value.centAmount / 100
+                        : item.price.value.centAmount / 100}
+                      {` ${item.price.value.currencyCode}`}
+                    </div>
+                  )}
                 </td>
                 <td>
                   <label htmlFor="countItem">
@@ -266,7 +322,8 @@ export const CartCustomer: React.FC = () => {
                     }}
                     className={style.deleteButton}
                   >
-                    Delete
+                    <span className={style.deleteButtonLarge}>Delete</span>
+                    <span className={style.deleteButtonSmall}>X</span>
                   </button>
                 </td>
               </tr>
@@ -305,12 +362,25 @@ export const CartCustomer: React.FC = () => {
               Apply
             </button>
           </div>
-          <div className={style.totalPrice}>
-            <h3>
-              Total:
-              {totalPrice && totalPrice.centAmount / 100}
-              {` ${totalPrice?.currencyCode ?? ''}`}
-            </h3>
+          <div className={style.totalPriceContainer}>
+            {originalTotalPrice - discountedTotalPrice !== 0 && (
+              <div className={style.originalPrice}>
+                <h3>
+                  Original Total:
+                  <span className={style.crossedOutPrice}>
+                    {originalTotalPrice}
+                    {` ${cartItems[0]?.price.value.currencyCode}`}
+                  </span>
+                </h3>
+              </div>
+            )}
+            <div className={style.discountedPrice}>
+              <h3>
+                Total:
+                {discountedTotalPrice}
+                {` ${cartItems[0]?.price.value.currencyCode ?? ''}`}
+              </h3>
+            </div>
           </div>
         </div>
       </div>

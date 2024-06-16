@@ -13,13 +13,15 @@
   gap: 20px;
   flex-grow: 1;
 
-  @include media-600 {
+  @include media-800 {
     flex-direction: column;
   }
 }
 
 .right_column {
   width: 30vw;
+  display: flex;
+  flex-direction: column;
 }
 
 .cartTable {
@@ -27,6 +29,7 @@
   border-collapse: separate;
   margin-bottom: 20px;
   border-spacing: 0 10px;
+  font-size: 1.3rem;
 
   th,
   td {
@@ -134,8 +137,61 @@ h1 {
   align-items: center;
 }
 
-@media (width <= 450px) {
-  button {
+.crossedOutPrice {
+  text-decoration: line-through;
+  color: red;
+  margin-right: 10px;
+}
+
+.totalPriceContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.originalPrice {
+  font-size: 1.2rem;
+}
+
+.discountedPrice {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: green;
+}
+
+@media (max-width: 500px) {
+  .deleteButtonSmall {
+    display: inline;
+  }
+
+  .deleteButtonLarge {
+    display: none;
+  }
+}
+
+@media (min-width: 501px) {
+  .deleteButtonSmall {
+    display: none;
+  }
+
+  .deleteButtonLarge {
+    display: inline;
+  }
+}
+
+@media (width < 800px) {
+  .clearCartButton,
+  .promoCodeInput,
+  .applyPromoButton {
     font-size: 1.5rem;
+    width: 30vw;
+  }
+}
+
+@media (width < 500px) {
+  .clearCartButton,
+  .promoCodeInput,
+  .applyPromoButton {
+    width: 40vw;
   }
 }
