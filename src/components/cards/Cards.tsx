@@ -21,10 +21,10 @@ interface CardProps {
 
 export const Card: React.FC<CardProps> = ({ products }) => {
   const [isDisabled, setIsDisabled] = useState<Record<string, boolean>>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<Record<string, boolean>>({});
 
   const ensureBasketAndCheckProducts = async () => {
-    const cartId = localStorage.getItem('cartId') ?? '';
+    const cartId = await createAnonymousBasket();
     const allProducts = await fetchAllProducts();
     const productsInCartResponse = await getProductsInCart(cartId);
     const productsInCart = productsInCartResponse.body.lineItems;
@@ -41,15 +41,16 @@ export const Card: React.FC<CardProps> = ({ products }) => {
   };
 
   const addProduct = async (idProduct: string) => {
-    setIsLoading(true);
+    setIsLoading((prevState) => ({ ...prevState, [idProduct]: true }));
     try {
-      await createAnonymousBasket();
-      const cartId = localStorage.getItem('cartId') ?? '';
-      await addProductToCart(cartId, idProduct);
-      setIsLoading(false);
-      setIsDisabled((prevState) => ({ ...prevState, [idProduct]: true }));
+      const cartId = await createAnonymousBasket();
+      if (cartId && idProduct) {
+        await addProductToCart(cartId, idProduct);
+        setIsDisabled((prevState) => ({ ...prevState, [idProduct]: true }));
+      }
     } finally {
-      setIsLoading(false);
+      setIsLoading((prevState) => ({ ...prevState, [idProduct]: false }));
+      await ensureBasketAndCheckProducts();
     }
   };
 
@@ -120,12 +121,14 @@ export const Card: React.FC<CardProps> = ({ products }) => {
               disabled={isDisabled[product.id]}
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.preventDefault();
-                (async () => {
-                  await addProduct(product.id);
-                })();
+                if (!isDisabled[product.id] && !isLoading[product.id]) {
+                  (async () => {
+                    await addProduct(product.id);
+                  })();
+                }
               }}
             />
-            {isLoading && <div className={style.load}>Adding product to cart...</div>}
+            {isLoading[product.id] && <div className={style.load}>Adding product to cart...</div>}
           </Link>
         );
       })}

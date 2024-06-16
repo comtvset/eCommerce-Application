@@ -13,7 +13,6 @@ import useModalEffect from 'src/components/form/profile/UseModalEffect.ts';
 import { Message } from 'src/components/cartMessage/CartMessage.tsx';
 import Modal from 'src/components/modalWindow/confirmationModal.tsx';
 
-
 export const CartCustomer: React.FC = () => {
   const [cartItems, setCartItems] = useState<LineItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<CentPrecisionMoney>();

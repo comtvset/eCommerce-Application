@@ -9,7 +9,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { ByProjectKeyRequestBuilder, ProductCatalogData } from '@commercetools/platform-sdk';
-import { createApiRoot } from 'src/services/api/BuildClient.ts';
+import { createApiRoot, createLoginApiRoot } from 'src/services/api/BuildClient.ts';
 import { Button } from 'src/components/button/Button.tsx';
 import { addProduct, deleteProductOnProductPage } from 'src/utils/BasketUtils.ts';
 
@@ -22,7 +22,12 @@ interface IProductData {
   masterData: ProductCatalogData;
 }
 
-const apiRoot: ByProjectKeyRequestBuilder = createApiRoot();
+let apiRoot: ByProjectKeyRequestBuilder;
+
+function updateApiRoot() {
+  const isUser = Boolean(localStorage.getItem('userTokens'));
+  apiRoot = isUser ? createLoginApiRoot() : createApiRoot();
+}
 
 export const CardOne: React.FC = () => {
   const [product, setProduct] = useState<IProductData>();
@@ -47,6 +52,8 @@ export const CardOne: React.FC = () => {
   const closeModalWindow = () => {
     setModal(false);
   };
+
+  updateApiRoot();
 
   const handleDeleteProduct = async (idProduct: string) => {
     await deleteProductOnProductPage(idProduct, (message) => {
