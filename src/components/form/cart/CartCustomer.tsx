@@ -247,19 +247,9 @@ export const CartCustomer: React.FC = () => {
       />
       <div className={style.wrapper}>
         <table className={style.cartTable}>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Image</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Action</th>
-            </tr>
-          </thead>
           <tbody>
             {cartItems.map((item) => (
               <tr key={item.id}>
-                <td>{getLocalizedName(item.name, 'en-US')}</td>
                 <td>
                   {item.variant.images && item.variant.images.length > 0 ? (
                     <img
@@ -272,27 +262,36 @@ export const CartCustomer: React.FC = () => {
                   )}
                 </td>
                 <td>
-                  {item.discountedPricePerQuantity.length > 0 ? (
-                    <div className={style.tablePriceContainer}>
-                      <span className={style.crossedOutPrice}>
-                        {item.price.discounted
-                          ? item.price.discounted.value.centAmount / 100
-                          : item.price.value.centAmount / 100}
-                      </span>
-                      <span className={style.discountedPrice}>
-                        {item.discountedPricePerQuantity[0].discountedPrice.value.centAmount / 100}
-                        {` ${item.price.value.currencyCode}`}
-                      </span>
-                    </div>
-                  ) : (
+                  <div className={style.productDescription}>
+                    {getLocalizedName(item.name, 'en-US')}
+                  </div>
+                  <div>
                     <div>
-                      {item.price.discounted
-                        ? item.price.discounted.value.centAmount / 100
-                        : item.price.value.centAmount / 100}
-                      {` ${item.price.value.currencyCode}`}
+                      {item.discountedPricePerQuantity.length > 0 ? (
+                        <div className={style.tablePriceContainer}>
+                          <span className={style.crossedOutPrice}>
+                            {item.price.discounted
+                              ? item.price.discounted.value.centAmount / 100
+                              : item.price.value.centAmount / 100}
+                          </span>
+                          <span className={style.discountedPrice}>
+                            {item.discountedPricePerQuantity[0].discountedPrice.value.centAmount /
+                              100}
+                            {` ${item.price.value.currencyCode}`}
+                          </span>
+                        </div>
+                      ) : (
+                        <div>
+                          {item.price.discounted
+                            ? item.price.discounted.value.centAmount / 100
+                            : item.price.value.centAmount / 100}
+                          {` ${item.price.value.currencyCode}`}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </td>
+
                 <td>
                   <label htmlFor="countItem">
                     <div className={style.quantityControl}>
