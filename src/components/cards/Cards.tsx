@@ -11,7 +11,6 @@ import { fetchAllProducts } from 'src/services/api/filterRequests.ts';
 import { createAnonymousBasket, getProductsInCart } from 'src/services/api/ApiBasket.ts';
 import ImageWithLoader from 'src/components/spinnerImage/ImageWithLoader.tsx';
 
-
 interface CardProps {
   products: ProductProjection[];
 }
