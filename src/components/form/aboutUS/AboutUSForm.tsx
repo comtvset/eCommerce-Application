@@ -44,7 +44,7 @@ export const AboutUS: React.FC = () => {
           biography="I am passionate about frontend development and eager to gain experience working on real projects within a team. I am studying JavaScript through RSSchool and ChatGPT, while also learning English and Polish. Every day, I acquire new knowledge and look to the future with optimism."
           linkedIn="https://www.linkedin.com/in/vadzim-tsikhaniuk-69643b155/"
           github="https://github.com/comtvset"
-          features="Login pages, Main page 🏠, Catalog Product page 📋,  Basket page"
+          features="Login pages, Main page 🏠, Catalog Product page 📋"
           challenge="Token, ecommercetools"
           ideas=""
         />
@@ -68,7 +68,7 @@ export const AboutUS: React.FC = () => {
           github="https://github.com/maria-akulova"
           features="Registration pages, User Profile page 👤,  Basket page, About Us page 🙋‍♂️🙋‍♀️"
           challenge="ecommercetools"
-          ideas="Jira, Confluence, Scrum, React, ecommercetools-sdk"
+          ideas="Jira, Confluence, Scrum, React, ecommercetools-sdk, display server errors, add spinner for images in Catalog, lazy loading for rarely used pages"
         />
       </div>
     </div>

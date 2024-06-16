@@ -2,20 +2,17 @@ import React, { useEffect, useState } from 'react';
 import style from 'src/components/form/cart/CartCustomer.module.scss';
 import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { createApiRoot, createLoginApiRoot } from 'src/services/api/BuildClient.ts';
-import {
-  Cart,
-  CentPrecisionMoney,
-  ClientResponse,
-  LineItem,
-  LocalizedString,
-} from '@commercetools/platform-sdk';
+import { Cart, ClientResponse, LineItem, LocalizedString } from '@commercetools/platform-sdk';
 import useModalEffect from 'src/components/form/profile/UseModalEffect.ts';
 import { Message } from 'src/components/cartMessage/CartMessage.tsx';
 import Modal from 'src/components/modalWindow/confirmationModal.tsx';
+import Spinner from 'src/components/lazyLoad/Spinner.tsx';
+
 
 export const CartCustomer: React.FC = () => {
   const [cartItems, setCartItems] = useState<LineItem[]>([]);
-  const [totalPrice, setTotalPrice] = useState<CentPrecisionMoney>();
+  const [originalTotalPrice, setOriginalTotalPrice] = useState<number>(0);
+  const [discountedTotalPrice, setDiscountedTotalPrice] = useState<number>(0);
   const [cartVersion, setCartVersion] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const [promoCode, setPromoCode] = useState('');
@@ -38,6 +35,20 @@ export const CartCustomer: React.FC = () => {
     }
   };
 
+  const calculateTotalDiscountedAmount = (lineItems: LineItem[], discountedTotal: number) => {
+    let totalDiscountedAmount = 0;
+
+    lineItems.forEach((item) => {
+      item.discountedPricePerQuantity.forEach((quantityDiscount) => {
+        quantityDiscount.discountedPrice.includedDiscounts.forEach((discount) => {
+          totalDiscountedAmount += discount.discountedAmount.centAmount * quantityDiscount.quantity;
+        });
+      });
+    });
+
+    return (totalDiscountedAmount + discountedTotal) / 100;
+  };
+
   useEffect(() => {
     if (id) {
       const getCartItems = async () => {
@@ -47,9 +58,16 @@ export const CartCustomer: React.FC = () => {
             .withId({ ID: id })
             .get()
             .execute();
-          setCartItems(cartCustomer.body.lineItems);
-          setTotalPrice(cartCustomer.body.totalPrice);
-          setCartVersion(cartCustomer.body.version);
+          const cart = cartCustomer.body;
+
+          const originalPrice = calculateTotalDiscountedAmount(
+            cart.lineItems,
+            cart.totalPrice.centAmount,
+          );
+          setCartItems(cart.lineItems);
+          setOriginalTotalPrice(originalPrice);
+          setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
+          setCartVersion(cart.version);
           setIsLoading(false);
         } catch (error) {
           proceedExceptions(error, 'Could not retrieve customer items from carts');
@@ -80,9 +98,18 @@ export const CartCustomer: React.FC = () => {
             },
           })
           .execute();
-        setCartItems(updatedCart.body.lineItems);
-        setTotalPrice(updatedCart.body.totalPrice);
-        setCartVersion(updatedCart.body.version);
+        const cart = updatedCart.body;
+        const originalPrice = calculateTotalDiscountedAmount(
+          cart.lineItems,
+          cart.totalPrice.centAmount,
+        );
+        setCartItems(cart.lineItems);
+        setOriginalTotalPrice(originalPrice);
+        setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
+        setCartVersion(cart.version);
+        if (!cart.lineItems.length) {
+          localStorage.clear();
+        }
       } catch (error) {
         proceedExceptions(error, 'Could not delete item from cart');
       }
@@ -108,9 +135,15 @@ export const CartCustomer: React.FC = () => {
             },
           })
           .execute();
-        setCartItems(updatedCart.body.lineItems);
-        setTotalPrice(updatedCart.body.totalPrice);
-        setCartVersion(updatedCart.body.version);
+        const cart = updatedCart.body;
+        const originalPrice = calculateTotalDiscountedAmount(
+          cart.lineItems,
+          cart.totalPrice.centAmount,
+        );
+        setCartItems(cart.lineItems);
+        setOriginalTotalPrice(originalPrice);
+        setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
+        setCartVersion(cart.version);
       } catch (error) {
         proceedExceptions(error, 'Could not update item quantity');
       }
@@ -133,10 +166,17 @@ export const CartCustomer: React.FC = () => {
             },
           })
           .execute();
+        const cart = updatedCart.body;
+        const originalPrice = calculateTotalDiscountedAmount(
+          cart.lineItems,
+          cart.totalPrice.centAmount,
+        );
         setCartItems([]);
-        setTotalPrice(updatedCart.body.totalPrice);
-        setCartVersion(updatedCart.body.version);
-        setShowModal(false); // Hide the modal after clearing the cart
+        setOriginalTotalPrice(originalPrice);
+        setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
+        setCartVersion(cart.version);
+        setShowModal(false);
+        localStorage.clear();
       } catch (error) {
         proceedExceptions(error, 'Could not clear the cart');
       }
@@ -161,9 +201,15 @@ export const CartCustomer: React.FC = () => {
             },
           })
           .execute();
-        setCartItems(updatedCart.body.lineItems);
-        setTotalPrice(updatedCart.body.totalPrice);
-        setCartVersion(updatedCart.body.version);
+        const cart = updatedCart.body;
+        const originalPrice = calculateTotalDiscountedAmount(
+          cart.lineItems,
+          cart.totalPrice.centAmount,
+        );
+        setCartItems(cart.lineItems);
+        setOriginalTotalPrice(originalPrice);
+        setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
+        setCartVersion(cart.version);
         setPromoCode('');
       } catch (error) {
         proceedExceptions(error, 'Could not apply promo code');
@@ -179,7 +225,7 @@ export const CartCustomer: React.FC = () => {
     return <Message />;
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
   if (cartItems.length === 0) {
     return <Message />;
@@ -204,19 +250,9 @@ export const CartCustomer: React.FC = () => {
       />
       <div className={style.wrapper}>
         <table className={style.cartTable}>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Image</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Action</th>
-            </tr>
-          </thead>
           <tbody>
             {cartItems.map((item) => (
               <tr key={item.id}>
-                <td>{getLocalizedName(item.name, 'en-US')}</td>
                 <td>
                   {item.variant.images && item.variant.images.length > 0 ? (
                     <img
@@ -229,30 +265,71 @@ export const CartCustomer: React.FC = () => {
                   )}
                 </td>
                 <td>
-                  {item.price.discounted
-                    ? item.price.discounted.value.centAmount / 100
-                    : item.price.value.centAmount / 100}
-                  {` ${item.price.value.currencyCode}`}
+                  <div className={style.productDescription}>
+                    {getLocalizedName(item.name, 'en-US')}
+                  </div>
+                  <div>
+                    <div>
+                      {item.discountedPricePerQuantity.length > 0 ? (
+                        <div className={style.tablePriceContainer}>
+                          <span className={style.crossedOutPrice}>
+                            {item.price.discounted
+                              ? item.price.discounted.value.centAmount / 100
+                              : item.price.value.centAmount / 100}
+                          </span>
+                          <span className={style.discountedPrice}>
+                            {item.discountedPricePerQuantity[0].discountedPrice.value.centAmount /
+                              100}
+                            {` ${item.price.value.currencyCode}`}
+                          </span>
+                        </div>
+                      ) : (
+                        <div>
+                          {item.price.discounted
+                            ? item.price.discounted.value.centAmount / 100
+                            : item.price.value.centAmount / 100}
+                          {` ${item.price.value.currencyCode}`}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </td>
+
                 <td>
                   <label htmlFor="countItem">
-                    {' '}
-                    <input
-                      id="countItem"
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) => {
-                        handleQuantityChange(item.id, parseInt(e.target.value, 10)).catch(
-                          (error: unknown) => {
-                            proceedExceptions(error, 'Modify item quantity failed');
-                          },
-                        );
-                      }}
-                      className={style.quantityInput}
-                    />
+                    <div className={style.quantityControl}>
+                      <button
+                        type="button"
+                        className={style.quantityButton}
+                        onClick={() => {
+                          handleQuantityChange(item.id, item.quantity - 1).catch(
+                            (error: unknown) => {
+                              proceedExceptions(error, 'Could not apply promo code');
+                            },
+                          );
+                        }}
+                        disabled={item.quantity <= 1}
+                      >
+                        -
+                      </button>
+                      <span className={style.quantityValue}>{item.quantity}</span>
+                      <button
+                        type="button"
+                        className={style.quantityButton}
+                        onClick={() => {
+                          handleQuantityChange(item.id, item.quantity + 1).catch(
+                            (error: unknown) => {
+                              proceedExceptions(error, 'Could not apply promo code');
+                            },
+                          );
+                        }}
+                      >
+                        +
+                      </button>
+                    </div>
                   </label>
                 </td>
+
                 <td>
                   <button
                     type="button"
@@ -263,7 +340,8 @@ export const CartCustomer: React.FC = () => {
                     }}
                     className={style.deleteButton}
                   >
-                    Delete
+                    <span className={style.deleteButtonLarge}>Delete</span>
+                    <span className={style.deleteButtonSmall}>X</span>
                   </button>
                 </td>
               </tr>
@@ -280,34 +358,45 @@ export const CartCustomer: React.FC = () => {
           >
             Clear Shopping Cart
           </button>
-          <div className={style.promoCodeContainer}>
-            <input
-              type="text"
-              value={promoCode}
-              onChange={(e) => {
-                setPromoCode(e.target.value);
-              }}
-              placeholder="Enter promo code"
-              className={style.promoCodeInput}
-            />
-            <button
-              type="button"
-              onClick={() => {
-                handleApplyPromoCode().catch((error: unknown) => {
-                  proceedExceptions(error, 'Could not apply promo code');
-                });
-              }}
-              className={style.applyPromoButton}
-            >
-              Apply
-            </button>
-          </div>
-          <div className={style.totalPrice}>
-            <h3>
-              Total:
-              {totalPrice && totalPrice.centAmount / 100}
-              {` ${totalPrice?.currencyCode ?? ''}`}
-            </h3>
+          <input
+            type="text"
+            value={promoCode}
+            onChange={(e) => {
+              setPromoCode(e.target.value);
+            }}
+            placeholder="Enter promo code"
+            className={style.promoCodeInput}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              handleApplyPromoCode().catch((error: unknown) => {
+                proceedExceptions(error, 'Could not apply promo code');
+              });
+            }}
+            className={style.applyPromoButton}
+          >
+            Apply
+          </button>
+          <div className={style.totalPriceContainer}>
+            {originalTotalPrice - discountedTotalPrice !== 0 && (
+              <div className={style.originalPrice}>
+                <h3>
+                  Original Total:
+                  <span className={style.crossedOutPrice}>
+                    {originalTotalPrice}
+                    {` ${cartItems[0]?.price.value.currencyCode}`}
+                  </span>
+                </h3>
+              </div>
+            )}
+            <div className={style.discountedPrice}>
+              <h3>
+                Total:
+                {discountedTotalPrice}
+                {` ${cartItems[0]?.price.value.currencyCode ?? ''}`}
+              </h3>
+            </div>
           </div>
         </div>
       </div>
