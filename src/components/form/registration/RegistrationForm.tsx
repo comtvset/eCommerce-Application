@@ -31,8 +31,6 @@ const requiredFields: (keyof ICustomerModel)[] = [
   'dateOfBirth',
 ];
 
-const apiRoot = createApiRoot();
-
 export const RegistrationForm: React.FC = () => {
   const context = useContext(CurrentUserContext);
 
@@ -157,9 +155,6 @@ export const RegistrationForm: React.FC = () => {
     const isAnyEmpty = requiredFields.some((field) => !formData[field]);
 
     if (!isAnyEmpty && isFormValid) {
-      let generatedCustomerID: string;
-      let generatedShippAddrID: string | undefined;
-      let generatedBillAddrID: string | undefined;
       const generateUUID = (): string => {
         return uuidv4();
       };
