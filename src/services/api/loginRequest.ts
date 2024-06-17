@@ -13,6 +13,7 @@ export const loginRequest = async (myEmail: string, myPassword: string) => {
         body: {
           email: myEmail,
           password: myPassword,
+          activeCartSignInMode: 'MergeWithExistingCustomerCart',
         },
       })
       .execute();
