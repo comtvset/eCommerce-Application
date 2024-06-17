@@ -1,7 +1,12 @@
-import { createApiRoot } from 'src/services/api/BuildClient.ts';
-import { CartUpdate } from '@commercetools/platform-sdk';
+import { createApiRoot, createLoginApiRoot } from 'src/services/api/BuildClient.ts';
+import { CartUpdate, ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 
-const apiRoot = createApiRoot();
+function updateApiRoot() {
+  const isUser = Boolean(localStorage.getItem('userTokens'));
+  const apiRoot: ByProjectKeyRequestBuilder = isUser ? createLoginApiRoot() : createApiRoot();
+  return apiRoot;
+}
+const apiRoot = updateApiRoot();
 
 export const createAnonymousBasket = async () => {
   let idCart = localStorage.getItem('cartId');
