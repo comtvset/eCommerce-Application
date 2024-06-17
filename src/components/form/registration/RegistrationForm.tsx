@@ -9,7 +9,6 @@ import { Link } from 'src/components/link/Link.tsx';
 import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { createApiRoot } from 'src/services/api/BuildClient.ts';
 import { loginRequest } from 'src/services/api/loginRequest.ts';
 import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
 import { createCustomer } from 'src/services/api/registrationCustomer.ts';
@@ -190,9 +189,6 @@ export const RegistrationForm: React.FC = () => {
 
       createCustomer(newCustomer)
         .then(async ({ body }) => {
-          generatedCustomerID = body.customer.id;
-          generatedShippAddrID = body.customer.addresses[0].id;
-          generatedBillAddrID = body.customer.addresses[1].id;
           if (body.customer.email && formData.password) {
             saveCredentials(formData.email, formData.password);
             setCurrentUser({ ...body.customer });
