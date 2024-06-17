@@ -198,12 +198,10 @@ export const RegistrationForm: React.FC = () => {
           generatedCustomerID = body.customer.id;
           generatedShippAddrID = body.customer.addresses[0].id;
           generatedBillAddrID = body.customer.addresses[1].id;
-          if (body.customer.email) {
-            if (formData.password) {
-              saveCredentials(formData.email, formData.password);
-              setCurrentUser({ ...body.customer });
-              await loginRequest(formData.email, formData.password);
-            }
+          if (body.customer.email && formData.password) {
+            saveCredentials(formData.email, formData.password);
+            setCurrentUser({ ...body.customer });
+            await loginRequest(formData.email, formData.password);
 
             setTimeout(() => {
               navigation('/');
@@ -214,65 +212,8 @@ export const RegistrationForm: React.FC = () => {
         .catch((error: unknown) => {
           if (error instanceof ServerError) {
             setModalData({ status: 'Error', message: error.message });
-          }
+          } else setModalData({ status: 'Error', message: 'Uknown error during registration' });
         });
-
-      if (formData.isShippingDefaultAddress) {
-        const setDefualtAdd = () => {
-          return apiRoot
-            .customers()
-            .withId({ ID: generatedCustomerID })
-            .post({
-              body: {
-                version: 1,
-                actions: [
-                  {
-                    action: 'setDefaultShippingAddress',
-                    addressId: generatedShippAddrID,
-                  },
-                ],
-              },
-            })
-            .execute();
-        };
-        setDefualtAdd()
-          .then(() => {
-            // TODO
-          })
-          .catch((error: unknown) => {
-            if (error) {
-              // TODO
-            }
-          });
-      }
-      if (formData.isBillingDefaultAddress) {
-        const setDefualtAdd = () => {
-          return apiRoot
-            .customers()
-            .withId({ ID: generatedCustomerID })
-            .post({
-              body: {
-                version: 1,
-                actions: [
-                  {
-                    action: 'setDefaultBillingAddress',
-                    addressId: generatedBillAddrID,
-                  },
-                ],
-              },
-            })
-            .execute();
-        };
-        setDefualtAdd()
-          .then(() => {
-            // TODO
-          })
-          .catch((error: unknown) => {
-            if (error) {
-              // TODO
-            }
-          });
-      }
     }
   };
 
