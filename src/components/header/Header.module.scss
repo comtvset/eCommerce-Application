@@ -69,10 +69,16 @@
   &.hidden {
     display: none;
   }
+  @include media-500 {
+    flex-direction: column;
+  }
 }
 
 .logout_container {
   display: flex;
+  @include media-500 {
+    flex-direction: column;
+  }
 }
 
 .logo,
