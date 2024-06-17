@@ -8,20 +8,19 @@
   ul {
     font-size: 2rem;
   }
-
 }
 
-.about_team {  
-    max-width: 1200px;
-    margin: 20px 10px;
-    padding: 20px 10px; 
-    font-family: 'Arial', sans-serif;
-    font-size: 1.3rem;
-    line-height: 1.6; 
-    text-align: justify; 
-    color: #333; 
-    border-radius: 10px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+.about_team {
+  max-width: 1200px;
+  margin: 20px 10px;
+  padding: 20px 10px;
+  font-family: 'Arial', sans-serif;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  text-align: justify;
+  color: #333;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .header {
@@ -46,7 +45,6 @@
   justify-content: space-around;
   align-items: flex-start;
   flex-wrap: wrap;
-
 
   > .technology {
     width: auto;
