@@ -42,13 +42,9 @@ export const RegistrationForm: React.FC = () => {
 
   const { setCurrentUser } = context;
   const [formData, setFormData] = useState(customerModel);
-
   const [errors, setErrors] = useState(customerModel);
-
   const [isFormValid, setIsFormValid] = useState(false);
-
   const popupMessage = { status: '', message: '' };
-
   const [modalData, setModalData] = useState(popupMessage);
 
   const navigation = useNavigate();
@@ -56,16 +52,10 @@ export const RegistrationForm: React.FC = () => {
   countryShipping = Country[formData.country as keyof typeof Country];
   countryBilling = Country[formData.billingCountry as keyof typeof Country];
 
-  const handleDefaultAddress = (checked: boolean) => {
+  const handleAddress = (field: string, checked: boolean) => {
     setFormData({
       ...formData,
-      isShippingDefaultAddress: checked,
-    });
-  };
-  const handleBillingAddress = (checked: boolean) => {
-    setFormData({
-      ...formData,
-      isBillingDefaultAddress: checked,
+      [field]: checked,
     });
   };
 
@@ -293,14 +283,14 @@ export const RegistrationForm: React.FC = () => {
         <AddressForm
           formData={formData}
           handleSameAddress={handleSameAddress}
-          handleBoolean={handleDefaultAddress}
+          handleBoolean={handleAddress}
           handleChange={handleChange}
           errors={errors}
           title="Shipping address"
         />
         <BillingAddressForm
           formData={formData}
-          handleBoolean={handleBillingAddress}
+          handleBoolean={handleAddress}
           handleChange={handleChange}
           errors={errors}
           title="Billing address"
