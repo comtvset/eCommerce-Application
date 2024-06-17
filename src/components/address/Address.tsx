@@ -14,7 +14,7 @@ interface AddressProps {
     postalCode?: string | undefined;
   };
   handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  handleBoolean: (field: string, value: boolean) => void;
+  handleBoolean?: (field: string, value: boolean) => void;
   handleSameAddress?: (value: boolean) => void;
   errors: {
     streetName: string | undefined;
@@ -51,7 +51,10 @@ export const AddressForm: React.FC<AddressProps> = ({
           label="Set as default address"
           checked={formData?.isShippingDefaultAddress ?? false}
           onChange={() => {
-            if (formData?.isShippingDefaultAddress !== undefined) {
+            if (
+              typeof handleBoolean === 'function' &&
+              formData?.isShippingDefaultAddress !== undefined
+            ) {
               handleBoolean('isShippingDefaultAddress', !formData.isShippingDefaultAddress);
             }
           }}
