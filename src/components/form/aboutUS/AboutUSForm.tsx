@@ -1,5 +1,9 @@
 import style from 'src/components/form/aboutUS/AboutUSForm.module.scss';
 import { PersonalCard } from 'src/components/teamcards/TeamCards.tsx';
+import rsslogo from 'src/public/rs_school_js.svg';
+import vadzimPhoto from 'src/public/DreamTeam/Vadzim.png';
+import margoPhoto from 'src/public/DreamTeam/MargoLIn.png';
+import mariaPhoto from 'src/public/DreamTeam/Maria.png';
 
 export const AboutUS: React.FC = () => {
   return (
@@ -7,7 +11,7 @@ export const AboutUS: React.FC = () => {
       <header className={style.header}>
         <div className={style.rsslogo}>
           <a href="https://rs.school/" target="_blank" rel="noreferrer">
-            <img src="src/public/rs_school_js.svg" alt="rss logo" />
+            <img src={rsslogo} alt="rss logo" />
           </a>
         </div>
         <h1>About Us - Dream Team</h1>
@@ -38,7 +42,7 @@ export const AboutUS: React.FC = () => {
           </ul>
         </div>
         <PersonalCard
-          photo="src/public/DreamTeam/Vadzim.png"
+          photo={vadzimPhoto}
           name="Vadzim Tsikhaniuk"
           title="TeamLead / Junior FE"
           biography="I am passionate about frontend development and eager to gain experience working on real projects within a team. I am studying JavaScript through RSSchool and ChatGPT, while also learning English and Polish. Every day, I acquire new knowledge and look to the future with optimism."
@@ -49,7 +53,7 @@ export const AboutUS: React.FC = () => {
           ideas=""
         />
         <PersonalCard
-          photo="src/public/DreamTeam/MargoLIn.png"
+          photo={margoPhoto}
           name="Margarita Masko"
           title="Junior FE Developer"
           biography="I am a budding frontend developer. This field has captured my heart. After completing courses in UX/UI design, I decided to bring my own website design to life — and that marked the beginning of my journey in development. I am constantly working on improving my skills. Additionally, I am actively studying English to expand my professional horizons and enhance my communication skills."
@@ -60,7 +64,7 @@ export const AboutUS: React.FC = () => {
           ideas="React components: Slider, Router"
         />
         <PersonalCard
-          photo="src/public/DreamTeam/Maria.png"
+          photo={mariaPhoto}
           name="Maria Akulova"
           title="Scrum Master / Junior FE Developer"
           biography="With 18 years of diverse IT experience, I have held roles ranging from Junior Java Developer to Lead Manual QA, Lead Automation QA, and QA Manager. I am certified as a ScrumMaster, Product Owner, and in SAFe and ISTQB, and have not completed Project Management courses. I am now pursuing a position as a Junior Frontend Developer to bring my extensive background and dedication to a new area of expertise."
