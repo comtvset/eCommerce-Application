@@ -11,11 +11,13 @@
 .link_basket {
   position: relative;
   width: 24px;
-  top: 2px;
+  top: 12px;
+
   &:hover {
     fill: #f5861f;
     cursor: pointer;
   }
+
   &.active {
     fill: $secondaryActiveLink;
     cursor: auto;
@@ -28,6 +30,7 @@
   left: 20px;
   font-size: 14px;
   font-weight: 700;
+
   &.active {
     color: $secondaryActiveLink;
   }
@@ -50,15 +53,45 @@
   width: 90%;
   margin: 0 auto;
   justify-content: space-between;
+}
 
-  @include media-800 {
-    flex-direction: column;
+.burger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  position: relative;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.burger span {
+  position: absolute;
+  left: 31%;
+  height: 1px;
+  width: 40%;
+  background-color: #403f3d;
+  transition: 0.3s ease-in-out;
+
+  //////
+  &:nth-child(1) {
+    top: 15px;
+  }
+
+  &:nth-child(2) {
+    top: 21px;
+  }
+
+  &:nth-child(3) {
+    top: 27px;
   }
 }
+
+
 
 .navigation {
   width: auto;
   align-items: end;
+
   @include media-500 {
     flex-direction: column;
   }
@@ -66,9 +99,11 @@
 
 .login_container {
   display: flex;
+
   &.hidden {
     display: none;
   }
+
   @include media-500 {
     flex-direction: column;
   }
@@ -76,6 +111,7 @@
 
 .logout_container {
   display: flex;
+
   @include media-500 {
     flex-direction: column;
   }
@@ -85,6 +121,7 @@
 .logout,
 .link {
   color: $secondaryTextColor;
+
   &:hover {
     cursor: pointer;
     transition-duration: 1s;
@@ -93,10 +130,12 @@
 
 .logo {
   font-size: 3.2rem;
+
   &.inactive:hover {
     cursor: auto;
     color: $secondaryTextColor;
   }
+
   @include media-800 {
     margin-left: 5px;
   }
@@ -126,6 +165,60 @@
 
   &:hover {
     color: $secondaryActiveLink;
-    cursor: auto;
+    cursor: default;
+  }
+}
+
+.logo {
+  flex-grow: 10;
+}
+
+
+
+@media (max-width: 700px) {
+  .burger {
+    display: flex;
+  }
+
+  .navigation {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    position: absolute;
+    left: 0px;
+    background-color: #efe6d3;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .open {
+    overflow: hidden;
+  }
+
+  .open.navigation {
+    display: flex;
+  }
+
+  .login_container,
+  .logout_container {
+    flex-direction: column;
+  }
+
+  .link,
+  .logout {
+    padding-top: 60px;
+    height: auto;
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 500px) {
+
+  .link,
+  .logout {
+    padding-top: 100px;
+    font-size: 3rem;
   }
 }
