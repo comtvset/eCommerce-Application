@@ -1,11 +1,15 @@
-import { createApiRoot, createLoginApiRoot } from './BuildClient.ts';
+import { Cart } from '@commercetools/platform-sdk';
+import { getCustomerBasket, getAnonimousCart, mergeCarts } from './ApiBasket.ts';
+import { createApiRoot } from './BuildClient.ts';
+
+let cartCustomer: Cart;
 
 export const loginRequest = async (myEmail: string, myPassword: string) => {
   const apiRoot = createApiRoot();
 
-  const loginApiRoot = createLoginApiRoot();
+  const anonymousCart: Cart = (await getAnonimousCart()) as unknown as Cart;
 
-  const loginUser = () => {
+  const loginUser = async () => {
     return apiRoot
       .me()
       .login()
@@ -16,19 +20,16 @@ export const loginRequest = async (myEmail: string, myPassword: string) => {
           activeCartSignInMode: 'MergeWithExistingCustomerCart',
         },
       })
-      .execute();
+      .execute()
+      .then(async (response) => {
+        const idUser = response.body.customer.id;
+        localStorage.setItem('customerID', idUser);
+        cartCustomer = (await getCustomerBasket()) as unknown as Cart;
+        if (anonymousCart.id) {
+          await mergeCarts(anonymousCart, cartCustomer);
+        }
+      });
   };
 
-  const result = loginUser()
-    .then((response) => {
-      const idUser = response.body.customer.id;
-      const newIdUser = idUser.split('-')[0];
-      localStorage.setItem('id', newIdUser);
-      localStorage.setItem('fullID', idUser);
-    })
-    .then(() => {
-      return loginApiRoot.carts().get().execute();
-    });
-
-  return result;
+  return loginUser();
 };

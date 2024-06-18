@@ -16,8 +16,10 @@ export const CartCustomer: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [promoCode, setPromoCode] = useState('');
 
-  const [api] = useState(localStorage.getItem('fullID') ? createLoginApiRoot() : createApiRoot());
-  const [id] = useState(localStorage.getItem('cartId') ?? '');
+  const [api] = useState(
+    localStorage.getItem('customerID') ? createLoginApiRoot() : createApiRoot(),
+  );
+  const [id] = useState(localStorage.getItem('anonimousCartId') ?? '');
   const [showModal, setShowModal] = useState(false);
 
   const popupMessage = { status: '', message: '' };
@@ -220,7 +222,7 @@ export const CartCustomer: React.FC = () => {
     return name[locale] || name.en;
   };
 
-  if (!localStorage.getItem('cartId')) {
+  if (!localStorage.getItem('anonimousCartId')) {
     return <Message />;
   }
   if (isLoading) {

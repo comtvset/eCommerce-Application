@@ -20,7 +20,7 @@ export const AddressProfileForm: React.FC<AddressProfileProps> = ({ userProfileF
 
   const [countryNewAddress] = useState<Country>(Country.Underfined);
   const [countryBilling] = useState<Country>(Country.Underfined);
-  const [id] = useState(localStorage.getItem('fullID') ?? '');
+  const [id] = useState(localStorage.getItem('customerID') ?? '');
   const [formData, setFormData] = useState<ICustomerModel>({
     ...customerModel,
     ...userProfileFormData,

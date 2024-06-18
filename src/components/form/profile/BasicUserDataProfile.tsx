@@ -23,7 +23,7 @@ export const BasicUserDataProfile: React.FC<BasicUserDataProfileProps> = ({
 
   const [api, setAPI] = useState(loginApiRoot);
 
-  const [id] = useState(localStorage.getItem('fullID') ?? '');
+  const [id] = useState(localStorage.getItem('customerID') ?? '');
   const [isDisabledUserInfo, setEditUserInfo] = useState(true);
   const [formData, setFormData] = useState<ICustomerModel>(customerModel);
   const [isFormValid, setIsFormValid] = useState(false);

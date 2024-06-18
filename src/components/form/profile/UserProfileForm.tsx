@@ -15,7 +15,7 @@ export const UserProfileForm: React.FC = () => {
   const [api] = useState(loginApiRoot);
   const [activeTab, setActiveTab] = useState('basicInfo');
 
-  const [id] = useState(localStorage.getItem('fullID') ?? '');
+  const [id] = useState(localStorage.getItem('customerID') ?? '');
   const [customerVersion, setCustomerVersion] = useState(-1);
 
   const [formData, setFormData] = useState<ICustomerModel>(customerModel);
