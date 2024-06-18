@@ -12,7 +12,7 @@ import {
 describe('CredentialsUtils functions', () => {
   beforeEach(() => {
     state.savedEmail = '';
-    state.savedPassword = 'null';
+    state.savedPassword = '';
   });
 
   it('saveCredentials should save the email and password correctly', () => {
