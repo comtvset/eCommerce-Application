@@ -22,6 +22,7 @@ We're excited you're interested in contributing to our project! This guide outli
   - Address any comments and iterate on your code as needed.
 
 **Pull Request (PR) Guidelines**
+
 - **Creation PR:**
   - We use template for creation PR, just follow it
   - Add screenshots for the smallest and biggest dimestions. See details in README.md

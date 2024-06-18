@@ -19,6 +19,7 @@ It's a comprehensive online shopping portal that provides an interactive and sea
 7. About Us page 🙋‍♂️🙋‍♀️
 
 ## Layout
+
 We support layout from 380px till 1440px
 
 ## Technology Stack
