@@ -30,15 +30,16 @@ export const AboutUS: React.FC = () => {
           <h2> Technology:</h2>
           <ul>
             <li>TypeScript</li>
+            <li>Netlify</li>
             <li>React</li>
             <li>Vite</li>
-            <li>SCSS</li>
             <li>HTML</li>
             <li>CSS</li>
+            <li>SCSS</li>
             <li>CommerceTools</li>
             <li>Linters</li>
             <li>Husky</li>
-            <li>gitHub</li>
+            <li>Git/GitHub</li>
           </ul>
         </div>
         <PersonalCard
@@ -49,8 +50,8 @@ export const AboutUS: React.FC = () => {
           linkedIn="https://www.linkedin.com/in/vadzim-tsikhaniuk-69643b155/"
           github="https://github.com/comtvset"
           features="Login pages, Main page 🏠, Catalog Product page 📋"
-          challenge="Token, ecommercetools"
-          ideas=""
+          challenge="Token, ecommercetools, unit tests, Netlify"
+          ideas="Burger menu"
         />
         <PersonalCard
           photo={margoPhoto}
@@ -60,7 +61,7 @@ export const AboutUS: React.FC = () => {
           linkedIn="https://www.linkedin.com/in/margarita-masko-032011248/"
           github="https://github.com/margo06"
           features="Routing, Header, Detailed Product page 🔎, Basket page"
-          challenge="ecommercetools"
+          challenge="ecommercetools, unit tests"
           ideas="React components: Slider, Router"
         />
         <PersonalCard
@@ -71,8 +72,8 @@ export const AboutUS: React.FC = () => {
           linkedIn="https://www.linkedin.com/in/maria-akulova-96b12220/"
           github="https://github.com/maria-akulova"
           features="Registration pages, User Profile page 👤,  Basket page, About Us page 🙋‍♂️🙋‍♀️"
-          challenge="ecommercetools"
-          ideas="Jira, Confluence, Scrum, React, ecommercetools-sdk, display server errors, add spinner for images in Catalog, lazy loading for rarely used pages"
+          challenge="ecommercetools, unit tests"
+          ideas="Jira, Confluence, Scrum, React, Netlify, ecommercetools-sdk, display server errors, add spinner for images in Catalog, lazy loading for rarely used pages"
         />
       </div>
     </div>

@@ -13,33 +13,32 @@ It's a comprehensive online shopping portal that provides an interactive and sea
 1. Login and Registration pages 🖥️
 2. Main page 🏠
 3. Catalog Product page 📋
-4. Detailed Product page 🔎
+4. Product Detailed page (PDP) 🔎
 5. User Profile page 👤
 6. Basket page 🛒
 7. About Us page 🙋‍♂️🙋‍♀️
 
 ## Technology Stack
 
-0. TypeScript
 1. React
 2. Vite
-3. Loadash
-4. AntDesign
+3. TypeScript
+4. Netlify
 5. SCSS
 6. HTML
 7. CSS
 8. CommerceTools - a leading provider of commerce solutions for B2C and B2B enterprises. CommerceTools offers a cloud-native, microservices-based commerce platform that enables brands to create unique and engaging digital commerce experiences.
 9. Linters: ESLint, Prettier, airbnb rules
 10. Husky
-11. git
-12. Jest
+11. Git/GitHub
+
 
 ## Organization
 
 0. Agile / Scrum
 1. Jira (Board, Dashboard, Releases, Sprint, Poker Planning, Automation)
 2. Confluence (Knowledge Base, MoMs, Agreements, Roles and Responsibilities etc..)
-3. GitHub (Pull Request, workflow, Review)
+3. GitHub (Pull Request, Workflow, Review)
 
 ## Design
 
@@ -141,7 +140,7 @@ npm run lint
 
 ### format
 
-start check of code quality with additional params. At the end you can find list of errors/warning in the terminal:
+to automatically format code using Prettier across all files in the src directory. This ensures consistent code style throughout the project.
 
 --cache - check only changed files
 
@@ -155,7 +154,7 @@ npm run format
 
 ### ci:format
 
-start check of code quality with additional params. At the end you can find list of errors/warning in the terminal:
+to check code formatting using Prettier across all files in the src directory. This helps identify formatting issues before committing changes.
 
 --cache - check only changed files
 
@@ -169,7 +168,7 @@ npm run ci:format
 
 ### test
 
-to run the test
+to run all tests
 
 Example:
 
