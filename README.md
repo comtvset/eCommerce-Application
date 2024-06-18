@@ -18,6 +18,9 @@ It's a comprehensive online shopping portal that provides an interactive and sea
 6. Basket page 🛒
 7. About Us page 🙋‍♂️🙋‍♀️
 
+## Layout
+We support layout from 380px till 1440px
+
 ## Technology Stack
 
 1. React

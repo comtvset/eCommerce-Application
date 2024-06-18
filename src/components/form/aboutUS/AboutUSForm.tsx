@@ -62,7 +62,7 @@ export const AboutUS: React.FC = () => {
           github="https://github.com/margo06"
           features="Routing, Header, Detailed Product page 🔎, Basket page"
           challenge="ecommercetools, unit tests"
-          ideas="React components: Slider, Router"
+          ideas="Figma, React components: Slider, Router"
         />
         <PersonalCard
           photo={mariaPhoto}

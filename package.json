@@ -12,7 +12,7 @@
   "main": "./src/main.tsx",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
+      "pre-commit": "npm run format --git-add",
       "pre-push": "npx validate-branch-name"
     }
   },

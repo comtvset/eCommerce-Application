@@ -5,7 +5,7 @@ We're excited you're interested in contributing to our project! This guide outli
 **How to Contribute**
 
 - **Find an Issue:**
-  - Check our Jira board ([https://megaandros.atlassian.net/jira/software/projects/DT/boards/2/backlog?epics=visible]) for open issues.
+  - Check our [Jira board ](https://megaandros.atlassian.net/jira/software/projects/DT/boards/2/backlog?epics=visible) for open issues.
   - If you don't find a suitable issue, feel free to discuss new ideas by creating an issue in Jira.
 - **Claim the Issue (Optional):**
   - Move issue to WIP status to let us know you're working on it. This helps avoid duplicate work.
@@ -21,8 +21,10 @@ We're excited you're interested in contributing to our project! This guide outli
   - We will review your PR and provide feedback.
   - Address any comments and iterate on your code as needed.
 
-**Pull Request Guidelines**
-
+**Pull Request (PR) Guidelines**
+- **Creation PR:**
+  - We use template for creation PR, just follow it
+  - Add screenshots for the smallest and biggest dimestions. See details in README.md
 - **Code Style:**
   - Follow the existing code style and formatting conventions in the project.
   - We used linter or code formatter like [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/) to ensure consistency.
@@ -37,7 +39,7 @@ We're excited you're interested in contributing to our project! This guide outli
 **Additional Considerations**
 
 - **Communication:**
-  - We value open communication. Feel free to ask questions, share ideas, and discuss challenges in the Jira issue comments or directly reach out to us.
+  - We value open communication. Feel free to ask questions, share ideas, and discuss challenges in the Jira issue comments or directly reach out to us. Use [discord](https://discord.com/channels/1233036099614543913/1233036100096884747) communication channel
 - **Attribution:**
   - While we primarily use this project for learning, we appreciate proper attribution if you use or share any significant parts of our code.
 
