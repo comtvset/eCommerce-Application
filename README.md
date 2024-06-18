@@ -32,7 +32,6 @@ It's a comprehensive online shopping portal that provides an interactive and sea
 10. Husky
 11. Git/GitHub
 
-
 ## Organization
 
 0. Agile / Scrum
