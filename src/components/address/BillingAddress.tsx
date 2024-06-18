@@ -13,7 +13,7 @@ interface BillingAddressProps {
     billingPostalCode: string | undefined;
   };
   handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  handleBoolean: (value: boolean) => void;
+  handleBoolean: (field: string, value: boolean) => void;
   errors: {
     billingStreet: string | undefined;
     billingCity: string | undefined;
@@ -40,7 +40,9 @@ export const BillingAddressForm: React.FC<BillingAddressProps> = ({
           id="billingCheckbox"
           label="Set as default address"
           checked={formData.isBillingDefaultAddress}
-          onChange={handleBoolean}
+          onChange={() => {
+            handleBoolean('isBillingDefaultAddress', !formData.isBillingDefaultAddress);
+          }}
           disabledMode={disabledMode}
         />
       </div>

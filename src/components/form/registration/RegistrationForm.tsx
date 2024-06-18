@@ -9,7 +9,6 @@ import { Link } from 'src/components/link/Link.tsx';
 import { BaseAddress, CustomerDraft } from '@commercetools/platform-sdk';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { createApiRoot } from 'src/services/api/BuildClient.ts';
 import { loginRequest } from 'src/services/api/loginRequest.ts';
 import { saveCredentials } from 'src/services/userData/saveEmailPassword.ts';
 import { createCustomer } from 'src/services/api/registrationCustomer.ts';
@@ -31,8 +30,6 @@ const requiredFields: (keyof ICustomerModel)[] = [
   'dateOfBirth',
 ];
 
-const apiRoot = createApiRoot();
-
 export const RegistrationForm: React.FC = () => {
   const context = useContext(CurrentUserContext);
 
@@ -42,13 +39,9 @@ export const RegistrationForm: React.FC = () => {
 
   const { setCurrentUser } = context;
   const [formData, setFormData] = useState(customerModel);
-
   const [errors, setErrors] = useState(customerModel);
-
   const [isFormValid, setIsFormValid] = useState(false);
-
   const popupMessage = { status: '', message: '' };
-
   const [modalData, setModalData] = useState(popupMessage);
 
   const navigation = useNavigate();
@@ -56,16 +49,10 @@ export const RegistrationForm: React.FC = () => {
   countryShipping = Country[formData.country as keyof typeof Country];
   countryBilling = Country[formData.billingCountry as keyof typeof Country];
 
-  const handleDefaultAddress = (checked: boolean) => {
+  const handleAddress = (field: string, checked: boolean) => {
     setFormData({
       ...formData,
-      isShippingDefaultAddress: checked,
-    });
-  };
-  const handleBillingAddress = (checked: boolean) => {
-    setFormData({
-      ...formData,
-      isBillingDefaultAddress: checked,
+      [field]: checked,
     });
   };
 
@@ -167,9 +154,6 @@ export const RegistrationForm: React.FC = () => {
     const isAnyEmpty = requiredFields.some((field) => !formData[field]);
 
     if (!isAnyEmpty && isFormValid) {
-      let generatedCustomerID: string;
-      let generatedShippAddrID: string | undefined;
-      let generatedBillAddrID: string | undefined;
       const generateUUID = (): string => {
         return uuidv4();
       };
@@ -205,15 +189,10 @@ export const RegistrationForm: React.FC = () => {
 
       createCustomer(newCustomer)
         .then(async ({ body }) => {
-          generatedCustomerID = body.customer.id;
-          generatedShippAddrID = body.customer.addresses[0].id;
-          generatedBillAddrID = body.customer.addresses[1].id;
-          if (body.customer.email) {
-            if (formData.password) {
-              saveCredentials(formData.email, formData.password);
-              setCurrentUser({ ...body.customer });
-              await loginRequest(formData.email, formData.password);
-            }
+          if (body.customer.email && formData.password) {
+            saveCredentials(formData.email, formData.password);
+            setCurrentUser({ ...body.customer });
+            await loginRequest(formData.email, formData.password);
 
             setTimeout(() => {
               navigation('/');
@@ -224,65 +203,8 @@ export const RegistrationForm: React.FC = () => {
         .catch((error: unknown) => {
           if (error instanceof ServerError) {
             setModalData({ status: 'Error', message: error.message });
-          }
+          } else setModalData({ status: 'Error', message: 'Uknown error during registration' });
         });
-
-      if (formData.isShippingDefaultAddress) {
-        const setDefualtAdd = () => {
-          return apiRoot
-            .customers()
-            .withId({ ID: generatedCustomerID })
-            .post({
-              body: {
-                version: 1,
-                actions: [
-                  {
-                    action: 'setDefaultShippingAddress',
-                    addressId: generatedShippAddrID,
-                  },
-                ],
-              },
-            })
-            .execute();
-        };
-        setDefualtAdd()
-          .then(() => {
-            // TODO
-          })
-          .catch((error: unknown) => {
-            if (error) {
-              // TODO
-            }
-          });
-      }
-      if (formData.isBillingDefaultAddress) {
-        const setDefualtAdd = () => {
-          return apiRoot
-            .customers()
-            .withId({ ID: generatedCustomerID })
-            .post({
-              body: {
-                version: 1,
-                actions: [
-                  {
-                    action: 'setDefaultBillingAddress',
-                    addressId: generatedBillAddrID,
-                  },
-                ],
-              },
-            })
-            .execute();
-        };
-        setDefualtAdd()
-          .then(() => {
-            // TODO
-          })
-          .catch((error: unknown) => {
-            if (error) {
-              // TODO
-            }
-          });
-      }
     }
   };
 
@@ -293,14 +215,14 @@ export const RegistrationForm: React.FC = () => {
         <AddressForm
           formData={formData}
           handleSameAddress={handleSameAddress}
-          handleBoolean={handleDefaultAddress}
+          handleBoolean={handleAddress}
           handleChange={handleChange}
           errors={errors}
           title="Shipping address"
         />
         <BillingAddressForm
           formData={formData}
-          handleBoolean={handleBillingAddress}
+          handleBoolean={handleAddress}
           handleChange={handleChange}
           errors={errors}
           title="Billing address"
