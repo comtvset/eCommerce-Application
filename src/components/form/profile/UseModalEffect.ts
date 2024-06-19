@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const useModalEffect = (
+export const useModalEffect = (
   modalData: { status: string; message: string },
   setModalData: React.Dispatch<React.SetStateAction<{ status: string; message: string }>>,
 ) => {

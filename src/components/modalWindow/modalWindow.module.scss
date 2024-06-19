@@ -21,11 +21,15 @@
 }
 
 .children.error {
-  background-color: red;
+  background-color: rgb(196, 130, 130);
 }
 
 .children.positive {
-  background-color: green;
+  background-color: rgb(134, 208, 134);
+}
+
+.children.warning {
+  background-color: rgb(224, 174, 123);
 }
 
 // src/components/Modal.module.scss
