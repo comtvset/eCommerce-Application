@@ -26,13 +26,15 @@ const ImageWithLoader: React.FC<ImageWithLoaderProps> = ({ src, alt, className }
       { rootMargin: '100px' },
     );
 
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
+    const currentImgRef = imgRef.current;
+
+    if (currentImgRef) {
+      observer.observe(currentImgRef);
     }
 
     return () => {
-      if (imgRef.current) {
-        observer.unobserve(imgRef.current);
+      if (currentImgRef) {
+        observer.unobserve(currentImgRef);
       }
     };
   }, [src]);
