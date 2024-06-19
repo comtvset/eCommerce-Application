@@ -6,7 +6,8 @@
   flex-wrap: wrap;
   max-width: 1300px;
   padding: 20px;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 20px;
   border-radius: 5px;
 }
 
@@ -76,6 +77,12 @@
 .name_thing {
   color: $secondaryTextColor;
   margin-bottom: 0px;
+  @include media-600 {
+    font-size: 1.8rem;
+  }
+  @include media-500 {
+    font-size: 1.6rem;
+  }
 }
 
 .description {
