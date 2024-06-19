@@ -16,7 +16,38 @@
   flex-wrap: nowrap;
   gap: 20px;
 
-  @include media-800 {
+  @include media-1200 {
+    flex-direction: column;
+  }
+}
+.title_delete_button {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.prices_quantity {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.totalPriceItem,
+.price_per_one,
+.counter_item {
+  margin: 10px 20px;
+  @include media-500 {
+    margin: 5px 10px;
+  }
+}
+.totalPriceItem {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 5px;
+  @include media-400 {
     flex-direction: column;
   }
 }
@@ -27,13 +58,12 @@
 }
 
 .cartTable {
-  width: 100%;
+  min-width: 895px;
   border-collapse: separate;
   margin-bottom: 20px;
   border-spacing: 0 10px;
   font-size: 1.3rem;
 
-  th,
   td {
     padding: 10px;
     padding-bottom: 10px;
@@ -42,55 +72,59 @@
     }
   }
 
-  th {
-    background-color: wheat;
-    font-size: 2rem;
-    border-collapse: collapse;
-    word-break: break-all;
-    @include media-500 {
-      font-size: 1rem;
-    }
-  }
-
   tbody > tr {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
 
-  .productImage {
-    width: 50px;
-    height: auto;
-    border-radius: 5px;
+  @include media-900 {
+    min-width: 595px;
+  }
+  @include media-600 {
+    min-width: 395px;
   }
 
-  .productDescription {
-    font-size: 2rem;
-    margin: 10px;
+  @include media-400 {
+    min-width: 300px;
   }
+}
 
-  input {
-    max-width: 50px;
-    padding: 4px;
-    text-align: center;
+.productImage {
+  width: 100px;
+  height: auto;
+  border-radius: 10px;
+  @include media-500 {
+    width: 70px;
   }
+}
 
-  .deleteButton {
-    background-color: #f0ac00;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    @include media-500 {
-      font-size: 1rem;
-    }
-  }
+.productDescription {
+  font-size: 2rem;
+  margin: 10px;
+}
 
-  .deleteButton:hover,
-  .applyPromoButton:hover {
-    background-color: #f5861f;
+input {
+  max-width: 50px;
+  padding: 4px;
+  text-align: center;
+}
+
+.deleteButton {
+  background-color: #f0ac00;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  @include media-500 {
+    font-size: 1rem;
   }
-  .clearCartButton:hover {
-    background-color: #f0ac00;
-  }
+}
+
+.deleteButton:hover,
+.applyPromoButton:hover {
+  background-color: #f5861f;
+}
+.clearCartButton:hover {
+  background-color: #f0ac00;
 }
 
 .totalPrice {
@@ -144,11 +178,8 @@ h1 {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-}
-
-.tablePriceContainer {
-  display: flex;
   align-items: center;
+  height: 30px;
 }
 
 .crossedOutPrice {
@@ -179,7 +210,7 @@ h1 {
 }
 
 .discountedPrice {
-  color: green; /* Example styling for discounted price */
+  color: green;
 }
 
 .totalPriceContainer {
@@ -196,6 +227,7 @@ h1 {
   font-size: 1.5rem;
   font-weight: bold;
   color: green;
+  align-self: baseline;
   @include media-400 {
     font-size: 1.3rem;
   }
@@ -270,9 +302,6 @@ h1 {
     font-size: 1.5rem;
   }
 
-  .cartContainer {
-    max-width: 600px;
-  }
   button,
   input {
     max-width: 200px;

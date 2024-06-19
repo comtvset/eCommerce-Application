@@ -221,7 +221,8 @@ export const CartCustomer: React.FC = () => {
         } else {
           setModalData({
             status: 'Attention',
-            message: 'The promo code is either invalid or inactive and could not be applied to the cart.',
+            message:
+              'The promo code is either invalid or inactive and could not be applied to the cart.',
           });
         }
       } catch (error) {
@@ -277,12 +278,28 @@ export const CartCustomer: React.FC = () => {
                     <span>No image available</span>
                   )}
                 </td>
-                <td>
-                  <div className={style.productDescription}>
-                    {getLocalizedName(item.name, 'en-US')}
-                  </div>
-                  <div>
+                <td className={style.essensial_product_details}>
+                  <div className={style.title_delete_button}>
+                    <div className={style.productDescription}>
+                      {getLocalizedName(item.name, 'en-US')}
+                    </div>
                     <div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleDelete(item.id).catch((error: unknown) => {
+                            proceedExceptions(error, 'Delete product failed');
+                          });
+                        }}
+                        className={style.deleteButton}
+                      >
+                        <span className={style.deleteButtonLarge}>Delete</span>
+                        <span className={style.deleteButtonSmall}>X</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className={style.prices_quantity}>
+                    <div className={style.price_per_one}>
                       {item.discountedPricePerQuantity.length > 0 ? (
                         <div className={style.tablePriceContainer}>
                           <span className={style.crossedOutPrice}>
@@ -305,57 +322,63 @@ export const CartCustomer: React.FC = () => {
                         </div>
                       )}
                     </div>
-                  </div>
-                </td>
-
-                <td>
-                  <label htmlFor="countItem">
-                    <div className={style.quantityControl}>
-                      <button
-                        type="button"
-                        className={style.quantityButton}
-                        onClick={() => {
-                          handleQuantityChange(item.id, item.quantity - 1).catch(
-                            (error: unknown) => {
-                              proceedExceptions(error, 'Could not apply promo code');
-                            },
-                          );
-                        }}
-                        disabled={item.quantity <= 1}
-                      >
-                        -
-                      </button>
-                      <span className={style.quantityValue}>{item.quantity}</span>
-                      <button
-                        type="button"
-                        className={style.quantityButton}
-                        onClick={() => {
-                          handleQuantityChange(item.id, item.quantity + 1).catch(
-                            (error: unknown) => {
-                              proceedExceptions(error, 'Could not apply promo code');
-                            },
-                          );
-                        }}
-                      >
-                        +
-                      </button>
+                    <div className={style.counter_item}>
+                      <label htmlFor="countItem">
+                        <div className={style.quantityControl}>
+                          <button
+                            type="button"
+                            className={style.quantityButton}
+                            onClick={() => {
+                              handleQuantityChange(item.id, item.quantity - 1).catch(
+                                (error: unknown) => {
+                                  proceedExceptions(error, 'Could not apply promo code');
+                                },
+                              );
+                            }}
+                            disabled={item.quantity <= 1}
+                          >
+                            -
+                          </button>
+                          <span className={style.quantityValue}>{item.quantity}</span>
+                          <button
+                            type="button"
+                            className={style.quantityButton}
+                            onClick={() => {
+                              handleQuantityChange(item.id, item.quantity + 1).catch(
+                                (error: unknown) => {
+                                  proceedExceptions(error, 'Could not apply promo code');
+                                },
+                              );
+                            }}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </label>
                     </div>
-                  </label>
-                </td>
+                    <div className={style.totalPriceItem}>
+                      {'Total:  '}
 
-                <td>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleDelete(item.id).catch((error: unknown) => {
-                        proceedExceptions(error, 'Edit address failed');
-                      });
-                    }}
-                    className={style.deleteButton}
-                  >
-                    <span className={style.deleteButtonLarge}>Delete</span>
-                    <span className={style.deleteButtonSmall}>X</span>
-                  </button>
+                      {item.discountedPricePerQuantity.length > 0 ? (
+                        <div className={style.tablePriceContainer}>
+                          <span className={style.discountedPrice}>
+                            {(item.discountedPricePerQuantity[0].discountedPrice.value.centAmount /
+                              100) *
+                              item.quantity}
+                          </span>
+                        </div>
+                      ) : (
+                        <div>
+                          {item.price.discounted
+                            ? (item.price.discounted.value.centAmount / 100) * item.quantity
+                            : (item.price.value.centAmount / 100) * item.quantity}
+                        </div>
+                      )}
+                      {` ${item.price.value.currencyCode}`}
+                    </div>
+                  </div>
+
+                  <div />
                 </td>
               </tr>
             ))}
@@ -396,6 +419,7 @@ export const CartCustomer: React.FC = () => {
               <div className={style.originalPrice}>
                 <h3>
                   Original Total:
+                  {'  '}
                   <span className={style.crossedOutPrice}>
                     {originalTotalPrice}
                     {` ${cartItems[0]?.price.value.currencyCode}`}
@@ -406,6 +430,7 @@ export const CartCustomer: React.FC = () => {
             <div className={style.discountedPrice}>
               <h3>
                 Total:
+                {'  '}
                 {discountedTotalPrice}
                 {` ${cartItems[0]?.price.value.currencyCode ?? ''}`}
               </h3>
