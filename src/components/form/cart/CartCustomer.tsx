@@ -7,6 +7,7 @@ import useModalEffect from 'src/components/form/profile/UseModalEffect.ts';
 import { Message } from 'src/components/cartMessage/CartMessage.tsx';
 import Modal from 'src/components/modalWindow/confirmationModal.tsx';
 import Spinner from 'src/components/lazyLoad/Spinner.tsx';
+import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
 
 export const CartCustomer: React.FC = () => {
   const [cartItems, setCartItems] = useState<LineItem[]>([]);
@@ -106,6 +107,8 @@ export const CartCustomer: React.FC = () => {
         setOriginalTotalPrice(originalPrice);
         setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
         setCartVersion(cart.version);
+        setModalData({ status: 'Sucess', message: 'Product was deleted from Cart' });
+
         if (!cart.lineItems.length) {
           localStorage.clear();
         }
@@ -183,6 +186,9 @@ export const CartCustomer: React.FC = () => {
   };
 
   const handleApplyPromoCode = async () => {
+    if (!promoCode) {
+      setModalData({ status: 'Warning', message: 'Please, enter Promo Code' });
+    }
     if (id && promoCode) {
       try {
         const updatedCart: ClientResponse<Cart> = await api
@@ -210,8 +216,16 @@ export const CartCustomer: React.FC = () => {
         setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
         setCartVersion(cart.version);
         setPromoCode('');
+        if (originalTotalPrice - discountedTotalPrice !== 0) {
+          setModalData({ status: 'Sucess', message: 'Promo code applyied to Cart' });
+        } else {
+          setModalData({
+            status: 'Attention',
+            message: 'Such Promo code absent or disactivated and was not applyied to Cart',
+          });
+        }
       } catch (error) {
-        proceedExceptions(error, 'Could not apply promo code');
+        proceedExceptions(error, 'Could not apply Promo code');
       }
     }
   };
@@ -399,6 +413,7 @@ export const CartCustomer: React.FC = () => {
           </div>
         </div>
       </div>
+      {modalData.message && <ModalWindow data={modalData} />}
     </div>
   );
 };
