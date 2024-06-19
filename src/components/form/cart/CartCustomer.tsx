@@ -221,7 +221,7 @@ export const CartCustomer: React.FC = () => {
         } else {
           setModalData({
             status: 'Attention',
-            message: 'Such Promo code absent or disactivated and was not applyied to Cart',
+            message: 'The promo code is either invalid or inactive and could not be applied to the cart.',
           });
         }
       } catch (error) {
