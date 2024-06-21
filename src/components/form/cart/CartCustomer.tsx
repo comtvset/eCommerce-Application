@@ -216,14 +216,11 @@ export const CartCustomer: React.FC = () => {
         setDiscountedTotalPrice(cart.totalPrice.centAmount / 100);
         setCartVersion(cart.version);
         setPromoCode('');
-        if (originalTotalPrice - discountedTotalPrice !== 0) {
+        const quantityDiscountedLines = cartItems.filter(
+          (item: LineItem) => item.discountedPricePerQuantity.length !== 0,
+        ).length;
+        if (quantityDiscountedLines) {
           setModalData({ status: 'Sucess', message: 'Promo code applyied to Cart' });
-        } else {
-          setModalData({
-            status: 'Attention',
-            message:
-              'The promo code is either invalid or inactive and could not be applied to the cart.',
-          });
         }
       } catch (error) {
         proceedExceptions(error, 'Could not apply Promo code');
