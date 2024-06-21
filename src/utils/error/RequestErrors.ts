@@ -10,6 +10,7 @@ interface CommercetoolsErrorResponse {
 }
 
 export const ErrorType = ['Invalid', 'Error'];
+export const WarningType = ['Warning', 'Attention'];
 
 const isCommercetoolsError = (error: unknown): error is { body: CommercetoolsErrorResponse } => {
   return (

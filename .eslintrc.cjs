@@ -35,13 +35,14 @@ module.exports = {
     'react-hooks',
   ],
   rules: {
+    eqeqeq: 'error',
     '@typescript-eslint/no-floating-promises': [
       'error',
       {
         ignoreIIFE: true,
       },
     ],
-    eqeqeq: 'error',
+
     'operator-linebreak': ['error', 'after', { overrides: { '?': 'before', ':': 'before' } }],
     'no-console': 'warn',
     'no-undef': 'off',
@@ -92,6 +93,7 @@ module.exports = {
         allowConstantExport: true,
       },
     ],
+    'react/prop-types': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'jsx-a11y/label-has-associated-control': [

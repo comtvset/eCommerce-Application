@@ -21,9 +21,53 @@
 }
 
 .children.error {
-  background-color: red;
+  background-color: rgb(196, 130, 130);
 }
 
 .children.positive {
-  background-color: green;
+  background-color: rgb(134, 208, 134);
+}
+
+.children.warning {
+  background-color: rgb(224, 174, 123);
+}
+
+// src/components/Modal.module.scss
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.button:hover {
+  opacity: 0.8;
 }

@@ -1,26 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { ICustomerModel, customerModel } from 'src/model/Customer.ts';
 import styles from 'src/components/form/profile/UserProfileForm.module.scss';
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-
-import { getLoginClient } from 'src/services/api/BuildClient.ts';
-
+import { createLoginApiRoot } from 'src/services/api/BuildClient.ts';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
-
 import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { mapCustomerToModel } from 'src/services/DTO/Customer.ts';
-
 import { ChangePasswordForm } from 'src/components/form/profile/ChangePasswordForm.tsx';
 import { AddressProfileForm } from 'src/components/form/profile/AddressProfileForm.tsx';
 import useModalEffect from 'src/components/form/profile/UseModalEffect.ts';
-import { PROJECT_KEY } from 'src/services/api/BuildClientRegistration.ts';
 import { BasicUserDataProfile } from './BasicUserDataProfile.tsx';
 
 export const UserProfileForm: React.FC = () => {
-  const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
-    projectKey: PROJECT_KEY,
-  });
-  const [api] = useState(apiRoot2);
+  const loginApiRoot = createLoginApiRoot();
+  const [api] = useState(loginApiRoot);
   const [activeTab, setActiveTab] = useState('basicInfo');
 
   const [id] = useState(localStorage.getItem('fullID') ?? '');

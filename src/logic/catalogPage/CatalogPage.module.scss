@@ -1,5 +1,7 @@
+@import 'src/styles/variables';
+@import 'src/styles/mixins';
+
 .layout {
-  width: 90%;
   display: flex;
   flex-direction: row;
   margin: 0 auto;
@@ -10,7 +12,11 @@
 .test {
   display: flex;
   flex-direction: column;
-  width: 20%;
+  width: fit-content;
+  margin: 0 15px;
+  @include media-600 {
+    margin: 0 5px 0 5px;
+  }
 }
 
 .dots {

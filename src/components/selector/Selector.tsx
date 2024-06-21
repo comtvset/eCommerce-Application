@@ -41,6 +41,7 @@ const Selector: React.FC<{ selectorProps: SelectorProps }> = ({ selectorProps })
         onChange={onChange}
         onBlur={onBlur}
         disabled={disabledMode}
+        autoComplete="..."
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

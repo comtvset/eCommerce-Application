@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { Country } from 'src/components/country/country.ts';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
 import { ICustomerModel, customerModel } from 'src/model/Customer.ts';
-import { getLoginClient } from 'src/services/api/BuildClient.ts';
-import { PROJECT_KEY } from 'src/services/api/BuildClientRegistration.ts';
+import { createLoginApiRoot } from 'src/services/api/BuildClient.ts';
 import { RegistrationMainFields } from 'src/components/form/registration/RegistrationMainFields.tsx';
 import styles from 'src/components/form/profile/UserProfileForm.module.scss';
 import { validateField } from 'src/components/validation/Validation.ts';
@@ -21,10 +19,9 @@ interface BasicUserDataProfileProps {
 export const BasicUserDataProfile: React.FC<BasicUserDataProfileProps> = ({
   userProfileFormData,
 }) => {
-  const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
-    projectKey: PROJECT_KEY,
-  });
-  const [api, setAPI] = useState(apiRoot2);
+  const loginApiRoot = createLoginApiRoot();
+
+  const [api, setAPI] = useState(loginApiRoot);
 
   const [id] = useState(localStorage.getItem('fullID') ?? '');
   const [isDisabledUserInfo, setEditUserInfo] = useState(true);
@@ -123,11 +120,7 @@ export const BasicUserDataProfile: React.FC<BasicUserDataProfileProps> = ({
 
                 updateEmail(formData.email);
 
-                setAPI(
-                  createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
-                    projectKey: PROJECT_KEY,
-                  }),
-                );
+                setAPI(createLoginApiRoot());
 
                 setFormData(customerData);
                 setModalData({

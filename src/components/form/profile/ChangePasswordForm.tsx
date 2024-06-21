@@ -5,9 +5,7 @@ import { InputWithLabel } from 'src/components/input/InputWithLabel.tsx';
 import { IPasswordForm, passwordForm } from 'src/components/form/profile/IPasswordForm.ts';
 import { validatePassword } from 'src/components/validation/Validation.ts';
 import { ModalWindow } from 'src/components/modalWindow/modalWindow.tsx';
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { getLoginClient } from 'src/services/api/BuildClient.ts';
-import { PROJECT_KEY } from 'src/services/api/BuildClientRegistration.ts';
+import { createLoginApiRoot } from 'src/services/api/BuildClient.ts';
 import { ServerError } from 'src/utils/error/RequestErrors.ts';
 import { getPassword, setPassword } from 'src/services/userData/saveEmailPassword.ts';
 import { updatePassword } from 'src/services/api/ResetPassword.ts';
@@ -18,10 +16,8 @@ interface ChangePasswordFormProps {
 }
 
 export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ version }) => {
-  const apiRoot2 = createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
-    projectKey: PROJECT_KEY,
-  });
-  const [api, setAPI] = useState(apiRoot2);
+  const loginApiRoot = createLoginApiRoot();
+  const [api, setAPI] = useState(loginApiRoot);
 
   const [isDisabledPassword, setEditPassword] = useState(true);
   const [errors, setErrors] = useState<IPasswordForm>(passwordForm);
@@ -107,11 +103,7 @@ export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ version 
 
             setModalData({ status: 'Success', message: 'Password updated successfully.' });
             setEditPassword(true);
-            setAPI(
-              createApiBuilderFromCtpClient(getLoginClient().client).withProjectKey({
-                projectKey: PROJECT_KEY,
-              }),
-            );
+            setAPI(createLoginApiRoot());
           })
           .catch((error: unknown) => {
             if (error instanceof ServerError) {

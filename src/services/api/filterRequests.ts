@@ -1,8 +1,37 @@
-import { apiRoot } from './ctpClient.ts';
+import { ByProjectKeyRequestBuilder, ProductProjection } from '@commercetools/platform-sdk';
+import { createApiRoot, createLoginApiRoot } from './BuildClient.ts';
 
-export const fetchAllProducts = async () => {
-  const response = await apiRoot.productProjections().search().get().execute();
-  return response.body.results;
+let apiRoot: ByProjectKeyRequestBuilder;
+let fetchPromise: Promise<ProductProjection[]> | null = null;
+
+function updateApiRoot() {
+  const isUser = Boolean(localStorage.getItem('userTokens'));
+  apiRoot = isUser ? createLoginApiRoot() : createApiRoot();
+}
+
+let isFetching = false;
+
+const fetchProducts = async (): Promise<ProductProjection[]> => {
+  if (!isFetching) {
+    isFetching = true;
+    try {
+      updateApiRoot();
+      const response = await apiRoot.productProjections().search().get().execute();
+      return response.body.results;
+    } finally {
+      isFetching = false;
+    }
+  }
+  return [];
+};
+
+export const fetchAllProducts = (): Promise<ProductProjection[]> => {
+  if (!fetchPromise) {
+    fetchPromise = fetchProducts().finally(() => {
+      fetchPromise = null;
+    });
+  }
+  return fetchPromise;
 };
 
 export const fetchCategory = async (category: string) => {
