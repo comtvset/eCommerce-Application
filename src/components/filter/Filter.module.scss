@@ -3,7 +3,6 @@
   flex-direction: column;
   margin-top: 40px;
   border-radius: 5px;
-  flex-wrap: wrap;
   justify-content: flex-start;
   padding: 5px;
   font-size: 1.7rem;
@@ -14,6 +13,7 @@
   padding: 1rem;
   border-bottom: 1px solid #ddd;
   color: (--primary-text-color);
+  flex-wrap: nowrap;
 }
 
 .filter_group {
@@ -26,6 +26,10 @@
   align-items: center;
   flex-direction: row-reverse;
   justify-content: space-between;
+  gap: 10px;
+  > label {
+    text-wrap: nowrap;
+  }
 }
 
 .color_option label {

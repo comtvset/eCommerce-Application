@@ -34,7 +34,7 @@ interface Filters {
   prices: FilterOption[];
 }
 
-export const Catalog: React.FC = () => {
+const Catalog: React.FC = () => {
   const [defaultColor, setDefaultColor] = useState<ProductProjection[]>([]);
   const [productState, setProductState] = useState<ProductProjection[]>([]);
   const [colorsArray, setColorsArray] = useState<string[]>([]);
@@ -290,3 +290,4 @@ export const Catalog: React.FC = () => {
     </>
   );
 };
+export default Catalog;

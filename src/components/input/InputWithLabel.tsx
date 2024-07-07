@@ -38,6 +38,7 @@ export const InputWithLabel: React.FC<InputProps> = ({
         required={required}
         aria-invalid={!!error}
         disabled={disabledMode}
+        autoComplete={name === 'email' ? 'email' : undefined}
       />
       {error && (
         <div className={style.error_tooltip} role="alert">

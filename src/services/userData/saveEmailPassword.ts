@@ -1,26 +1,28 @@
-let savedEmail = '';
-let savedPassword = 'null';
+export const state = {
+  savedEmail: '',
+  savedPassword: '',
+};
 
 export const saveCredentials = (email: string, password: string) => {
-  savedEmail = email;
-  savedPassword = password;
+  state.savedEmail = email;
+  state.savedPassword = password;
 };
 
 export const updateEmail = (email: string) => {
-  savedEmail = email;
+  state.savedEmail = email;
 };
 
 export const setPassword = (password: string) => {
-  savedPassword = password;
+  state.savedPassword = password;
 };
 
 export const getPassword = (): string => {
-  return savedPassword;
+  return state.savedPassword;
 };
 
 export const getCredentials = () => {
   return {
-    email: savedEmail,
-    password: savedPassword,
+    email: state.savedEmail,
+    password: state.savedPassword,
   };
 };

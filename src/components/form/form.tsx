@@ -100,16 +100,19 @@ export const Form = () => {
         <span className={myStyles.myInput_header}>EMAIL</span>
         <input
           className="inputText"
+          id="email"
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
           }}
           required
+          autoComplete="email"
         />
         <span className={styles.error}>{errorEmail}</span>
         <span className={myStyles.myInput_header}>PASSWORD</span>
         <input
           className="inputText"
+          id="password"
           value={password}
           type={showPassword ? 'text' : 'password'}
           onChange={(e) => {
@@ -122,6 +125,7 @@ export const Form = () => {
           Show Password
           <input
             className={myStyles.myInput}
+            id="showpassword"
             type="checkbox"
             checked={showPassword}
             onChange={(event) => {

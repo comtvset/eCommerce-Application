@@ -1,12 +1,9 @@
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { ctpClient, getLoginClient } from './BuildClient.ts';
-import { saveToken } from './saveToken.ts';
+import { createApiRoot, createLoginApiRoot } from './BuildClient.ts';
 
 export const loginRequest = async (myEmail: string, myPassword: string) => {
-  const PROJECT_KEY: string = import.meta.env.VITE_CTP_PROJECT_KEY as string;
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-    projectKey: PROJECT_KEY,
-  });
+  const apiRoot = createApiRoot();
+
+  const loginApiRoot = createLoginApiRoot();
 
   const loginUser = () => {
     return apiRoot
@@ -16,16 +13,11 @@ export const loginRequest = async (myEmail: string, myPassword: string) => {
         body: {
           email: myEmail,
           password: myPassword,
+          activeCartSignInMode: 'MergeWithExistingCustomerCart',
         },
       })
       .execute();
   };
-
-  const { client, tokenCache } = getLoginClient();
-
-  const apiRoot2 = createApiBuilderFromCtpClient(client).withProjectKey({
-    projectKey: PROJECT_KEY,
-  });
 
   const result = loginUser()
     .then((response) => {
@@ -35,10 +27,7 @@ export const loginRequest = async (myEmail: string, myPassword: string) => {
       localStorage.setItem('fullID', idUser);
     })
     .then(() => {
-      return apiRoot2.carts().get().execute();
-    })
-    .then(() => {
-      saveToken(tokenCache);
+      return loginApiRoot.carts().get().execute();
     });
 
   return result;

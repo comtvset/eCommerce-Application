@@ -1,0 +1,82 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  > p,
+  ul {
+    font-size: 2rem;
+  }
+}
+
+.about_team {
+  max-width: 1200px;
+  margin: 20px 10px;
+  padding: 20px 10px;
+  font-family: 'Arial', sans-serif;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  text-align: justify;
+  color: #333;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 15px 0 15px;
+  font-size: 3rem;
+
+  .rsslogo {
+    > a > img {
+      width: 150px;
+      height: 100px;
+      margin-right: 100px;
+    }
+  }
+}
+
+.profile_cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+
+  > .technology {
+    width: auto;
+    padding: 0 10px;
+
+    > ul > li {
+      font-size: 1.7rem;
+    }
+  }
+}
+
+.burndawnchart,
+.project_statistics {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 75%;
+}
+
+@media (width <=768px) {
+  .profile_cards {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (width >=1440px) {
+  .profile_cards {
+    justify-content: center;
+    align-items: flex-start;
+  }
+}

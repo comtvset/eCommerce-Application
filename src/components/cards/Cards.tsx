@@ -1,16 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { Paragraph } from 'src/components/text/Text.tsx';
 import style from 'src/components/cards/Cards.module.scss';
 import style1 from 'src/components/card/Card.module.scss';
 import { Link } from 'src/components/link/Link.tsx';
 import { getCurrencySymbol } from 'src/utils/CurrencyUtils.ts';
+import { ensureBasketAndCheckProduct } from 'src/utils/BasketUtils.ts';
+import { Button } from 'src/components/button/Button.tsx';
+import { fetchAllProducts } from 'src/services/api/filterRequests.ts';
+import {
+  addProductToCart,
+  createAnonymousBasket,
+  getProductsInCart,
+} from 'src/services/api/ApiBasket.ts';
+import ImageWithLoader from 'src/components/spinnerImage/ImageWithLoader.tsx';
 
 interface CardProps {
   products: ProductProjection[];
 }
 
 export const Card: React.FC<CardProps> = ({ products }) => {
+  const [isDisabled, setIsDisabled] = useState<Record<string, boolean>>({});
+  const [isLoading, setIsLoading] = useState<Record<string, boolean>>({});
+
+  const ensureBasketAndCheckProducts = async () => {
+    const cartId = await createAnonymousBasket();
+    const allProducts = await fetchAllProducts();
+    const productsInCartResponse = await getProductsInCart(cartId);
+    const productsInCart = productsInCartResponse.body.lineItems;
+
+    const buttonsState: Record<string, boolean> = {};
+
+    allProducts.forEach((product) => {
+      const isProductInCart = productsInCart.some(
+        (cartProduct) => cartProduct.productId === product.id,
+      );
+      buttonsState[product.id] = isProductInCart;
+    });
+    setIsDisabled(buttonsState);
+  };
+
+  const addProduct = async (idProduct: string) => {
+    setIsLoading((prevState) => ({ ...prevState, [idProduct]: true }));
+    try {
+      const cartId = await createAnonymousBasket();
+      if (cartId && idProduct) {
+        await addProductToCart(cartId, idProduct);
+        setIsDisabled((prevState) => ({ ...prevState, [idProduct]: true }));
+      }
+    } finally {
+      setIsLoading((prevState) => ({ ...prevState, [idProduct]: false }));
+      await ensureBasketAndCheckProducts();
+    }
+  };
+
+  useEffect(() => {
+    ensureBasketAndCheckProducts().catch(() => {
+      'Button is broken';
+    });
+  }, []);
+
   return (
     <div className={style.cards_container}>
       {products.map((product) => {
@@ -39,11 +88,16 @@ export const Card: React.FC<CardProps> = ({ products }) => {
             key={product.id}
             id={product.id}
             to={`/product/${product.id}`}
+            onClick={() => {
+              (async () => {
+                await ensureBasketAndCheckProduct(product.id);
+              })();
+            }}
           >
             <div className={style.image_container}>
-              <img
+              <ImageWithLoader
                 className={style.image}
-                src={product.masterVariant.images?.[0].url}
+                src={product.masterVariant.images ? product.masterVariant.images[0].url : ''}
                 alt={product.name['en-US']}
               />
             </div>
@@ -61,6 +115,20 @@ export const Card: React.FC<CardProps> = ({ products }) => {
                 <Paragraph tag="h2" title={priceDiscount} className={style1.price_finish} />
               )}
             </div>
+            <Button
+              className={style.button__add}
+              title="ADD TO BASKET"
+              disabled={isDisabled[product.id]}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                e.preventDefault();
+                if (!isDisabled[product.id] && !isLoading[product.id]) {
+                  (async () => {
+                    await addProduct(product.id);
+                  })();
+                }
+              }}
+            />
+            {isLoading[product.id] && <div className={style.load}>Adding product to cart...</div>}
           </Link>
         );
       })}

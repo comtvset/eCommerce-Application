@@ -1,3 +1,3 @@
-npm run format
-npm run ci:format
+npm run format --staged-files
+npm run ci:format --staged-files
 
